@@ -74,7 +74,8 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const TeamScalarFieldEnum = {
   id: 'id',
-  name: 'name'
+  name: 'name',
+  logo: 'logo'
 } as const
 
 export type TeamScalarFieldEnum = (typeof TeamScalarFieldEnum)[keyof typeof TeamScalarFieldEnum]

@@ -532,10 +532,6 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
-}
-
 export type MatchCreateWithoutTeamAInput = {
   week: number
   day: string

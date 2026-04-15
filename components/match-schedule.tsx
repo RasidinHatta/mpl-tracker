@@ -9,7 +9,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { WeekSchedule } from "@/app/actions/matches";
+import type { WeekSchedule } from "@/actions/matches";
 
 function formatDate(date: Date | string) {
   return new Date(date).toLocaleDateString("en-US", {

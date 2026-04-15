@@ -14,7 +14,8 @@ datasource db {
 
 model Team {
   id           Int         @id @default(autoincrement())
-  name         String      @unique 
+  name         String      @unique
+  logo         String? 
   
   // Relations
   matchesAsA   Match[]     @relation("TeamA")
