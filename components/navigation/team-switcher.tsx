@@ -11,11 +11,9 @@ import Logo from "../shadcn-studio/logo"
 const data = {
   teams: [
     {
-      name: "MPLTrack",
       logo: (
         <Logo />
       ),
-      plan: "MPL Track",
     },
   ],
 }
