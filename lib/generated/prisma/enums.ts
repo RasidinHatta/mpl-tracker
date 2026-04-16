@@ -9,7 +9,10 @@
 * 🟢 You can import this file directly.
 */
 
+export const MatchFormat = {
+  BO3: 'BO3',
+  BO5: 'BO5',
+  BO7: 'BO7'
+} as const
 
-
-// This file is empty because there are no enums in the schema.
-export {}
+export type MatchFormat = (typeof MatchFormat)[keyof typeof MatchFormat]

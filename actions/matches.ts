@@ -9,8 +9,11 @@ export type MatchWithTeams = {
   date: Date;
   teamA: { id: number; name: string; logo: string | null };
   teamB: { id: number; name: string; logo: string | null };
-  result: string | null;
-  prediction: string | null;
+  format: string;
+  teamAResult: number | null;
+  teamBResult: number | null;
+  teamAPrediction: number | null;
+  teamBPrediction: number | null;
 };
 
 export type WeekSchedule = {
@@ -42,8 +45,11 @@ export async function getMatchSchedule(): Promise<WeekSchedule[]> {
       date: match.date,
       teamA: { id: match.teamA.id, name: match.teamA.name, logo: match.teamA.logo },
       teamB: { id: match.teamB.id, name: match.teamB.name, logo: match.teamB.logo },
-      result: match.result,
-      prediction: match.prediction,
+      format: match.format,
+      teamAResult: match.teamAResult,
+      teamBResult: match.teamBResult,
+      teamAPrediction: match.teamAPrediction,
+      teamBPrediction: match.teamBPrediction,
     });
   }
 
@@ -51,4 +57,20 @@ export async function getMatchSchedule(): Promise<WeekSchedule[]> {
     week,
     matches,
   }));
+}
+
+export async function updateMatch(id: number, data: { teamAResult?: number | null; teamBResult?: number | null; teamAPrediction?: number | null; teamBPrediction?: number | null }) {
+  const { revalidatePath } = await import("next/cache");
+  
+  await prisma.match.update({
+    where: { id },
+    data: {
+      teamAResult: data.teamAResult ?? null,
+      teamBResult: data.teamBResult ?? null,
+      teamAPrediction: data.teamAPrediction ?? null,
+      teamBPrediction: data.teamBPrediction ?? null,
+    },
+  });
+
+  revalidatePath('/schedule');
 }

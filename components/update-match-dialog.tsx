@@ -1,0 +1,157 @@
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { updateMatch, type MatchWithTeams } from "@/actions/matches";
+import { ChevronRight } from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { TeamAvatar } from "./match-schedule";
+
+export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
+  const [open, setOpen] = useState(false);
+  const [teamAPrediction, setTeamAPrediction] = useState(match.teamAPrediction?.toString() || "");
+  const [teamBPrediction, setTeamBPrediction] = useState(match.teamBPrediction?.toString() || "");
+  const [teamAResult, setTeamAResult] = useState(match.teamAResult?.toString() || "");
+  const [teamBResult, setTeamBResult] = useState(match.teamBResult?.toString() || "");
+  const [loading, setLoading] = useState(false);
+  
+  const getMaxScore = (format: string) => {
+    switch (format) {
+      case "BO3": return 2;
+      case "BO5": return 3;
+      case "BO7": return 4;
+      default: return 99;
+    }
+  };
+  const maxScore = getMaxScore(match.format);
+  
+  const handleSave = async () => {
+    try {
+      setLoading(true);
+      await updateMatch(match.id, {
+        teamAPrediction: teamAPrediction ? parseInt(teamAPrediction) : null,
+        teamBPrediction: teamBPrediction ? parseInt(teamBPrediction) : null,
+        teamAResult: teamAResult ? parseInt(teamAResult) : null,
+        teamBResult: teamBResult ? parseInt(teamBResult) : null,
+      });
+      toast.success("Match updated successfully");
+      setOpen(false);
+    } catch (error) {
+      toast.error("Failed to update match");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger
+        render={
+          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground" />
+        }
+      >
+        View Details / Update
+        <ChevronRight className="h-3.5 w-3.5" />
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Update Match Details</DialogTitle>
+          <DialogDescription>
+            Update prediction and result for {match.teamA.name} vs {match.teamB.name}.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex flex-col gap-6 py-6">
+          {/* Teams Header */}
+          <div className="flex items-center justify-between px-4 sm:px-8">
+            <div className="flex flex-col items-center gap-2">
+              <TeamAvatar name={match.teamA.name} logo={match.teamA.logo} color="left" />
+              <span className="text-sm font-semibold">{match.teamA.name}</span>
+            </div>
+            <span className="text-muted-foreground font-medium text-sm">VS</span>
+            <div className="flex flex-col items-center gap-2">
+              <TeamAvatar name={match.teamB.name} logo={match.teamB.logo} color="right" />
+              <span className="text-sm font-semibold">{match.teamB.name}</span>
+            </div>
+          </div>
+
+          {/* Prediction Row */}
+          <div className="flex items-center justify-between gap-2 px-4 sm:px-8 mt-4">
+            <div className="flex flex-1 items-center justify-center">
+              <Input
+                type="number"
+                min="0"
+                max={maxScore}
+                className="w-20 text-center text-lg font-bold"
+                value={teamAPrediction}
+                onChange={(e) => setTeamAPrediction(e.target.value)}
+              />
+            </div>
+            
+            <div className="flex w-28 flex-col items-center justify-center">
+              <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1">Prediction</span>
+              <span className="text-lg font-medium text-muted-foreground/50">-</span>
+            </div>
+
+            <div className="flex flex-1 items-center justify-center">
+              <Input
+                type="number"
+                min="0"
+                max={maxScore}
+                className="w-20 text-center text-lg font-bold"
+                value={teamBPrediction}
+                onChange={(e) => setTeamBPrediction(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Result Row */}
+          <div className="flex items-center justify-between gap-2 px-4 sm:px-8">
+            <div className="flex flex-1 items-center justify-center">
+              <Input
+                type="number"
+                min="0"
+                max={maxScore}
+                className="w-20 text-center text-lg font-bold"
+                value={teamAResult}
+                onChange={(e) => setTeamAResult(e.target.value)}
+              />
+            </div>
+            
+            <div className="flex w-28 flex-col items-center justify-center">
+              <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1">Result</span>
+              <span className="text-lg font-medium text-muted-foreground/50">-</span>
+            </div>
+
+            <div className="flex flex-1 items-center justify-center">
+              <Input
+                type="number"
+                min="0"
+                max={maxScore}
+                className="w-20 text-center text-lg font-bold"
+                value={teamBResult}
+                onChange={(e) => setTeamBResult(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+        <DialogFooter>
+          <Button type="submit" disabled={loading} onClick={handleSave}>
+            Save changes
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

@@ -23,19 +23,28 @@ model Team {
   standings    Standings?
 }
 
+enum MatchFormat {
+  BO3
+  BO5
+  BO7
+}
+
 model Match {
   id          Int      @id @default(autoincrement())
   week        Int      
   day         String   
-  date        DateTime 
+  date        DateTime
+  format      MatchFormat @default(BO3)
   
   teamAId     Int
   teamBId     Int
   teamA       Team     @relation("TeamA", fields: [teamAId], references: [id])
   teamB       Team     @relation("TeamB", fields: [teamBId], references: [id])
 
-  result      String?  
-  prediction  String?  
+  teamAResult     Int?
+  teamBResult     Int?
+  teamAPrediction Int?
+  teamBPrediction Int?
 }
 
 model Standings {

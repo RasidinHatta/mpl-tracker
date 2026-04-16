@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import type { WeekSchedule } from "@/actions/matches";
 import { Trophy, Calendar, Clock, TrendingUp, ChevronRight, Swords } from "lucide-react";
+import { UpdateMatchDialog } from "./update-match-dialog";
 
 function formatDate(date: Date | string) {
   const d = new Date(date);
@@ -29,17 +30,8 @@ function formatDate(date: Date | string) {
   };
 }
 
-function parseResult(result: string | null) {
-  if (!result) return null;
-  const parts = result.split("-").map((s) => s.trim());
-  if (parts.length === 2) {
-    return { scoreA: parts[0], scoreB: parts[1] };
-  }
-  return null;
-}
-
-function isMatchCompleted(match: { result: string | null; date: Date | string }) {
-  if (match.result !== null) return true;
+function isMatchCompleted(match: { teamAResult: number | null; teamBResult: number | null; date: Date | string }) {
+  if (match.teamAResult !== null && match.teamBResult !== null) return true;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const matchDate = new Date(match.date);
@@ -47,7 +39,7 @@ function isMatchCompleted(match: { result: string | null; date: Date | string })
   return today > matchDate;
 }
 
-function TeamAvatar({ name, logo, color }: { name: string; logo?: string | null; color: "left" | "right" }) {
+export function TeamAvatar({ name, logo, color }: { name: string; logo?: string | null; color: "left" | "right" }) {
   const gradientClass = color === "left" 
     ? "from-primary/20 via-primary/10 to-transparent" 
     : "from-secondary/20 via-secondary/10 to-transparent";
@@ -74,8 +66,7 @@ function MatchCard({
 }: {
   match: WeekSchedule["matches"][number];
 }) {
-  const scores = parseResult(match.result);
-  const hasResult = scores !== null;
+  const hasResult = match.teamAResult !== null && match.teamBResult !== null;
   const completed = isMatchCompleted(match);
   const dateInfo = formatDate(match.date);
   const [isHovered, setIsHovered] = useState(false);
@@ -128,22 +119,16 @@ function MatchCard({
           </div>
 
           {/* Score / VS */}
-          <div className="flex flex-col items-center gap-1 px-2">
-            {hasResult ? (
-              <div className="flex items-baseline gap-1">
-                <span className={`text-3xl font-black tabular-nums tracking-tight ${Number(scores.scoreA) > Number(scores.scoreB) ? "text-primary" : "text-muted-foreground"}`}>
-                  {scores.scoreA}
-                </span>
-                <span className="text-lg font-medium text-muted-foreground/50">:</span>
-                <span className={`text-3xl font-black tabular-nums tracking-tight ${Number(scores.scoreB) > Number(scores.scoreA) ? "text-primary" : "text-muted-foreground"}`}>
-                  {scores.scoreB}
-                </span>
-              </div>
-            ) : (
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted/80 ring-1 ring-border">
-                <Swords className="h-5 w-5 text-muted-foreground" />
-              </div>
-            )}
+          <div className="flex flex-col items-center justify-center gap-1 px-2">
+            <div className="flex items-center gap-3">
+              <span className={`text-4xl font-black tabular-nums tracking-tighter ${hasResult && Number(match.teamAResult) > Number(match.teamBResult) ? "text-primary drop-shadow-sm" : "text-muted-foreground"}`}>
+                {match.teamAResult ?? '-'}
+              </span>
+              <span className="text-xl font-bold text-muted-foreground/40 mb-1">:</span>
+              <span className={`text-4xl font-black tabular-nums tracking-tighter ${hasResult && Number(match.teamBResult) > Number(match.teamAResult) ? "text-primary drop-shadow-sm" : "text-muted-foreground"}`}>
+                {match.teamBResult ?? '-'}
+              </span>
+            </div>
           </div>
 
           {/* Team B */}
@@ -156,20 +141,19 @@ function MatchCard({
         </div>
 
         {/* Prediction */}
-        {match.prediction && (
+        {!hasResult && (match.teamAPrediction !== null || match.teamBPrediction !== null) && (
           <div className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-muted/60 px-3 py-2 text-xs">
             <TrendingUp className="h-3.5 w-3.5 text-muted-foreground" />
             <span className="text-muted-foreground">Prediction:</span>
-            <span className="font-semibold text-foreground">{match.prediction}</span>
+            <span className="font-semibold text-foreground">
+              {match.teamAPrediction ?? '-'} - {match.teamBPrediction ?? '-'}
+            </span>
           </div>
         )}
 
         {/* Action hint */}
         <div className={`mt-3 flex justify-center transition-all duration-300 ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
-          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground">
-            View Details
-            <ChevronRight className="h-3.5 w-3.5" />
-          </Button>
+          <UpdateMatchDialog match={match} />
         </div>
       </CardContent>
     </Card>

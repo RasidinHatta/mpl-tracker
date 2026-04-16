@@ -17,7 +17,7 @@ export default async function SchedulePage() {
   const completedMatches = schedule.reduce(
     (acc, week) => {
       return acc + week.matches.filter((m) => {
-        if (m.result !== null) return true;
+        if (m.teamAResult !== null && m.teamBResult !== null) return true;
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const matchDate = new Date(m.date);
