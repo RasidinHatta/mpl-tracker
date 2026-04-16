@@ -202,7 +202,6 @@ export type TeamWhereInput = {
   logo?: Prisma.StringNullableFilter<"Team"> | string | null
   matchesAsA?: Prisma.MatchListRelationFilter
   matchesAsB?: Prisma.MatchListRelationFilter
-  standings?: Prisma.XOR<Prisma.StandingsNullableScalarRelationFilter, Prisma.StandingsWhereInput> | null
 }
 
 export type TeamOrderByWithRelationInput = {
@@ -211,7 +210,6 @@ export type TeamOrderByWithRelationInput = {
   logo?: Prisma.SortOrderInput | Prisma.SortOrder
   matchesAsA?: Prisma.MatchOrderByRelationAggregateInput
   matchesAsB?: Prisma.MatchOrderByRelationAggregateInput
-  standings?: Prisma.StandingsOrderByWithRelationInput
 }
 
 export type TeamWhereUniqueInput = Prisma.AtLeast<{
@@ -223,7 +221,6 @@ export type TeamWhereUniqueInput = Prisma.AtLeast<{
   logo?: Prisma.StringNullableFilter<"Team"> | string | null
   matchesAsA?: Prisma.MatchListRelationFilter
   matchesAsB?: Prisma.MatchListRelationFilter
-  standings?: Prisma.XOR<Prisma.StandingsNullableScalarRelationFilter, Prisma.StandingsWhereInput> | null
 }, "id" | "name">
 
 export type TeamOrderByWithAggregationInput = {
@@ -251,7 +248,6 @@ export type TeamCreateInput = {
   logo?: string | null
   matchesAsA?: Prisma.MatchCreateNestedManyWithoutTeamAInput
   matchesAsB?: Prisma.MatchCreateNestedManyWithoutTeamBInput
-  standings?: Prisma.StandingsCreateNestedOneWithoutTeamInput
 }
 
 export type TeamUncheckedCreateInput = {
@@ -260,7 +256,6 @@ export type TeamUncheckedCreateInput = {
   logo?: string | null
   matchesAsA?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamAInput
   matchesAsB?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamBInput
-  standings?: Prisma.StandingsUncheckedCreateNestedOneWithoutTeamInput
 }
 
 export type TeamUpdateInput = {
@@ -268,7 +263,6 @@ export type TeamUpdateInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchesAsA?: Prisma.MatchUpdateManyWithoutTeamANestedInput
   matchesAsB?: Prisma.MatchUpdateManyWithoutTeamBNestedInput
-  standings?: Prisma.StandingsUpdateOneWithoutTeamNestedInput
 }
 
 export type TeamUncheckedUpdateInput = {
@@ -277,7 +271,6 @@ export type TeamUncheckedUpdateInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchesAsA?: Prisma.MatchUncheckedUpdateManyWithoutTeamANestedInput
   matchesAsB?: Prisma.MatchUncheckedUpdateManyWithoutTeamBNestedInput
-  standings?: Prisma.StandingsUncheckedUpdateOneWithoutTeamNestedInput
 }
 
 export type TeamCreateManyInput = {
@@ -372,25 +365,10 @@ export type TeamUpdateOneRequiredWithoutMatchesAsBNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TeamUpdateToOneWithWhereWithoutMatchesAsBInput, Prisma.TeamUpdateWithoutMatchesAsBInput>, Prisma.TeamUncheckedUpdateWithoutMatchesAsBInput>
 }
 
-export type TeamCreateNestedOneWithoutStandingsInput = {
-  create?: Prisma.XOR<Prisma.TeamCreateWithoutStandingsInput, Prisma.TeamUncheckedCreateWithoutStandingsInput>
-  connectOrCreate?: Prisma.TeamCreateOrConnectWithoutStandingsInput
-  connect?: Prisma.TeamWhereUniqueInput
-}
-
-export type TeamUpdateOneRequiredWithoutStandingsNestedInput = {
-  create?: Prisma.XOR<Prisma.TeamCreateWithoutStandingsInput, Prisma.TeamUncheckedCreateWithoutStandingsInput>
-  connectOrCreate?: Prisma.TeamCreateOrConnectWithoutStandingsInput
-  upsert?: Prisma.TeamUpsertWithoutStandingsInput
-  connect?: Prisma.TeamWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.TeamUpdateToOneWithWhereWithoutStandingsInput, Prisma.TeamUpdateWithoutStandingsInput>, Prisma.TeamUncheckedUpdateWithoutStandingsInput>
-}
-
 export type TeamCreateWithoutMatchesAsAInput = {
   name: string
   logo?: string | null
   matchesAsB?: Prisma.MatchCreateNestedManyWithoutTeamBInput
-  standings?: Prisma.StandingsCreateNestedOneWithoutTeamInput
 }
 
 export type TeamUncheckedCreateWithoutMatchesAsAInput = {
@@ -398,7 +376,6 @@ export type TeamUncheckedCreateWithoutMatchesAsAInput = {
   name: string
   logo?: string | null
   matchesAsB?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamBInput
-  standings?: Prisma.StandingsUncheckedCreateNestedOneWithoutTeamInput
 }
 
 export type TeamCreateOrConnectWithoutMatchesAsAInput = {
@@ -410,7 +387,6 @@ export type TeamCreateWithoutMatchesAsBInput = {
   name: string
   logo?: string | null
   matchesAsA?: Prisma.MatchCreateNestedManyWithoutTeamAInput
-  standings?: Prisma.StandingsCreateNestedOneWithoutTeamInput
 }
 
 export type TeamUncheckedCreateWithoutMatchesAsBInput = {
@@ -418,7 +394,6 @@ export type TeamUncheckedCreateWithoutMatchesAsBInput = {
   name: string
   logo?: string | null
   matchesAsA?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamAInput
-  standings?: Prisma.StandingsUncheckedCreateNestedOneWithoutTeamInput
 }
 
 export type TeamCreateOrConnectWithoutMatchesAsBInput = {
@@ -441,7 +416,6 @@ export type TeamUpdateWithoutMatchesAsAInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchesAsB?: Prisma.MatchUpdateManyWithoutTeamBNestedInput
-  standings?: Prisma.StandingsUpdateOneWithoutTeamNestedInput
 }
 
 export type TeamUncheckedUpdateWithoutMatchesAsAInput = {
@@ -449,7 +423,6 @@ export type TeamUncheckedUpdateWithoutMatchesAsAInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchesAsB?: Prisma.MatchUncheckedUpdateManyWithoutTeamBNestedInput
-  standings?: Prisma.StandingsUncheckedUpdateOneWithoutTeamNestedInput
 }
 
 export type TeamUpsertWithoutMatchesAsBInput = {
@@ -467,7 +440,6 @@ export type TeamUpdateWithoutMatchesAsBInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchesAsA?: Prisma.MatchUpdateManyWithoutTeamANestedInput
-  standings?: Prisma.StandingsUpdateOneWithoutTeamNestedInput
 }
 
 export type TeamUncheckedUpdateWithoutMatchesAsBInput = {
@@ -475,53 +447,6 @@ export type TeamUncheckedUpdateWithoutMatchesAsBInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   matchesAsA?: Prisma.MatchUncheckedUpdateManyWithoutTeamANestedInput
-  standings?: Prisma.StandingsUncheckedUpdateOneWithoutTeamNestedInput
-}
-
-export type TeamCreateWithoutStandingsInput = {
-  name: string
-  logo?: string | null
-  matchesAsA?: Prisma.MatchCreateNestedManyWithoutTeamAInput
-  matchesAsB?: Prisma.MatchCreateNestedManyWithoutTeamBInput
-}
-
-export type TeamUncheckedCreateWithoutStandingsInput = {
-  id?: number
-  name: string
-  logo?: string | null
-  matchesAsA?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamAInput
-  matchesAsB?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamBInput
-}
-
-export type TeamCreateOrConnectWithoutStandingsInput = {
-  where: Prisma.TeamWhereUniqueInput
-  create: Prisma.XOR<Prisma.TeamCreateWithoutStandingsInput, Prisma.TeamUncheckedCreateWithoutStandingsInput>
-}
-
-export type TeamUpsertWithoutStandingsInput = {
-  update: Prisma.XOR<Prisma.TeamUpdateWithoutStandingsInput, Prisma.TeamUncheckedUpdateWithoutStandingsInput>
-  create: Prisma.XOR<Prisma.TeamCreateWithoutStandingsInput, Prisma.TeamUncheckedCreateWithoutStandingsInput>
-  where?: Prisma.TeamWhereInput
-}
-
-export type TeamUpdateToOneWithWhereWithoutStandingsInput = {
-  where?: Prisma.TeamWhereInput
-  data: Prisma.XOR<Prisma.TeamUpdateWithoutStandingsInput, Prisma.TeamUncheckedUpdateWithoutStandingsInput>
-}
-
-export type TeamUpdateWithoutStandingsInput = {
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  matchesAsA?: Prisma.MatchUpdateManyWithoutTeamANestedInput
-  matchesAsB?: Prisma.MatchUpdateManyWithoutTeamBNestedInput
-}
-
-export type TeamUncheckedUpdateWithoutStandingsInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  matchesAsA?: Prisma.MatchUncheckedUpdateManyWithoutTeamANestedInput
-  matchesAsB?: Prisma.MatchUncheckedUpdateManyWithoutTeamBNestedInput
 }
 
 
@@ -570,7 +495,6 @@ export type TeamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   logo?: boolean
   matchesAsA?: boolean | Prisma.Team$matchesAsAArgs<ExtArgs>
   matchesAsB?: boolean | Prisma.Team$matchesAsBArgs<ExtArgs>
-  standings?: boolean | Prisma.Team$standingsArgs<ExtArgs>
   _count?: boolean | Prisma.TeamCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["team"]>
 
@@ -596,7 +520,6 @@ export type TeamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type TeamInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   matchesAsA?: boolean | Prisma.Team$matchesAsAArgs<ExtArgs>
   matchesAsB?: boolean | Prisma.Team$matchesAsBArgs<ExtArgs>
-  standings?: boolean | Prisma.Team$standingsArgs<ExtArgs>
   _count?: boolean | Prisma.TeamCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TeamIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -607,7 +530,6 @@ export type $TeamPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     matchesAsA: Prisma.$MatchPayload<ExtArgs>[]
     matchesAsB: Prisma.$MatchPayload<ExtArgs>[]
-    standings: Prisma.$StandingsPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1009,7 +931,6 @@ export interface Prisma__TeamClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   matchesAsA<T extends Prisma.Team$matchesAsAArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Team$matchesAsAArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   matchesAsB<T extends Prisma.Team$matchesAsBArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Team$matchesAsBArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  standings<T extends Prisma.Team$standingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Team$standingsArgs<ExtArgs>>): Prisma.Prisma__StandingsClient<runtime.Types.Result.GetResult<Prisma.$StandingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1480,25 +1401,6 @@ export type Team$matchesAsBArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.MatchScalarFieldEnum | Prisma.MatchScalarFieldEnum[]
-}
-
-/**
- * Team.standings
- */
-export type Team$standingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Standings
-   */
-  select?: Prisma.StandingsSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Standings
-   */
-  omit?: Prisma.StandingsOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.StandingsInclude<ExtArgs> | null
-  where?: Prisma.StandingsWhereInput
 }
 
 /**

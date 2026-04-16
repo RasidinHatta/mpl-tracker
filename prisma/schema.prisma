@@ -20,7 +20,6 @@ model Team {
   // Relations
   matchesAsA   Match[]     @relation("TeamA")
   matchesAsB   Match[]     @relation("TeamB")
-  standings    Standings?
 }
 
 enum MatchFormat {
@@ -45,16 +44,4 @@ model Match {
   teamBResult     Int?
   teamAPrediction Int?
   teamBPrediction Int?
-}
-
-model Standings {
-  id            Int    @id @default(autoincrement())
-  teamId        Int    @unique
-  team          Team   @relation(fields: [teamId], references: [id])
-  
-  rank          Int
-  matchPoints   Int
-  matchWL       String 
-  netGameWin    Int
-  gameWL        String 
 }

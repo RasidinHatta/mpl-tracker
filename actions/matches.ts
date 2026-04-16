@@ -73,4 +73,5 @@ export async function updateMatch(id: number, data: { teamAResult?: number | nul
   });
 
   revalidatePath('/schedule');
+  revalidatePath('/standing');
 }

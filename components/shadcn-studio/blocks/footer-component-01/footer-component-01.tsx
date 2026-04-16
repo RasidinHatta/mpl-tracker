@@ -34,7 +34,7 @@ const Footer = () => {
         <p className='text-center font-medium text-muted-foreground text-balance'>
           {`© ${new Date().getFullYear()}`}{' '}
           <Link href='/' className='hover:underline text-foreground'>
-            Finance Tracker
+            MPL Tracker
           </Link>
           . Empowering your financial future.
         </p>

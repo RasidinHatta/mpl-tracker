@@ -52,8 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   Team: 'Team',
-  Match: 'Match',
-  Standings: 'Standings'
+  Match: 'Match'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -96,19 +95,6 @@ export const MatchScalarFieldEnum = {
 } as const
 
 export type MatchScalarFieldEnum = (typeof MatchScalarFieldEnum)[keyof typeof MatchScalarFieldEnum]
-
-
-export const StandingsScalarFieldEnum = {
-  id: 'id',
-  teamId: 'teamId',
-  rank: 'rank',
-  matchPoints: 'matchPoints',
-  matchWL: 'matchWL',
-  netGameWin: 'netGameWin',
-  gameWL: 'gameWL'
-} as const
-
-export type StandingsScalarFieldEnum = (typeof StandingsScalarFieldEnum)[keyof typeof StandingsScalarFieldEnum]
 
 
 export const SortOrder = {

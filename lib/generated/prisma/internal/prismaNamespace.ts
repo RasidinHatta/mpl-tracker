@@ -385,8 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   Team: 'Team',
-  Match: 'Match',
-  Standings: 'Standings'
+  Match: 'Match'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -402,7 +401,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "team" | "match" | "standings"
+    modelProps: "team" | "match"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -554,80 +553,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    Standings: {
-      payload: Prisma.$StandingsPayload<ExtArgs>
-      fields: Prisma.StandingsFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.StandingsFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StandingsPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.StandingsFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StandingsPayload>
-        }
-        findFirst: {
-          args: Prisma.StandingsFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StandingsPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.StandingsFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StandingsPayload>
-        }
-        findMany: {
-          args: Prisma.StandingsFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StandingsPayload>[]
-        }
-        create: {
-          args: Prisma.StandingsCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StandingsPayload>
-        }
-        createMany: {
-          args: Prisma.StandingsCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.StandingsCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StandingsPayload>[]
-        }
-        delete: {
-          args: Prisma.StandingsDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StandingsPayload>
-        }
-        update: {
-          args: Prisma.StandingsUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StandingsPayload>
-        }
-        deleteMany: {
-          args: Prisma.StandingsDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.StandingsUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.StandingsUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StandingsPayload>[]
-        }
-        upsert: {
-          args: Prisma.StandingsUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$StandingsPayload>
-        }
-        aggregate: {
-          args: Prisma.StandingsAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateStandings>
-        }
-        groupBy: {
-          args: Prisma.StandingsGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.StandingsGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.StandingsCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.StandingsCountAggregateOutputType> | number
-        }
-      }
-    }
   }
 } & {
   other: {
@@ -691,19 +616,6 @@ export const MatchScalarFieldEnum = {
 } as const
 
 export type MatchScalarFieldEnum = (typeof MatchScalarFieldEnum)[keyof typeof MatchScalarFieldEnum]
-
-
-export const StandingsScalarFieldEnum = {
-  id: 'id',
-  teamId: 'teamId',
-  rank: 'rank',
-  matchPoints: 'matchPoints',
-  matchWL: 'matchWL',
-  netGameWin: 'netGameWin',
-  gameWL: 'gameWL'
-} as const
-
-export type StandingsScalarFieldEnum = (typeof StandingsScalarFieldEnum)[keyof typeof StandingsScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -902,7 +814,6 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   team?: Prisma.TeamOmit
   match?: Prisma.MatchOmit
-  standings?: Prisma.StandingsOmit
 }
 
 /* Types for Logging */

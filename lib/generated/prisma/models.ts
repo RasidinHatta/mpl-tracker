@@ -10,5 +10,4 @@
  */
 export type * from './models/Team'
 export type * from './models/Match'
-export type * from './models/Standings'
 export type * from './commonInputTypes'
