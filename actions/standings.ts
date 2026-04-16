@@ -15,7 +15,7 @@ export type TeamStanding = {
   gameLosses: number;
 };
 
-export async function getStandings(): Promise<TeamStanding[]> {
+export async function getStandings(usePredictions: boolean = false, forecastWeek: number | null = null): Promise<TeamStanding[]> {
   const teams = await prisma.team.findMany({
     include: {
       matchesAsA: true,
@@ -31,20 +31,46 @@ export async function getStandings(): Promise<TeamStanding[]> {
 
     // Process matches where team is Team A
     for (const match of team.matchesAsA) {
-      if (match.teamAResult !== null && match.teamBResult !== null) {
-        gameWins += match.teamAResult;
-        gameLosses += match.teamBResult;
-        if (match.teamAResult > match.teamBResult) matchWins += 1;
+      let scoreA = match.teamAResult;
+      let scoreB = match.teamBResult;
+
+      // If no definitive result yet, and we are evaluating predictions
+      if (scoreA === null || scoreB === null) {
+        if (usePredictions && match.teamAPrediction !== null && match.teamBPrediction !== null) {
+          if (forecastWeek === null || match.week === forecastWeek) {
+            scoreA = match.teamAPrediction;
+            scoreB = match.teamBPrediction;
+          }
+        }
+      }
+
+      if (scoreA !== null && scoreB !== null) {
+        gameWins += scoreA;
+        gameLosses += scoreB;
+        if (scoreA > scoreB) matchWins += 1;
         else matchLosses += 1;
       }
     }
 
     // Process matches where team is Team B
     for (const match of team.matchesAsB) {
-      if (match.teamAResult !== null && match.teamBResult !== null) {
-        gameWins += match.teamBResult;
-        gameLosses += match.teamAResult;
-        if (match.teamBResult > match.teamAResult) matchWins += 1;
+      let scoreA = match.teamAResult;
+      let scoreB = match.teamBResult;
+
+      // If no definitive result yet, and we are evaluating predictions
+      if (scoreA === null || scoreB === null) {
+        if (usePredictions && match.teamAPrediction !== null && match.teamBPrediction !== null) {
+          if (forecastWeek === null || match.week === forecastWeek) {
+            scoreA = match.teamAPrediction;
+            scoreB = match.teamBPrediction;
+          }
+        }
+      }
+
+      if (scoreA !== null && scoreB !== null) {
+        gameWins += scoreB;
+        gameLosses += scoreA;
+        if (scoreB > scoreA) matchWins += 1;
         else matchLosses += 1;
       }
     }

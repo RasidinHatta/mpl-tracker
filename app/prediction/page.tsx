@@ -1,4 +1,12 @@
-import { PieChart } from "lucide-react";
+import React from "react";
+import { PieChart, Target, CheckCircle2, Trophy, BarChart3, TrendingUp, XCircle, Clock } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getPredictionStats } from "@/actions/predictions";
+import { getStandings } from "@/actions/standings";
+import { getMatchSchedule } from "@/actions/matches";
 
 export const metadata = {
   title: "MPL Tracker — Predictions",
@@ -6,6 +14,19 @@ export const metadata = {
 };
 
 export default async function PredictionPage() {
+  const stats = await getPredictionStats();
+  const weeklyMatches = await getMatchSchedule();
+  
+  let currentWeek = 0;
+  for (const week of weeklyMatches) {
+    if (week.matches.some(m => m.teamAResult !== null && m.teamBResult !== null)) {
+      currentWeek = Math.max(currentWeek, week.week);
+    }
+  }
+  const nextWeek = currentWeek + 1;
+
+  const predictedStandings = await getStandings(true, nextWeek);
+
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 pt-0">
       {/* Header */}
@@ -14,14 +35,228 @@ export default async function PredictionPage() {
           <h2 className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
             <PieChart size={16} /> Match Predictions
           </h2>
-          <h1 className="text-4xl font-bold tracking-tight">Predictions</h1>
+          <h1 className="text-4xl font-bold tracking-tight">Predictions Accuracy</h1>
         </div>
       </div>
 
       {/* Content */}
-      <div className="text-muted-foreground text-sm">
-        Predictions coming soon.
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Total Predictions</CardTitle>
+            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalMatches}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Matches with both result & prediction.
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Win Accuracy</CardTitle>
+            <Target className="h-4 w-4 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.accuracy.toFixed(1)}%</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              {stats.correctWinners} correct match winners.
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Exact Scores</CardTitle>
+            <CheckCircle2 className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.exactScores}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Perfectly guessed match scores.
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium">Perfect Accuracy</CardTitle>
+            <Trophy className="h-4 w-4 text-yellow-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.exactScoreAccuracy.toFixed(1)}%</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Percentage of exact score matches.
+            </p>
+          </CardContent>
+        </Card>
       </div>
+
+      <div className="grid gap-6 md:grid-cols-12 mt-2">
+        <Card className="md:col-span-4 flex flex-col">
+          <CardHeader>
+            <CardTitle>Accuracy Progress</CardTitle>
+            <CardDescription>Visual breakdown of your prediction performance.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-8 flex-1 justify-center flex flex-col">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-medium">Match Winner Accuracy</span>
+                <span className="font-bold">{stats.accuracy.toFixed(1)}%</span>
+              </div>
+              <Progress value={stats.accuracy} className="h-3 bg-muted" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="font-medium">Exact Score Accuracy</span>
+                <span className="font-bold">{stats.exactScoreAccuracy.toFixed(1)}%</span>
+              </div>
+              <Progress value={stats.exactScoreAccuracy} className="h-3 bg-muted [&>div]:bg-green-500" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="md:col-span-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><TrendingUp className="w-5 h-5 text-primary" /> Forecasted Standings (Week {nextWeek})</CardTitle>
+            <CardDescription>What the standings would look like if your Week {nextWeek} predictions come true.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="rounded-md border overflow-hidden shadow-sm">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted hover:bg-muted border-none">
+                    <TableHead className="text-foreground font-bold h-10 px-4 uppercase tracking-tight text-xs">Team</TableHead>
+                    <TableHead className="text-center text-red-600 dark:text-red-500 font-bold uppercase tracking-tight h-10 text-xs">Match Point</TableHead>
+                    <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">Match</TableHead>
+                    <TableHead className="text-center text-red-600 dark:text-red-500 font-bold uppercase tracking-tight h-10 text-xs">Net Game</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {predictedStandings.map((team) => (
+                    <TableRow key={team.teamId} className="hover:bg-muted/50 border-border transition-colors">
+                      <TableCell className="p-0 align-middle">
+                        <div className="flex items-center h-full">
+                          <div className="flex h-12 w-6 shrink-0 items-center justify-center bg-muted-foreground/20 text-foreground font-black text-lg mr-3">
+                            {team.rank}
+                          </div>
+                          <div className="flex items-center gap-2 py-1">
+                            <div className="h-6 w-6 shrink-0 overflow-hidden">
+                              {team.logo ? (
+                                <img src={team.logo} alt={team.teamName} className="h-full w-full object-contain" />
+                              ) : (
+                                <div className="h-full w-full flex items-center justify-center text-[10px] font-bold bg-muted">{team.teamName.slice(0, 2)}</div>
+                              )}
+                            </div>
+                            <span className="font-bold text-sm text-foreground uppercase tracking-tight">{team.teamName}</span>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center font-black text-red-600 dark:text-red-500 text-sm">{team.matchPoints}</TableCell>
+                      <TableCell className="text-center font-bold text-foreground text-sm tracking-tight">{team.matchWins} - {team.matchLosses}</TableCell>
+                      <TableCell className="text-center font-black text-red-600 dark:text-red-500 text-sm">{team.netGameWin}</TableCell>
+                    </TableRow>
+                  ))}
+                  {predictedStandings.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center py-8 text-muted-foreground font-semibold">
+                        No team standings available yet.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Weekly Predictions Breakdown */}
+      <Card className="mt-2">
+        <CardHeader>
+          <CardTitle>Prediction History</CardTitle>
+          <CardDescription>Track your predictive accuracy across every match by week.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {weeklyMatches.length > 0 ? (
+            <Tabs defaultValue={weeklyMatches[0].week.toString()} className="w-full">
+              <TabsList className="mb-4 flex flex-wrap h-auto">
+                {weeklyMatches.map((week) => (
+                  <TabsTrigger key={week.week} value={week.week.toString()}>
+                    Week {week.week}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+              
+              {weeklyMatches.map((week) => (
+                <TabsContent key={week.week} value={week.week.toString()}>
+                  <div className="rounded-md border overflow-hidden shadow-sm">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-muted hover:bg-muted border-none">
+                          <TableHead className="text-foreground font-bold h-10 px-4 text-xs tracking-wide">MATCHUP</TableHead>
+                          <TableHead className="text-center text-foreground font-bold h-10 px-4 text-xs tracking-wide">PREDICTION</TableHead>
+                          <TableHead className="text-center text-foreground font-bold h-10 px-4 text-xs tracking-wide">RESULT</TableHead>
+                          <TableHead className="text-center text-foreground font-bold h-10 px-4 text-xs tracking-wide w-[120px]">STATUS</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {week.matches.map((match) => {
+                          const hasPrediction = match.teamAPrediction !== null && match.teamBPrediction !== null;
+                          const hasResult = match.teamAResult !== null && match.teamBResult !== null;
+
+                          let statusIcon = <div className="text-xs font-semibold text-muted-foreground">NO PREDICTION</div>;
+                          if (hasPrediction && !hasResult) {
+                            statusIcon = <div className="flex items-center justify-center gap-1.5 text-xs font-semibold text-muted-foreground"><Clock className="w-3.5 h-3.5" /> PENDING</div>;
+                          } else if (hasPrediction && hasResult) {
+                            const predictedWinnerA = match.teamAPrediction! > match.teamBPrediction!;
+                            const actualWinnerA = match.teamAResult! > match.teamBResult!;
+                            const exact = match.teamAPrediction === match.teamAResult && match.teamBPrediction === match.teamBResult;
+
+                            if (exact) {
+                              statusIcon = <div className="flex items-center justify-center gap-1.5 text-xs text-green-500 font-bold"><CheckCircle2 className="w-4 h-4" /> EXACT</div>;
+                            } else if (predictedWinnerA === actualWinnerA) {
+                              statusIcon = <div className="flex items-center justify-center gap-1.5 text-xs text-primary font-bold"><Target className="w-4 h-4" /> WINNER</div>;
+                            } else {
+                              statusIcon = <div className="flex items-center justify-center gap-1.5 text-xs text-destructive font-bold"><XCircle className="w-4 h-4" /> WRONG</div>;
+                            }
+                          } else if (!hasPrediction && hasResult) {
+                            statusIcon = <div className="text-xs font-semibold text-muted-foreground/50">MISSED</div>;
+                          }
+
+                          return (
+                            <TableRow key={match.id} className="hover:bg-muted/10 transition-colors">
+                              <TableCell>
+                                <div className="flex items-center gap-3">
+                                  <span className="font-bold text-sm min-w-[50px] text-right">{match.teamA.name}</span>
+                                  <span className="text-muted-foreground/40 font-bold text-xs">vs</span>
+                                  <span className="font-bold text-sm min-w-[50px]">{match.teamB.name}</span>
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-center font-bold text-muted-foreground">
+                                {hasPrediction ? `${match.teamAPrediction} - ${match.teamBPrediction}` : "-"}
+                              </TableCell>
+                              <TableCell className="text-center font-bold text-foreground">
+                                {hasResult ? `${match.teamAResult} - ${match.teamBResult}` : "-"}
+                              </TableCell>
+                              <TableCell className="text-center">
+                                {statusIcon}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </TabsContent>
+              ))}
+            </Tabs>
+          ) : (
+            <div className="text-center py-8 text-muted-foreground font-semibold">
+              No match data available.
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
