@@ -36,6 +36,14 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
     }
   };
   const maxScore = getMaxScore(match.format);
+
+  const isMatchCompleted = match.teamAResult !== null && match.teamBResult !== null || (() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const matchDate = new Date(match.date);
+    matchDate.setHours(0, 0, 0, 0);
+    return today > matchDate;
+  })();
   
   const handleSave = async () => {
     try {
@@ -95,6 +103,7 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
                 max={maxScore}
                 className="w-20 text-center text-lg font-bold"
                 value={teamAPrediction}
+                disabled={isMatchCompleted}
                 onChange={(e) => setTeamAPrediction(e.target.value)}
               />
             </div>
@@ -111,6 +120,7 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
                 max={maxScore}
                 className="w-20 text-center text-lg font-bold"
                 value={teamBPrediction}
+                disabled={isMatchCompleted}
                 onChange={(e) => setTeamBPrediction(e.target.value)}
               />
             </div>
