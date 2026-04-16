@@ -2,6 +2,7 @@ import { Trophy } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getStandings } from "@/actions/standings";
+import { TeamAvatar } from "@/components/match-schedule";
 
 export const metadata = {
   title: "MPL Tracker — Standings",
@@ -50,12 +51,8 @@ export default async function StandingPage() {
                           {team.rank}
                         </div>
                         <div className="flex items-center gap-3">
-                          <div className="h-7 w-7 shrink-0 overflow-hidden">
-                            {team.logo ? (
-                              <img src={team.logo} alt={team.teamName} className="h-full w-full object-contain" />
-                            ) : (
-                              <div className="h-full w-full flex items-center justify-center text-[10px] font-bold bg-muted">{team.teamName.slice(0, 2)}</div>
-                            )}
+                          <div className="shrink-0">
+                            <TeamAvatar name={team.teamName} logo={team.logo} color="left" size="small" />
                           </div>
                           <span className="font-bold text-sm text-foreground uppercase tracking-tight">{team.teamName}</span>
                         </div>

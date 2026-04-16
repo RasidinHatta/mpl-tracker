@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getPredictionStats } from "@/actions/predictions";
 import { getStandings } from "@/actions/standings";
 import { getMatchSchedule } from "@/actions/matches";
+import { TeamAvatar } from "@/components/match-schedule";
 
 export const metadata = {
   title: "MPL Tracker — Predictions",
@@ -127,8 +128,9 @@ export default async function PredictionPage() {
                   <TableRow className="bg-muted hover:bg-muted border-none">
                     <TableHead className="text-foreground font-bold h-10 px-4 uppercase tracking-tight text-xs">Team</TableHead>
                     <TableHead className="text-center text-red-600 dark:text-red-500 font-bold uppercase tracking-tight h-10 text-xs">Match Point</TableHead>
-                    <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">Match</TableHead>
+                    <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">Match W-L</TableHead>
                     <TableHead className="text-center text-red-600 dark:text-red-500 font-bold uppercase tracking-tight h-10 text-xs">Net Game</TableHead>
+                    <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">Game W-L</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -139,13 +141,9 @@ export default async function PredictionPage() {
                           <div className="flex h-12 w-6 shrink-0 items-center justify-center bg-muted-foreground/20 text-foreground font-black text-lg mr-3">
                             {team.rank}
                           </div>
-                          <div className="flex items-center gap-2 py-1">
-                            <div className="h-6 w-6 shrink-0 overflow-hidden">
-                              {team.logo ? (
-                                <img src={team.logo} alt={team.teamName} className="h-full w-full object-contain" />
-                              ) : (
-                                <div className="h-full w-full flex items-center justify-center text-[10px] font-bold bg-muted">{team.teamName.slice(0, 2)}</div>
-                              )}
+                          <div className="flex items-center gap-3 py-1">
+                            <div className="shrink-0">
+                              <TeamAvatar name={team.teamName} logo={team.logo} color="left" size="small" />
                             </div>
                             <span className="font-bold text-sm text-foreground uppercase tracking-tight">{team.teamName}</span>
                           </div>
@@ -154,11 +152,12 @@ export default async function PredictionPage() {
                       <TableCell className="text-center font-black text-red-600 dark:text-red-500 text-sm">{team.matchPoints}</TableCell>
                       <TableCell className="text-center font-bold text-foreground text-sm tracking-tight">{team.matchWins} - {team.matchLosses}</TableCell>
                       <TableCell className="text-center font-black text-red-600 dark:text-red-500 text-sm">{team.netGameWin}</TableCell>
+                      <TableCell className="text-center font-bold text-foreground text-sm tracking-tight">{team.gameWins} - {team.gameLosses}</TableCell>
                     </TableRow>
                   ))}
                   {predictedStandings.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center py-8 text-muted-foreground font-semibold">
+                      <TableCell colSpan={5} className="text-center py-8 text-muted-foreground font-semibold">
                         No team standings available yet.
                       </TableCell>
                     </TableRow>
@@ -226,10 +225,16 @@ export default async function PredictionPage() {
                           return (
                             <TableRow key={match.id} className="hover:bg-muted/10 transition-colors">
                               <TableCell>
-                                <div className="flex items-center gap-3">
-                                  <span className="font-bold text-sm min-w-[50px] text-right">{match.teamA.name}</span>
-                                  <span className="text-muted-foreground/40 font-bold text-xs">vs</span>
-                                  <span className="font-bold text-sm min-w-[50px]">{match.teamB.name}</span>
+                                <div className="flex items-center gap-2 w-max">
+                                  <span className="font-bold text-sm min-w-[60px] text-right">{match.teamA.name}</span>
+                                  <div className="shrink-0">
+                                    <TeamAvatar name={match.teamA.name} logo={match.teamA.logo} color="left" size="small" />
+                                  </div>
+                                  <span className="text-muted-foreground/40 font-bold text-xs mx-1">vs</span>
+                                  <div className="shrink-0">
+                                    <TeamAvatar name={match.teamB.name} logo={match.teamB.logo} color="right" size="small" />
+                                  </div>
+                                  <span className="font-bold text-sm min-w-[60px]">{match.teamB.name}</span>
                                 </div>
                               </TableCell>
                               <TableCell className="text-center font-bold text-muted-foreground">

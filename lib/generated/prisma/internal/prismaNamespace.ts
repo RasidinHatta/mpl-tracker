@@ -606,13 +606,14 @@ export const MatchScalarFieldEnum = {
   week: 'week',
   day: 'day',
   date: 'date',
-  format: 'format',
   teamAId: 'teamAId',
   teamBId: 'teamBId',
-  teamAResult: 'teamAResult',
-  teamBResult: 'teamBResult',
   teamAPrediction: 'teamAPrediction',
-  teamBPrediction: 'teamBPrediction'
+  teamAResult: 'teamAResult',
+  teamBPrediction: 'teamBPrediction',
+  teamBResult: 'teamBResult',
+  format: 'format',
+  matchNo: 'matchNo'
 } as const
 
 export type MatchScalarFieldEnum = (typeof MatchScalarFieldEnum)[keyof typeof MatchScalarFieldEnum]

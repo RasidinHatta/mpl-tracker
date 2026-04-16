@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../lib/generated/prisma"
@@ -13,35 +8,32 @@ datasource db {
 }
 
 model Team {
-  id           Int         @id @default(autoincrement())
-  name         String      @unique
-  logo         String? 
-  
-  // Relations
-  matchesAsA   Match[]     @relation("TeamA")
-  matchesAsB   Match[]     @relation("TeamB")
+  id         Int     @id @default(autoincrement())
+  name       String  @unique
+  logo       String?
+  matchesAsA Match[] @relation("TeamA")
+  matchesAsB Match[] @relation("TeamB")
+}
+
+model Match {
+  id              Int         @id @default(autoincrement())
+  week            Int
+  day             Int
+  date            DateTime
+  teamAId         Int
+  teamBId         Int
+  teamAPrediction Int?
+  teamAResult     Int?
+  teamBPrediction Int?
+  teamBResult     Int?
+  format          MatchFormat @default(BO3)
+  matchNo         Int         @default(1)
+  teamA           Team        @relation("TeamA", fields: [teamAId], references: [id])
+  teamB           Team        @relation("TeamB", fields: [teamBId], references: [id])
 }
 
 enum MatchFormat {
   BO3
   BO5
   BO7
-}
-
-model Match {
-  id          Int      @id @default(autoincrement())
-  week        Int      
-  day         String   
-  date        DateTime
-  format      MatchFormat @default(BO3)
-  
-  teamAId     Int
-  teamBId     Int
-  teamA       Team     @relation("TeamA", fields: [teamAId], references: [id])
-  teamB       Team     @relation("TeamB", fields: [teamBId], references: [id])
-
-  teamAResult     Int?
-  teamBResult     Int?
-  teamAPrediction Int?
-  teamBPrediction Int?
 }

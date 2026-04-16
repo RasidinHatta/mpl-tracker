@@ -5,8 +5,9 @@ import prisma from "@/lib/prisma";
 export type MatchWithTeams = {
   id: number;
   week: number;
-  day: string;
+  day: number;
   date: Date;
+  matchNo: number;
   teamA: { id: number; name: string; logo: string | null };
   teamB: { id: number; name: string; logo: string | null };
   format: string;
@@ -27,7 +28,7 @@ export async function getMatchSchedule(): Promise<WeekSchedule[]> {
       teamA: true,
       teamB: true,
     },
-    orderBy: [{ week: "asc" }, { date: "asc" }],
+    orderBy: [{ week: "asc" }, { date: "asc" }, { matchNo: "asc" }],
   });
 
   // Group matches by week
@@ -43,6 +44,7 @@ export async function getMatchSchedule(): Promise<WeekSchedule[]> {
       week: match.week,
       day: match.day,
       date: match.date,
+      matchNo: match.matchNo,
       teamA: { id: match.teamA.id, name: match.teamA.name, logo: match.teamA.logo },
       teamB: { id: match.teamB.id, name: match.teamB.name, logo: match.teamB.logo },
       format: match.format,

@@ -66,13 +66,6 @@ export default async function SchedulePage() {
             </div>
           </div>
         </div>
-
-        {/* Filters / Quick Actions could go here */}
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className="cursor-pointer hover:bg-muted transition-colors">All Matches</Badge>
-          <Badge variant="outline" className="cursor-pointer hover:bg-muted transition-colors text-muted-foreground">Completed</Badge>
-          <Badge variant="outline" className="cursor-pointer hover:bg-muted transition-colors text-muted-foreground">Upcoming</Badge>
-        </div>
       </div>
 
       {/* Content */}

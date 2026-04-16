@@ -39,7 +39,7 @@ function isMatchCompleted(match: { teamAResult: number | null; teamBResult: numb
   return today > matchDate;
 }
 
-export function TeamAvatar({ name, logo, color }: { name: string; logo?: string | null; color: "left" | "right" }) {
+export function TeamAvatar({ name, logo, color, size = "large" }: { name: string; logo?: string | null; color: "left" | "right"; size?: "large" | "small" }) {
   const gradientClass = color === "left" 
     ? "from-primary/20 via-primary/10 to-transparent" 
     : "from-secondary/20 via-secondary/10 to-transparent";
@@ -48,12 +48,15 @@ export function TeamAvatar({ name, logo, color }: { name: string; logo?: string 
     ? "ring-primary/30 group-hover:ring-primary/50"
     : "ring-secondary/30 group-hover:ring-secondary/50";
 
+  const sizeClass = size === "large" ? "h-14 w-14 rounded-xl" : "h-8 w-8 rounded-[8px]";
+  const textClass = size === "large" ? "text-xl" : "text-xs";
+
   return (
-    <div className={`relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl bg-linear-to-br ${gradientClass} ring-1 ${ringClass} transition-all duration-300`}>
+    <div className={`relative flex ${sizeClass} items-center justify-center overflow-hidden bg-white bg-linear-to-br ${gradientClass} ring-1 ${ringClass} transition-all duration-300`}>
       {logo ? (
-        <img src={logo} alt={`${name} logo`} className="h-full w-full object-contain p-1" />
+        <img src={logo} alt={`${name} logo`} className="h-full w-full object-contain p-[2px]" />
       ) : (
-        <span className="text-xl font-bold text-foreground/90">
+        <span className={`${textClass} font-bold text-foreground/90`}>
           {name.slice(0, 2).toUpperCase()}
         </span>
       )}
@@ -68,7 +71,6 @@ function MatchCard({
 }) {
   const hasResult = match.teamAResult !== null && match.teamBResult !== null;
   const completed = isMatchCompleted(match);
-  const dateInfo = formatDate(match.date);
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -86,11 +88,7 @@ function MatchCard({
       <CardHeader className="relative pb-3 pt-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Calendar className="h-3.5 w-3.5" />
-            <span>{dateInfo.short}</span>
-            <span className="text-muted-foreground/30">•</span>
-            <Clock className="h-3.5 w-3.5" />
-            <span>{match.day}</span>
+            <span className="font-bold text-foreground">Match {match.matchNo}</span>
           </div>
           
           {completed ? (
@@ -141,7 +139,7 @@ function MatchCard({
         </div>
 
         {/* Prediction */}
-        {!hasResult && (match.teamAPrediction !== null || match.teamBPrediction !== null) && (
+        {(match.teamAPrediction !== null || match.teamBPrediction !== null) && (
           <div className="mt-4 flex items-center justify-center gap-2 rounded-lg bg-muted/60 px-3 py-2 text-xs">
             <TrendingUp className="h-3.5 w-3.5 text-muted-foreground" />
             <span className="text-muted-foreground">Prediction:</span>
@@ -272,7 +270,7 @@ export default function MatchSchedule({
                           {dateInfo.dayName}
                         </div>
                         <div>
-                          <h4 className="text-sm font-semibold">{dayName}</h4>
+                          <h4 className="text-sm font-semibold">Day {dayName}</h4>
                           <p className="text-xs text-muted-foreground">{dateInfo.full}</p>
                         </div>
                       </div>
