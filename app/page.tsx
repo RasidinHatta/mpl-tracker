@@ -1,7 +1,7 @@
 import { LayoutDashboard, Target, Trophy, CheckCircle2, ChevronRight, Calendar, Clock, Sword } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
+import { AnimatedProgress } from "@/components/animated-progress";
 import { getStandings } from "@/actions/standings";
 import { getMatchSchedule } from "@/actions/matches";
 import { getPredictionStats } from "@/actions/predictions";
@@ -174,14 +174,20 @@ export default async function DashboardPage() {
                     <span>Match Winners</span>
                     <span>{stats.correctWinners} / {stats.totalMatches}</span>
                   </div>
-                  <Progress value={stats.accuracy} className="h-2 bg-primary/20" />
+                  <AnimatedProgress 
+                    value={stats.accuracy} 
+                    className="**:data-[slot=progress-track]:h-2 **:data-[slot=progress-track]:bg-red-500/80 **:data-[slot=progress-indicator]:bg-green-500 **:data-[slot=progress-indicator]:transition-all **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out" 
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-xs font-semibold">
                     <span className="flex items-center gap-1 text-green-500"><CheckCircle2 className="w-3 h-3" /> Exact Scores</span>
                     <span>{stats.exactScores} / {stats.totalMatches}</span>
                   </div>
-                  <Progress value={stats.exactScoreAccuracy} className="h-2 bg-green-500/20 [&>div]:bg-green-500" />
+                  <AnimatedProgress 
+                    value={stats.exactScoreAccuracy} 
+                    className="**:data-[slot=progress-track]:h-2 **:data-[slot=progress-track]:bg-red-500/80 **:data-[slot=progress-indicator]:bg-green-500 **:data-[slot=progress-indicator]:transition-all **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out" 
+                  />
                 </div>
               </div>
             </CardContent>

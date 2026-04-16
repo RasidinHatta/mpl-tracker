@@ -11,7 +11,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { Card } from "@/components/ui/card"
-import { CalendarDays, LayoutDashboard, PieChartIcon, Trophy } from "lucide-react"
+import { CalendarDays, LayoutDashboard, PieChartIcon, Trophy, History } from "lucide-react"
 import { NavMain } from "./nav-main"
 
 
@@ -44,6 +44,12 @@ export function AppSidebar({ ...props }: AppSidebarProps) {
       url: "/prediction",
       icon: <PieChartIcon />,
       isActive: pathname.startsWith("/prediction"),
+    },
+    {
+      title: "History",
+      url: "/history",
+      icon: <History />,
+      isActive: pathname.startsWith("/history"),
     },
   ]
 
