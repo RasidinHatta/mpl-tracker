@@ -1,11 +1,12 @@
 "use client"
 
-import Logo from "@/assets/svg/logo"
+
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import Logo from "../shadcn-studio/logo"
 
 const data = {
   teams: [

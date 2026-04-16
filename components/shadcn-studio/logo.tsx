@@ -1,13 +1,13 @@
-import LogoSvg from '@/assets/svg/logo'
-
-// Util Imports
+import { Swords } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const Logo = ({ className }: { className?: string }) => {
   return (
-    <div className={cn('flex items-center gap-2.5', className)}>
-      <LogoSvg className='size-8.5' />
-      <span className='text-xl font-semibold'>MPL Tracker</span>
+    <div className={cn('flex items-center gap-2.5 group', className)}>
+      <div className="flex bg-primary text-primary-foreground p-1.5 rounded-md group-hover:bg-primary/90 transition-colors">
+        <Swords className='size-5' />
+      </div>
+      <span className='text-xl font-black tracking-tight'>MPL<span className="text-primary tracking-normal">Tracker</span></span>
     </div>
   )
 }

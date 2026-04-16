@@ -13,17 +13,17 @@ const Footer = () => {
         </a>
 
         <div className='flex flex-wrap items-center justify-center gap-5 whitespace-nowrap text-sm font-medium'>
-          <Link href='/about' className='opacity-80 transition-opacity duration-300 hover:opacity-100'>
-            About
+          <Link href='/' className='opacity-80 transition-opacity duration-300 hover:opacity-100'>
+            Dashboard
           </Link>
-          <Link href='/features' className='opacity-80 transition-opacity duration-300 hover:opacity-100'>
-            Features
+          <Link href='/schedule' className='opacity-80 transition-opacity duration-300 hover:opacity-100'>
+            Match Schedule
           </Link>
-          <Link href='/terms' className='opacity-80 transition-opacity duration-300 hover:opacity-100'>
-            Terms
+          <Link href='/standing' className='opacity-80 transition-opacity duration-300 hover:opacity-100'>
+            Standings
           </Link>
-          <Link href='/privacy' className='opacity-80 transition-opacity duration-300 hover:opacity-100'>
-            Privacy
+          <Link href='/prediction' className='opacity-80 transition-opacity duration-300 hover:opacity-100'>
+            Predictions
           </Link>
         </div>
       </div>
@@ -36,7 +36,7 @@ const Footer = () => {
           <Link href='/' className='hover:underline text-foreground'>
             MPL Tracker
           </Link>
-          . Empowering your financial future.
+          . The ultimate esports prediction tool.
         </p>
       </div>
     </footer>
