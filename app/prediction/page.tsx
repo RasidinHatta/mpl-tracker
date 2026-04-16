@@ -3,6 +3,7 @@ import { PieChart, Target, CheckCircle2, Trophy, BarChart3, TrendingUp, XCircle,
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
+import { AnimatedProgress } from "@/components/animated-progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getPredictionStats } from "@/actions/predictions";
 import { getStandings } from "@/actions/standings";
@@ -98,20 +99,69 @@ export default async function PredictionPage() {
             <CardTitle>Accuracy Progress</CardTitle>
             <CardDescription>Visual breakdown of your prediction performance.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-8 flex-1 justify-center flex flex-col">
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-medium">Match Winner Accuracy</span>
-                <span className="font-bold">{stats.accuracy.toFixed(1)}%</span>
-              </div>
-              <Progress value={stats.accuracy} className="h-3 bg-muted" />
+          <CardContent className="flex-1 flex flex-col">
+            {/* Weekly Performance Bar */}
+            <div className="space-y-3 mb-6 overflow-y-auto pr-2 max-h-[250px]">
+              {weeklyMatches.map((week) => (
+                <div key={week.week} className="flex items-center gap-3">
+                  <span className="text-xs font-semibold text-muted-foreground w-12 shrink-0">
+                    Week {week.week}
+                  </span>
+                  <div className="flex flex-1 gap-1 h-3">
+                    {week.matches.map((match) => {
+                      const hasPrediction = match.teamAPrediction !== null && match.teamBPrediction !== null;
+                      const hasResult = match.teamAResult !== null && match.teamBResult !== null;
+                      
+                      let bgColor = "bg-muted"; // No prediction
+                      if (hasPrediction && hasResult) {
+                        const predictedWinnerA = match.teamAPrediction! > match.teamBPrediction!;
+                        const actualWinnerA = match.teamAResult! > match.teamBResult!;
+                        // "if prediction true make the bar green"
+                        if (predictedWinnerA === actualWinnerA) {
+                          bgColor = "bg-green-500";
+                        } else {
+                          bgColor = "bg-destructive";
+                        }
+                      } else if (hasPrediction && !hasResult) {
+                        bgColor = "bg-primary/40"; // pending
+                      }
+
+                      return (
+                        <div
+                          key={match.id}
+                          className={`flex-1 rounded-sm ${bgColor}`}
+                          title={`${match.teamA.name} vs ${match.teamB.name}`}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-medium">Exact Score Accuracy</span>
-                <span className="font-bold">{stats.exactScoreAccuracy.toFixed(1)}%</span>
+
+            <div className="space-y-6 mt-auto">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium">Match Winner Accuracy</span>
+                  <span className="font-bold">{stats.accuracy.toFixed(1)}%</span>
+                </div>
+                <AnimatedProgress 
+                  value={stats.accuracy} 
+                  className="**:data-[slot=progress-track]:h-3 **:data-[slot=progress-track]:bg-red-500 **:data-[slot=progress-indicator]:bg-green-500 **:data-[slot=progress-indicator]:transition-all **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out" 
+                  title={`${stats.accuracy.toFixed(1)}% Correct, ${(100 - stats.accuracy).toFixed(1)}% Incorrect`}
+                />
               </div>
-              <Progress value={stats.exactScoreAccuracy} className="h-3 bg-muted [&>div]:bg-green-500" />
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-medium">Exact Score Accuracy</span>
+                  <span className="font-bold">{stats.exactScoreAccuracy.toFixed(1)}%</span>
+                </div>
+                <AnimatedProgress 
+                  value={stats.exactScoreAccuracy} 
+                  className="**:data-[slot=progress-track]:h-3 **:data-[slot=progress-track]:bg-red-500 **:data-[slot=progress-indicator]:bg-green-500 **:data-[slot=progress-indicator]:transition-all **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out" 
+                  title={`${stats.exactScoreAccuracy.toFixed(1)}% Correct, ${(100 - stats.exactScoreAccuracy).toFixed(1)}% Incorrect`}
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
