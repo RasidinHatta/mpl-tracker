@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { TeamAvatar } from "./match-schedule";
 import { useSession } from "@/lib/auth.client";
+import { UserRole } from "@/lib/generated/prisma/enums";
 
 export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
   const [open, setOpen] = useState(false);
@@ -28,7 +29,7 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
   const [teamBResult, setTeamBResult] = useState(match.teamBResult?.toString() || "");
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
-  const isAdmin = session?.user?.id === "rasidin";
+  const isAdmin = session?.user?.role === UserRole.ADMIN;
   
   const getMaxScore = (format: string) => {
     switch (format) {
@@ -48,7 +49,27 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
     return today > matchDate;
   })();
   
+  const isValidScore = (a: string, b: string) => {
+    if (!a && !b) return true; // both empty = clearing, allow
+    if (!a || !b) return true; // partial, allow (server handles nulls)
+    const scoreA = parseInt(a);
+    const scoreB = parseInt(b);
+    if (isNaN(scoreA) || isNaN(scoreB)) return false;
+    // One team must reach maxScore, the other must be strictly less
+    const winner = Math.max(scoreA, scoreB);
+    const loser = Math.min(scoreA, scoreB);
+    return winner === maxScore && loser < maxScore;
+  };
+
   const handleSave = async () => {
+    if (isAdmin && (teamAResult || teamBResult) && !isValidScore(teamAResult, teamBResult)) {
+      toast.error(`Invalid result: for ${match.format}, one team must reach ${maxScore} and the other must have fewer wins.`);
+      return;
+    }
+    if ((teamAPrediction || teamBPrediction) && !isValidScore(teamAPrediction, teamBPrediction)) {
+      toast.error(`Invalid prediction: for ${match.format}, one team must reach ${maxScore} and the other must have fewer wins.`);
+      return;
+    }
     try {
       setLoading(true);
       await updateMatch(match.id, {

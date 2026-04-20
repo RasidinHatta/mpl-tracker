@@ -88,8 +88,9 @@ export async function updateMatch(id: number, data: { teamAResult?: number | nul
     headers: await headers()
   });
   const userId = session?.user?.id;
+  const userRole = (session?.user as { role?: string } | undefined)?.role;
 
-  if (userId === "rasidin" && (data.teamAResult !== undefined || data.teamBResult !== undefined)) {
+  if (userRole === "ADMIN" && (data.teamAResult !== undefined || data.teamBResult !== undefined)) {
     await prisma.match.update({
       where: { id },
       data: {

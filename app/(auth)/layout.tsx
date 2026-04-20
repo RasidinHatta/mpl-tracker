@@ -6,15 +6,13 @@ export default function AuthLayout({
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {/* Visual / Branding side */}
-      <div className="relative hidden md:flex flex-col p-12 lg:col-span-2 overflow-hidden bg-zinc-950">
+      <div className="relative hidden md:flex flex-col p-12 lg:col-span-2 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2940&auto=format&fit=crop"
             alt="Esports Arena Background"
             className="h-full w-full object-cover opacity-50 transition-transform duration-1000 hover:scale-105"
           />
-          <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-black/90 backdrop-blur-[2px]" />
-          <div className="absolute inset-0 bg-linear-to-r from-transparent to-background/90 md:to-background" />
         </div>
 
         {/* Branding content */}
