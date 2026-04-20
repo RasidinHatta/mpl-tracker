@@ -13,19 +13,22 @@ import {
 import { Card } from "@/components/ui/card"
 import { CalendarDays, LayoutDashboard, PieChartIcon, Trophy, History } from "lucide-react"
 import { NavMain } from "./nav-main"
+import { NavUser } from "./nav-user"
 
 
-interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {}
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
+  user?: any;
+}
 
-export function AppSidebar({ ...props }: AppSidebarProps) {
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
   const pathname = usePathname()
 
   const navMain = [
     {
       title: "Dashboard",
-      url: "/",
+      url: "/dashboard",
       icon: <LayoutDashboard />,
-      isActive: pathname === "/",
+      isActive: pathname === "/dashboard",
     },
     {
       title: "Standing",
@@ -63,6 +66,7 @@ export function AppSidebar({ ...props }: AppSidebarProps) {
           <NavMain items={navMain} />
         </SidebarContent>
         <SidebarFooter>
+          {user && <NavUser user={user} />}
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>

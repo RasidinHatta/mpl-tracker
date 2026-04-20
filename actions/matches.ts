@@ -1,6 +1,8 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 
 export type MatchWithTeams = {
   id: number;
@@ -23,10 +25,20 @@ export type WeekSchedule = {
 };
 
 export async function getMatchSchedule(): Promise<WeekSchedule[]> {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+  const userId = session?.user?.id;
+
   const matches = await prisma.match.findMany({
     include: {
       teamA: true,
       teamB: true,
+      ...(userId ? {
+        predictions: {
+          where: { userId }
+        }
+      } : { predictions: false })
     },
     orderBy: [{ week: "asc" }, { date: "asc" }, { matchNo: "asc" }],
   });
@@ -39,6 +51,15 @@ export async function getMatchSchedule(): Promise<WeekSchedule[]> {
     if (!weekMap.has(week)) {
       weekMap.set(week, []);
     }
+    
+    // Check for user predictions
+    let preA = null;
+    let preB = null;
+    if (match.predictions && match.predictions.length > 0) {
+      preA = match.predictions[0].teamAPrediction;
+      preB = match.predictions[0].teamBPrediction;
+    }
+
     weekMap.get(week)!.push({
       id: match.id,
       week: match.week,
@@ -50,8 +71,8 @@ export async function getMatchSchedule(): Promise<WeekSchedule[]> {
       format: match.format,
       teamAResult: match.teamAResult,
       teamBResult: match.teamBResult,
-      teamAPrediction: match.teamAPrediction,
-      teamBPrediction: match.teamBPrediction,
+      teamAPrediction: preA,
+      teamBPrediction: preB,
     });
   }
 
@@ -63,17 +84,44 @@ export async function getMatchSchedule(): Promise<WeekSchedule[]> {
 
 export async function updateMatch(id: number, data: { teamAResult?: number | null; teamBResult?: number | null; teamAPrediction?: number | null; teamBPrediction?: number | null }) {
   const { revalidatePath } = await import("next/cache");
-  
-  await prisma.match.update({
-    where: { id },
-    data: {
-      teamAResult: data.teamAResult ?? null,
-      teamBResult: data.teamBResult ?? null,
-      teamAPrediction: data.teamAPrediction ?? null,
-      teamBPrediction: data.teamBPrediction ?? null,
-    },
+  const session = await auth.api.getSession({
+    headers: await headers()
   });
+  const userId = session?.user?.id;
+
+  if (data.teamAResult !== undefined || data.teamBResult !== undefined) {
+    // Ideally check admin permissions here
+    await prisma.match.update({
+      where: { id },
+      data: {
+        ...(data.teamAResult !== undefined && { teamAResult: data.teamAResult ?? null }),
+        ...(data.teamBResult !== undefined && { teamBResult: data.teamBResult ?? null }),
+      },
+    });
+  }
+  
+  if (userId && (data.teamAPrediction !== undefined || data.teamBPrediction !== undefined)) {
+    await prisma.userPrediction.upsert({
+      where: {
+        userId_matchId: {
+          userId,
+          matchId: id
+        }
+      },
+      update: {
+        ...(data.teamAPrediction !== undefined && { teamAPrediction: data.teamAPrediction ?? null }),
+        ...(data.teamBPrediction !== undefined && { teamBPrediction: data.teamBPrediction ?? null }),
+      },
+      create: {
+        userId,
+        matchId: id,
+        teamAPrediction: data.teamAPrediction ?? null,
+        teamBPrediction: data.teamBPrediction ?? null,
+      }
+    });
+  }
 
   revalidatePath('/schedule');
   revalidatePath('/standing');
+  revalidatePath('/prediction');
 }

@@ -4,7 +4,6 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/themes/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
-import ProtectedLayout from "@/components/layout/layout";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -39,9 +38,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ProtectedLayout>
-            {children}
-          </ProtectedLayout>
+          {children}
           <Toaster position="top-center" richColors />
         </ThemeProvider>
       </body>

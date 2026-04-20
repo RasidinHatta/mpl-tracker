@@ -1,6 +1,8 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 
 export type TeamStanding = {
   rank: number;
@@ -16,10 +18,23 @@ export type TeamStanding = {
 };
 
 export async function getStandings(usePredictions: boolean = false, forecastWeek: number | null = null): Promise<TeamStanding[]> {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+  const userId = session?.user?.id;
+
   const teams = await prisma.team.findMany({
     include: {
-      matchesAsA: true,
-      matchesAsB: true,
+      matchesAsA: {
+        include: {
+          ...(userId ? { predictions: { where: { userId } } } : {})
+        }
+      },
+      matchesAsB: {
+        include: {
+          ...(userId ? { predictions: { where: { userId } } } : {})
+        }
+      },
     },
   });
 
@@ -36,10 +51,14 @@ export async function getStandings(usePredictions: boolean = false, forecastWeek
 
       // If no definitive result yet, and we are evaluating predictions
       if (scoreA === null || scoreB === null) {
-        if (usePredictions && match.teamAPrediction !== null && match.teamBPrediction !== null) {
-          if (forecastWeek === null || match.week === forecastWeek) {
-            scoreA = match.teamAPrediction;
-            scoreB = match.teamBPrediction;
+        if (usePredictions && match.predictions && match.predictions.length > 0) {
+          const preA = match.predictions[0].teamAPrediction;
+          const preB = match.predictions[0].teamBPrediction;
+          if (preA !== null && preB !== null) {
+            if (forecastWeek === null || match.week === forecastWeek) {
+              scoreA = preA;
+              scoreB = preB;
+            }
           }
         }
       }
@@ -59,10 +78,14 @@ export async function getStandings(usePredictions: boolean = false, forecastWeek
 
       // If no definitive result yet, and we are evaluating predictions
       if (scoreA === null || scoreB === null) {
-        if (usePredictions && match.teamAPrediction !== null && match.teamBPrediction !== null) {
-          if (forecastWeek === null || match.week === forecastWeek) {
-            scoreA = match.teamAPrediction;
-            scoreB = match.teamBPrediction;
+        if (usePredictions && match.predictions && match.predictions.length > 0) {
+          const preA = match.predictions[0].teamAPrediction;
+          const preB = match.predictions[0].teamBPrediction;
+          if (preA !== null && preB !== null) {
+            if (forecastWeek === null || match.week === forecastWeek) {
+              scoreA = preA;
+              scoreB = preB;
+            }
           }
         }
       }

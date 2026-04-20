@@ -9,6 +9,14 @@
 * 🟢 You can import this file directly.
 */
 
+export const UserRole = {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+} as const
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
 export const MatchFormat = {
   BO3: 'BO3',
   BO5: 'BO5',

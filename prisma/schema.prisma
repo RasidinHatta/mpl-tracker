@@ -7,33 +7,155 @@ datasource db {
   provider = "postgresql"
 }
 
-model Team {
-  id         Int     @id @default(autoincrement())
-  name       String  @unique
-  logo       String?
-  matchesAsA Match[] @relation("TeamA")
-  matchesAsB Match[] @relation("TeamB")
-}
+// ═══════════════════════════════════════════════════════════════
+// ENUMS
+// ═══════════════════════════════════════════════════════════════
 
-model Match {
-  id              Int         @id @default(autoincrement())
-  week            Int
-  day             Int
-  date            DateTime
-  teamAId         Int
-  teamBId         Int
-  teamAPrediction Int?
-  teamAResult     Int?
-  teamBPrediction Int?
-  teamBResult     Int?
-  format          MatchFormat @default(BO3)
-  matchNo         Int         @default(1)
-  teamA           Team        @relation("TeamA", fields: [teamAId], references: [id])
-  teamB           Team        @relation("TeamB", fields: [teamBId], references: [id])
+enum UserRole {
+  USER
+  ADMIN
 }
 
 enum MatchFormat {
   BO3
   BO5
   BO7
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AUTHENTICATION & USER MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+
+model User {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name          String
+  email         String    @unique
+  emailVerified Boolean
+  image         String?
+  role          UserRole  @default(USER)
+  banned        Boolean?
+  banReason     String?
+  banExpires    DateTime?
+
+  // Relations
+  sessions    Session[]
+  accounts    Account[]
+  predictions UserPrediction[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  expiresAt      DateTime
+  token          String   @unique
+  ipAddress      String?
+  userAgent      String?
+  impersonatedBy String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Account {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("auth_accounts")
+}
+
+model Verification {
+  id        String    @id @default(uuid())
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  identifier String
+  value      String
+  expiresAt  DateTime
+
+  @@map("verifications")
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MATCH MANAGEMENT
+// ═══════════════════════════════════════════════════════════════
+
+model Team {
+  id   Int     @id @default(autoincrement())
+  name String  @unique
+  logo String?
+
+  matchesAsA Match[] @relation("TeamA")
+  matchesAsB Match[] @relation("TeamB")
+
+  @@map("teams")
+}
+
+model Match {
+  id      Int         @id @default(autoincrement())
+  week    Int
+  day     Int
+  date    DateTime
+  teamAId Int
+  teamBId Int
+  format  MatchFormat @default(BO3)
+  matchNo Int         @default(1)
+
+  // Actual results (set by admin)
+  teamAResult Int?
+  teamBResult Int?
+
+  teamA Team @relation("TeamA", fields: [teamAId], references: [id])
+  teamB Team @relation("TeamB", fields: [teamBId], references: [id])
+
+  predictions UserPrediction[]
+
+  @@index([week, day])
+  @@map("matches")
+}
+
+// ═══════════════════════════════════════════════════════════════
+// USER PREDICTIONS
+// ═══════════════════════════════════════════════════════════════
+
+model UserPrediction {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId  String
+  matchId Int
+
+  teamAPrediction Int?
+  teamBPrediction Int?
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, matchId]) // one prediction per user per match
+  @@index([userId])
+  @@index([matchId])
+  @@map("user_predictions")
 }
