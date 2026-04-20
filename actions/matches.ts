@@ -89,8 +89,7 @@ export async function updateMatch(id: number, data: { teamAResult?: number | nul
   });
   const userId = session?.user?.id;
 
-  if (data.teamAResult !== undefined || data.teamBResult !== undefined) {
-    // Ideally check admin permissions here
+  if (userId === "rasidin" && (data.teamAResult !== undefined || data.teamBResult !== undefined)) {
     await prisma.match.update({
       where: { id },
       data: {

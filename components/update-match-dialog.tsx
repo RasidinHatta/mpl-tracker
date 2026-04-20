@@ -18,6 +18,7 @@ import { ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { TeamAvatar } from "./match-schedule";
+import { useSession } from "@/lib/auth.client";
 
 export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
   const [open, setOpen] = useState(false);
@@ -26,6 +27,8 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
   const [teamAResult, setTeamAResult] = useState(match.teamAResult?.toString() || "");
   const [teamBResult, setTeamBResult] = useState(match.teamBResult?.toString() || "");
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
+  const isAdmin = session?.user?.id === "rasidin";
   
   const getMaxScore = (format: string) => {
     switch (format) {
@@ -127,34 +130,36 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
           </div>
 
           {/* Result Row */}
-          <div className="flex items-center justify-between gap-2 px-4 sm:px-8">
-            <div className="flex flex-1 items-center justify-center">
-              <Input
-                type="number"
-                min="0"
-                max={maxScore}
-                className="w-20 text-center text-lg font-bold"
-                value={teamAResult}
-                onChange={(e) => setTeamAResult(e.target.value)}
-              />
-            </div>
-            
-            <div className="flex w-28 flex-col items-center justify-center">
-              <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1">Result</span>
-              <span className="text-lg font-medium text-muted-foreground/50">-</span>
-            </div>
+          {isAdmin && (
+            <div className="flex items-center justify-between gap-2 px-4 sm:px-8">
+              <div className="flex flex-1 items-center justify-center">
+                <Input
+                  type="number"
+                  min="0"
+                  max={maxScore}
+                  className="w-20 text-center text-lg font-bold"
+                  value={teamAResult}
+                  onChange={(e) => setTeamAResult(e.target.value)}
+                />
+              </div>
+              
+              <div className="flex w-28 flex-col items-center justify-center">
+                <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1">Result</span>
+                <span className="text-lg font-medium text-muted-foreground/50">-</span>
+              </div>
 
-            <div className="flex flex-1 items-center justify-center">
-              <Input
-                type="number"
-                min="0"
-                max={maxScore}
-                className="w-20 text-center text-lg font-bold"
-                value={teamBResult}
-                onChange={(e) => setTeamBResult(e.target.value)}
-              />
+              <div className="flex flex-1 items-center justify-center">
+                <Input
+                  type="number"
+                  min="0"
+                  max={maxScore}
+                  className="w-20 text-center text-lg font-bold"
+                  value={teamBResult}
+                  onChange={(e) => setTeamBResult(e.target.value)}
+                />
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <DialogFooter>
           <Button type="submit" disabled={loading} onClick={handleSave}>
