@@ -142,7 +142,8 @@ export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[k
 export const TeamScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  logo: 'logo'
+  logo: 'logo',
+  group: 'group'
 } as const
 
 export type TeamScalarFieldEnum = (typeof TeamScalarFieldEnum)[keyof typeof TeamScalarFieldEnum]
@@ -156,6 +157,7 @@ export const MatchScalarFieldEnum = {
   teamAId: 'teamAId',
   teamBId: 'teamBId',
   format: 'format',
+  group: 'group',
   matchNo: 'matchNo',
   teamAResult: 'teamAResult',
   teamBResult: 'teamBResult'

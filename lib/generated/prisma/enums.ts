@@ -24,3 +24,12 @@ export const MatchFormat = {
 } as const
 
 export type MatchFormat = (typeof MatchFormat)[keyof typeof MatchFormat]
+
+
+export const MatchGroup = {
+  MPLID: 'MPLID',
+  MPLPH: 'MPLPH',
+  MPLMY: 'MPLMY'
+} as const
+
+export type MatchGroup = (typeof MatchGroup)[keyof typeof MatchGroup]

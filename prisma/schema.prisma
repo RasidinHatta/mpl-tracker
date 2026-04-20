@@ -22,6 +22,12 @@ enum MatchFormat {
   BO7
 }
 
+enum MatchGroup {
+  MPLID
+  MPLPH
+  MPLMY
+}
+
 // ═══════════════════════════════════════════════════════════════
 // AUTHENTICATION & USER MANAGEMENT
 // ═══════════════════════════════════════════════════════════════
@@ -103,9 +109,10 @@ model Verification {
 // ═══════════════════════════════════════════════════════════════
 
 model Team {
-  id   Int     @id @default(autoincrement())
-  name String  @unique
-  logo String?
+  id    Int        @id @default(autoincrement())
+  name  String     @unique
+  logo  String?
+  group MatchGroup @default(MPLID)
 
   matchesAsA Match[] @relation("TeamA")
   matchesAsB Match[] @relation("TeamB")
@@ -121,6 +128,7 @@ model Match {
   teamAId Int
   teamBId Int
   format  MatchFormat @default(BO3)
+  group   MatchGroup  @default(MPLID)
   matchNo Int         @default(1)
 
   // Actual results (set by admin)

@@ -1033,7 +1033,8 @@ export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[k
 export const TeamScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  logo: 'logo'
+  logo: 'logo',
+  group: 'group'
 } as const
 
 export type TeamScalarFieldEnum = (typeof TeamScalarFieldEnum)[keyof typeof TeamScalarFieldEnum]
@@ -1047,6 +1048,7 @@ export const MatchScalarFieldEnum = {
   teamAId: 'teamAId',
   teamBId: 'teamBId',
   format: 'format',
+  group: 'group',
   matchNo: 'matchNo',
   teamAResult: 'teamAResult',
   teamBResult: 'teamBResult'
@@ -1158,6 +1160,20 @@ export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'In
  * Reference to a field of type 'Int[]'
  */
 export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
+ * Reference to a field of type 'MatchGroup'
+ */
+export type EnumMatchGroupFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MatchGroup'>
+    
+
+
+/**
+ * Reference to a field of type 'MatchGroup[]'
+ */
+export type ListEnumMatchGroupFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MatchGroup[]'>
     
 
 

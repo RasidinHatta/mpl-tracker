@@ -56,6 +56,7 @@ export type MatchMinAggregateOutputType = {
   teamAId: number | null
   teamBId: number | null
   format: $Enums.MatchFormat | null
+  group: $Enums.MatchGroup | null
   matchNo: number | null
   teamAResult: number | null
   teamBResult: number | null
@@ -69,6 +70,7 @@ export type MatchMaxAggregateOutputType = {
   teamAId: number | null
   teamBId: number | null
   format: $Enums.MatchFormat | null
+  group: $Enums.MatchGroup | null
   matchNo: number | null
   teamAResult: number | null
   teamBResult: number | null
@@ -82,6 +84,7 @@ export type MatchCountAggregateOutputType = {
   teamAId: number
   teamBId: number
   format: number
+  group: number
   matchNo: number
   teamAResult: number
   teamBResult: number
@@ -119,6 +122,7 @@ export type MatchMinAggregateInputType = {
   teamAId?: true
   teamBId?: true
   format?: true
+  group?: true
   matchNo?: true
   teamAResult?: true
   teamBResult?: true
@@ -132,6 +136,7 @@ export type MatchMaxAggregateInputType = {
   teamAId?: true
   teamBId?: true
   format?: true
+  group?: true
   matchNo?: true
   teamAResult?: true
   teamBResult?: true
@@ -145,6 +150,7 @@ export type MatchCountAggregateInputType = {
   teamAId?: true
   teamBId?: true
   format?: true
+  group?: true
   matchNo?: true
   teamAResult?: true
   teamBResult?: true
@@ -245,6 +251,7 @@ export type MatchGroupByOutputType = {
   teamAId: number
   teamBId: number
   format: $Enums.MatchFormat
+  group: $Enums.MatchGroup
   matchNo: number
   teamAResult: number | null
   teamBResult: number | null
@@ -281,6 +288,7 @@ export type MatchWhereInput = {
   teamAId?: Prisma.IntFilter<"Match"> | number
   teamBId?: Prisma.IntFilter<"Match"> | number
   format?: Prisma.EnumMatchFormatFilter<"Match"> | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFilter<"Match"> | $Enums.MatchGroup
   matchNo?: Prisma.IntFilter<"Match"> | number
   teamAResult?: Prisma.IntNullableFilter<"Match"> | number | null
   teamBResult?: Prisma.IntNullableFilter<"Match"> | number | null
@@ -297,6 +305,7 @@ export type MatchOrderByWithRelationInput = {
   teamAId?: Prisma.SortOrder
   teamBId?: Prisma.SortOrder
   format?: Prisma.SortOrder
+  group?: Prisma.SortOrder
   matchNo?: Prisma.SortOrder
   teamAResult?: Prisma.SortOrderInput | Prisma.SortOrder
   teamBResult?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -316,6 +325,7 @@ export type MatchWhereUniqueInput = Prisma.AtLeast<{
   teamAId?: Prisma.IntFilter<"Match"> | number
   teamBId?: Prisma.IntFilter<"Match"> | number
   format?: Prisma.EnumMatchFormatFilter<"Match"> | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFilter<"Match"> | $Enums.MatchGroup
   matchNo?: Prisma.IntFilter<"Match"> | number
   teamAResult?: Prisma.IntNullableFilter<"Match"> | number | null
   teamBResult?: Prisma.IntNullableFilter<"Match"> | number | null
@@ -332,6 +342,7 @@ export type MatchOrderByWithAggregationInput = {
   teamAId?: Prisma.SortOrder
   teamBId?: Prisma.SortOrder
   format?: Prisma.SortOrder
+  group?: Prisma.SortOrder
   matchNo?: Prisma.SortOrder
   teamAResult?: Prisma.SortOrderInput | Prisma.SortOrder
   teamBResult?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -353,6 +364,7 @@ export type MatchScalarWhereWithAggregatesInput = {
   teamAId?: Prisma.IntWithAggregatesFilter<"Match"> | number
   teamBId?: Prisma.IntWithAggregatesFilter<"Match"> | number
   format?: Prisma.EnumMatchFormatWithAggregatesFilter<"Match"> | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupWithAggregatesFilter<"Match"> | $Enums.MatchGroup
   matchNo?: Prisma.IntWithAggregatesFilter<"Match"> | number
   teamAResult?: Prisma.IntNullableWithAggregatesFilter<"Match"> | number | null
   teamBResult?: Prisma.IntNullableWithAggregatesFilter<"Match"> | number | null
@@ -363,6 +375,7 @@ export type MatchCreateInput = {
   day: number
   date: Date | string
   format?: $Enums.MatchFormat
+  group?: $Enums.MatchGroup
   matchNo?: number
   teamAResult?: number | null
   teamBResult?: number | null
@@ -379,6 +392,7 @@ export type MatchUncheckedCreateInput = {
   teamAId: number
   teamBId: number
   format?: $Enums.MatchFormat
+  group?: $Enums.MatchGroup
   matchNo?: number
   teamAResult?: number | null
   teamBResult?: number | null
@@ -390,6 +404,7 @@ export type MatchUpdateInput = {
   day?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   format?: Prisma.EnumMatchFormatFieldUpdateOperationsInput | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchNo?: Prisma.IntFieldUpdateOperationsInput | number
   teamAResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   teamBResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -406,6 +421,7 @@ export type MatchUncheckedUpdateInput = {
   teamAId?: Prisma.IntFieldUpdateOperationsInput | number
   teamBId?: Prisma.IntFieldUpdateOperationsInput | number
   format?: Prisma.EnumMatchFormatFieldUpdateOperationsInput | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchNo?: Prisma.IntFieldUpdateOperationsInput | number
   teamAResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   teamBResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -420,6 +436,7 @@ export type MatchCreateManyInput = {
   teamAId: number
   teamBId: number
   format?: $Enums.MatchFormat
+  group?: $Enums.MatchGroup
   matchNo?: number
   teamAResult?: number | null
   teamBResult?: number | null
@@ -430,6 +447,7 @@ export type MatchUpdateManyMutationInput = {
   day?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   format?: Prisma.EnumMatchFormatFieldUpdateOperationsInput | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchNo?: Prisma.IntFieldUpdateOperationsInput | number
   teamAResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   teamBResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -443,6 +461,7 @@ export type MatchUncheckedUpdateManyInput = {
   teamAId?: Prisma.IntFieldUpdateOperationsInput | number
   teamBId?: Prisma.IntFieldUpdateOperationsInput | number
   format?: Prisma.EnumMatchFormatFieldUpdateOperationsInput | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchNo?: Prisma.IntFieldUpdateOperationsInput | number
   teamAResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   teamBResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -466,6 +485,7 @@ export type MatchCountOrderByAggregateInput = {
   teamAId?: Prisma.SortOrder
   teamBId?: Prisma.SortOrder
   format?: Prisma.SortOrder
+  group?: Prisma.SortOrder
   matchNo?: Prisma.SortOrder
   teamAResult?: Prisma.SortOrder
   teamBResult?: Prisma.SortOrder
@@ -490,6 +510,7 @@ export type MatchMaxOrderByAggregateInput = {
   teamAId?: Prisma.SortOrder
   teamBId?: Prisma.SortOrder
   format?: Prisma.SortOrder
+  group?: Prisma.SortOrder
   matchNo?: Prisma.SortOrder
   teamAResult?: Prisma.SortOrder
   teamBResult?: Prisma.SortOrder
@@ -503,6 +524,7 @@ export type MatchMinOrderByAggregateInput = {
   teamAId?: Prisma.SortOrder
   teamBId?: Prisma.SortOrder
   format?: Prisma.SortOrder
+  group?: Prisma.SortOrder
   matchNo?: Prisma.SortOrder
   teamAResult?: Prisma.SortOrder
   teamBResult?: Prisma.SortOrder
@@ -639,6 +661,7 @@ export type MatchCreateWithoutTeamAInput = {
   day: number
   date: Date | string
   format?: $Enums.MatchFormat
+  group?: $Enums.MatchGroup
   matchNo?: number
   teamAResult?: number | null
   teamBResult?: number | null
@@ -653,6 +676,7 @@ export type MatchUncheckedCreateWithoutTeamAInput = {
   date: Date | string
   teamBId: number
   format?: $Enums.MatchFormat
+  group?: $Enums.MatchGroup
   matchNo?: number
   teamAResult?: number | null
   teamBResult?: number | null
@@ -674,6 +698,7 @@ export type MatchCreateWithoutTeamBInput = {
   day: number
   date: Date | string
   format?: $Enums.MatchFormat
+  group?: $Enums.MatchGroup
   matchNo?: number
   teamAResult?: number | null
   teamBResult?: number | null
@@ -688,6 +713,7 @@ export type MatchUncheckedCreateWithoutTeamBInput = {
   date: Date | string
   teamAId: number
   format?: $Enums.MatchFormat
+  group?: $Enums.MatchGroup
   matchNo?: number
   teamAResult?: number | null
   teamBResult?: number | null
@@ -731,6 +757,7 @@ export type MatchScalarWhereInput = {
   teamAId?: Prisma.IntFilter<"Match"> | number
   teamBId?: Prisma.IntFilter<"Match"> | number
   format?: Prisma.EnumMatchFormatFilter<"Match"> | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFilter<"Match"> | $Enums.MatchGroup
   matchNo?: Prisma.IntFilter<"Match"> | number
   teamAResult?: Prisma.IntNullableFilter<"Match"> | number | null
   teamBResult?: Prisma.IntNullableFilter<"Match"> | number | null
@@ -757,6 +784,7 @@ export type MatchCreateWithoutPredictionsInput = {
   day: number
   date: Date | string
   format?: $Enums.MatchFormat
+  group?: $Enums.MatchGroup
   matchNo?: number
   teamAResult?: number | null
   teamBResult?: number | null
@@ -772,6 +800,7 @@ export type MatchUncheckedCreateWithoutPredictionsInput = {
   teamAId: number
   teamBId: number
   format?: $Enums.MatchFormat
+  group?: $Enums.MatchGroup
   matchNo?: number
   teamAResult?: number | null
   teamBResult?: number | null
@@ -798,6 +827,7 @@ export type MatchUpdateWithoutPredictionsInput = {
   day?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   format?: Prisma.EnumMatchFormatFieldUpdateOperationsInput | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchNo?: Prisma.IntFieldUpdateOperationsInput | number
   teamAResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   teamBResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -813,6 +843,7 @@ export type MatchUncheckedUpdateWithoutPredictionsInput = {
   teamAId?: Prisma.IntFieldUpdateOperationsInput | number
   teamBId?: Prisma.IntFieldUpdateOperationsInput | number
   format?: Prisma.EnumMatchFormatFieldUpdateOperationsInput | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchNo?: Prisma.IntFieldUpdateOperationsInput | number
   teamAResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   teamBResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -825,6 +856,7 @@ export type MatchCreateManyTeamAInput = {
   date: Date | string
   teamBId: number
   format?: $Enums.MatchFormat
+  group?: $Enums.MatchGroup
   matchNo?: number
   teamAResult?: number | null
   teamBResult?: number | null
@@ -837,6 +869,7 @@ export type MatchCreateManyTeamBInput = {
   date: Date | string
   teamAId: number
   format?: $Enums.MatchFormat
+  group?: $Enums.MatchGroup
   matchNo?: number
   teamAResult?: number | null
   teamBResult?: number | null
@@ -847,6 +880,7 @@ export type MatchUpdateWithoutTeamAInput = {
   day?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   format?: Prisma.EnumMatchFormatFieldUpdateOperationsInput | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchNo?: Prisma.IntFieldUpdateOperationsInput | number
   teamAResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   teamBResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -861,6 +895,7 @@ export type MatchUncheckedUpdateWithoutTeamAInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teamBId?: Prisma.IntFieldUpdateOperationsInput | number
   format?: Prisma.EnumMatchFormatFieldUpdateOperationsInput | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchNo?: Prisma.IntFieldUpdateOperationsInput | number
   teamAResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   teamBResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -874,6 +909,7 @@ export type MatchUncheckedUpdateManyWithoutTeamAInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teamBId?: Prisma.IntFieldUpdateOperationsInput | number
   format?: Prisma.EnumMatchFormatFieldUpdateOperationsInput | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchNo?: Prisma.IntFieldUpdateOperationsInput | number
   teamAResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   teamBResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -884,6 +920,7 @@ export type MatchUpdateWithoutTeamBInput = {
   day?: Prisma.IntFieldUpdateOperationsInput | number
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   format?: Prisma.EnumMatchFormatFieldUpdateOperationsInput | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchNo?: Prisma.IntFieldUpdateOperationsInput | number
   teamAResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   teamBResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -898,6 +935,7 @@ export type MatchUncheckedUpdateWithoutTeamBInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teamAId?: Prisma.IntFieldUpdateOperationsInput | number
   format?: Prisma.EnumMatchFormatFieldUpdateOperationsInput | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchNo?: Prisma.IntFieldUpdateOperationsInput | number
   teamAResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   teamBResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -911,6 +949,7 @@ export type MatchUncheckedUpdateManyWithoutTeamBInput = {
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   teamAId?: Prisma.IntFieldUpdateOperationsInput | number
   format?: Prisma.EnumMatchFormatFieldUpdateOperationsInput | $Enums.MatchFormat
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchNo?: Prisma.IntFieldUpdateOperationsInput | number
   teamAResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   teamBResult?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -955,6 +994,7 @@ export type MatchSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   teamAId?: boolean
   teamBId?: boolean
   format?: boolean
+  group?: boolean
   matchNo?: boolean
   teamAResult?: boolean
   teamBResult?: boolean
@@ -972,6 +1012,7 @@ export type MatchSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   teamAId?: boolean
   teamBId?: boolean
   format?: boolean
+  group?: boolean
   matchNo?: boolean
   teamAResult?: boolean
   teamBResult?: boolean
@@ -987,6 +1028,7 @@ export type MatchSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   teamAId?: boolean
   teamBId?: boolean
   format?: boolean
+  group?: boolean
   matchNo?: boolean
   teamAResult?: boolean
   teamBResult?: boolean
@@ -1002,12 +1044,13 @@ export type MatchSelectScalar = {
   teamAId?: boolean
   teamBId?: boolean
   format?: boolean
+  group?: boolean
   matchNo?: boolean
   teamAResult?: boolean
   teamBResult?: boolean
 }
 
-export type MatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "week" | "day" | "date" | "teamAId" | "teamBId" | "format" | "matchNo" | "teamAResult" | "teamBResult", ExtArgs["result"]["match"]>
+export type MatchOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "week" | "day" | "date" | "teamAId" | "teamBId" | "format" | "group" | "matchNo" | "teamAResult" | "teamBResult", ExtArgs["result"]["match"]>
 export type MatchInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   teamA?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
   teamB?: boolean | Prisma.TeamDefaultArgs<ExtArgs>
@@ -1038,6 +1081,7 @@ export type $MatchPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     teamAId: number
     teamBId: number
     format: $Enums.MatchFormat
+    group: $Enums.MatchGroup
     matchNo: number
     teamAResult: number | null
     teamBResult: number | null
@@ -1474,6 +1518,7 @@ export interface MatchFieldRefs {
   readonly teamAId: Prisma.FieldRef<"Match", 'Int'>
   readonly teamBId: Prisma.FieldRef<"Match", 'Int'>
   readonly format: Prisma.FieldRef<"Match", 'MatchFormat'>
+  readonly group: Prisma.FieldRef<"Match", 'MatchGroup'>
   readonly matchNo: Prisma.FieldRef<"Match", 'Int'>
   readonly teamAResult: Prisma.FieldRef<"Match", 'Int'>
   readonly teamBResult: Prisma.FieldRef<"Match", 'Int'>
