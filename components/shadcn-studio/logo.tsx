@@ -7,7 +7,6 @@ const Logo = ({ className }: { className?: string }) => {
       <div className="flex bg-primary text-primary-foreground p-1.5 rounded-md group-hover:bg-primary/90 transition-colors">
         <Swords className='size-5' />
       </div>
-      <span className='text-xl font-black tracking-tight'>MPL<span className="text-primary tracking-normal">Tracker</span></span>
     </div>
   )
 }

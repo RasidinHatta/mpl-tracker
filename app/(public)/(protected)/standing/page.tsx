@@ -3,14 +3,26 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getStandings } from "@/actions/standings";
 import { TeamAvatar } from "@/components/match-schedule";
+import { MatchGroup } from "@/lib/generated/prisma/enums";
+import { AddTeamDialog } from "@/components/add-team-dialog";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 
 export const metadata = {
   title: "MPL Tracker — Standings",
   description: "View current MPL team standings and rankings.",
 };
 
-export default async function StandingPage() {
-  const standings = await getStandings();
+export default async function StandingPage(props: { searchParams?: Promise<{ group?: string }> }) {
+  const searchParams = await props.searchParams;
+  const groupParam = searchParams?.group as MatchGroup | undefined;
+  const group = groupParam || MatchGroup.MPLID;
+  const standings = await getStandings(false, null, groupParam);
+
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+  const isAdmin = session?.user?.role === "ADMIN";
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 pt-0">
@@ -22,6 +34,12 @@ export default async function StandingPage() {
           </h2>
           <h1 className="text-4xl font-bold tracking-tight">Standings</h1>
         </div>
+        
+        {isAdmin && (
+          <div className="pt-2 shrink-0 self-start md:self-auto">
+            <AddTeamDialog group={group} />
+          </div>
+        )}
       </div>
 
       {/* Content */}

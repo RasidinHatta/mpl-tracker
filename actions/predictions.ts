@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 
+import { MatchGroup } from "@/lib/generated/prisma/enums";
+
 export type PredictionStats = {
   totalMatches: number;
   correctWinners: number;
@@ -12,7 +14,7 @@ export type PredictionStats = {
   exactScoreAccuracy: number;
 };
 
-export async function getPredictionStats(): Promise<PredictionStats> {
+export async function getPredictionStats(group?: MatchGroup): Promise<PredictionStats> {
   const session = await auth.api.getSession({
     headers: await headers()
   });
@@ -32,6 +34,7 @@ export async function getPredictionStats(): Promise<PredictionStats> {
     where: {
       teamAResult: { not: null },
       teamBResult: { not: null },
+      group: group ? group : undefined,
       predictions: {
         some: {
           userId,

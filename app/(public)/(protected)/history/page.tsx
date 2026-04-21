@@ -2,14 +2,19 @@ import prisma from "@/lib/prisma";
 import { History } from "lucide-react";
 import { TeamAvatar } from "@/components/match-schedule";
 import { HistoryMatrix } from "@/components/history-matrix";
+import { MatchGroup } from "@/lib/generated/prisma/enums";
 
 export const metadata = {
   title: "MPL Tracker — Match History",
   description: "Cross-table matrix of all team head-to-head match history.",
 };
 
-export default async function HistoryPage() {
+export default async function HistoryPage(props: { searchParams?: Promise<{ group?: string }> }) {
+  const searchParams = await props.searchParams;
+  const group = searchParams?.group as MatchGroup | undefined;
+
   const teams = await prisma.team.findMany({
+    where: group ? { group } : undefined,
     orderBy: { name: "asc" },
   });
 
@@ -17,6 +22,7 @@ export default async function HistoryPage() {
     where: {
       teamAResult: { not: null },
       teamBResult: { not: null },
+      group: group ? group : undefined,
     },
     orderBy: [{ week: "asc" }, { date: "asc" }],
   });

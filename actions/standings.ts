@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 
+import { MatchGroup } from "@/lib/generated/prisma/enums";
+
 export type TeamStanding = {
   rank: number;
   teamId: number;
@@ -17,13 +19,14 @@ export type TeamStanding = {
   gameLosses: number;
 };
 
-export async function getStandings(usePredictions: boolean = false, forecastWeek: number | null = null): Promise<TeamStanding[]> {
+export async function getStandings(usePredictions: boolean = false, forecastWeek: number | null = null, group?: MatchGroup): Promise<TeamStanding[]> {
   const session = await auth.api.getSession({
     headers: await headers()
   });
   const userId = session?.user?.id;
 
   const teams = await prisma.team.findMany({
+    where: group ? { group } : undefined,
     include: {
       matchesAsA: {
         include: {

@@ -8,6 +8,7 @@ import { getPredictionStats } from "@/actions/predictions";
 import { TeamAvatar } from "@/components/match-schedule";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { MatchGroup } from "@/lib/generated/prisma/enums";
 
 export const metadata = {
   title: "MPL Tracker — Dashboard",
@@ -19,14 +20,18 @@ function formatDateShort(date: Date) {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage(props: { searchParams?: Promise<{ group?: string }> }) {
+  const searchParams = await props.searchParams;
+  const group = searchParams?.group as MatchGroup | undefined;
+
   const [schedule, standings, stats] = await Promise.all([
-    getMatchSchedule(),
-    getStandings(),
-    getPredictionStats(),
+    getMatchSchedule(group),
+    getStandings(false, null, group),
+    getPredictionStats(group),
   ]);
 
   const allMatches = schedule.flatMap((w) => w.matches);
+  const matchGroup = group || allMatches[0]?.group || "";
   const completedMatches = allMatches.filter((m) => m.teamAResult !== null && m.teamBResult !== null);
   const upcomingMatches = allMatches.filter((m) => m.teamAResult === null || m.teamBResult === null);
   
@@ -42,7 +47,7 @@ export default async function DashboardPage() {
           <h2 className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
             <LayoutDashboard size={16} /> Overview
           </h2>
-          <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
+          <h1 className="text-4xl font-bold tracking-tight">Dashboard{matchGroup ? ` - ${matchGroup}` : ""}</h1>
         </div>
       </div>
 
@@ -57,7 +62,7 @@ export default async function DashboardPage() {
               <h3 className="text-lg font-bold flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-primary" /> Next Up
               </h3>
-              <Link href="/schedule">
+              <Link href={`/schedule${matchGroup ? `?group=${matchGroup}` : ''}`}>
                 <Button variant="ghost" size="sm" className="text-xs">
                   View Full Schedule <ChevronRight className="w-3 h-3 ml-1" />
                 </Button>
@@ -98,7 +103,7 @@ export default async function DashboardPage() {
                             Predicted: {match.teamAPrediction} - {match.teamBPrediction}
                           </Badge>
                         ) : (
-                          <Link href="/schedule">
+                          <Link href={`/schedule${matchGroup ? `?group=${matchGroup}` : ''}`}>
                             <Badge variant="secondary" className="text-[10px] hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">
                               + Add Prediction
                             </Badge>
@@ -226,7 +231,7 @@ export default async function DashboardPage() {
                 ))}
               </div>
               <div className="mt-6">
-                <Link href="/standing">
+                <Link href={`/standing${matchGroup ? `?group=${matchGroup}` : ''}`}>
                   <Button variant="outline" className="w-full text-xs" size="sm">
                     View Full Standings
                   </Button>

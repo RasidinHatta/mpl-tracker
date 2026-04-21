@@ -28,6 +28,7 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
   const [teamAResult, setTeamAResult] = useState(match.teamAResult?.toString() || "");
   const [teamBResult, setTeamBResult] = useState(match.teamBResult?.toString() || "");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === UserRole.ADMIN;
   
@@ -80,6 +81,7 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
       });
       toast.success("Match updated successfully");
       setOpen(false);
+      router.refresh();
     } catch (error) {
       toast.error("Failed to update match");
     } finally {

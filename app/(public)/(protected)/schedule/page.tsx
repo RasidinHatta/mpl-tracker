@@ -1,7 +1,11 @@
-import { getMatchSchedule } from "@/actions/matches";
+import { getMatchSchedule, getTeams } from "@/actions/matches";
 import MatchSchedule from "@/components/match-schedule";
+import { AddMatchDialog } from "@/components/add-match-dialog";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 import { CalendarDays, Trophy, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { MatchGroup } from "@/lib/generated/prisma/enums";
 
 export const metadata = {
   title: "MPL Tracker — Match Schedule",
@@ -9,8 +13,17 @@ export const metadata = {
     "Track MPL match schedules, results, and predictions week by week.",
 };
 
-export default async function SchedulePage() {
-  const schedule = await getMatchSchedule();
+export default async function SchedulePage(props: { searchParams?: Promise<{ group?: string }> }) {
+  const searchParams = await props.searchParams;
+  const groupParam = searchParams?.group as MatchGroup | undefined;
+  const group = groupParam || MatchGroup.MPLID; // Use default if none selected
+  const schedule = await getMatchSchedule(groupParam);
+  const teams = await getTeams(groupParam);
+
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+  const isAdmin = session?.user?.role === "ADMIN";
 
   // Calculate stats
   const totalMatches = schedule.reduce((acc, week) => acc + week.matches.length, 0);
@@ -42,6 +55,11 @@ export default async function SchedulePage() {
             <p className="text-muted-foreground max-w-lg">
               Track all MPL matches, view results, and check predictions for the current season.
             </p>
+            {isAdmin && (
+              <div className="pt-2">
+                <AddMatchDialog teams={teams} group={group} />
+              </div>
+            )}
           </div>
 
           {/* Quick Stats */}

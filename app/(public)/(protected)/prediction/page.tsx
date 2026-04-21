@@ -9,15 +9,19 @@ import { getPredictionStats } from "@/actions/predictions";
 import { getStandings } from "@/actions/standings";
 import { getMatchSchedule } from "@/actions/matches";
 import { TeamAvatar } from "@/components/match-schedule";
+import { MatchGroup } from "@/lib/generated/prisma/enums";
 
 export const metadata = {
   title: "MPL Tracker — Predictions",
   description: "Make your match predictions and track your accuracy.",
 };
 
-export default async function PredictionPage() {
-  const stats = await getPredictionStats();
-  const weeklyMatches = await getMatchSchedule();
+export default async function PredictionPage(props: { searchParams?: Promise<{ group?: string }> }) {
+  const searchParams = await props.searchParams;
+  const group = searchParams?.group as MatchGroup | undefined;
+
+  const stats = await getPredictionStats(group);
+  const weeklyMatches = await getMatchSchedule(group);
   
   let currentWeek = 0;
   for (const week of weeklyMatches) {
@@ -27,7 +31,7 @@ export default async function PredictionPage() {
   }
   const nextWeek = currentWeek + 1;
 
-  const predictedStandings = await getStandings(true, nextWeek);
+  const predictedStandings = await getStandings(true, nextWeek, group);
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 pt-0">

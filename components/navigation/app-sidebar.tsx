@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { usePathname } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 import { TeamSwitcher } from "@/components/navigation/team-switcher"
 import {
   Sidebar,
@@ -22,35 +22,43 @@ interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const currentGroupId = searchParams.get("group") ?? "MPLID"
+
+  const createUrl = (base: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+    params.set("group", currentGroupId)
+    return `${base}?${params.toString()}`
+  }
 
   const navMain = [
     {
       title: "Dashboard",
-      url: "/dashboard",
+      url: createUrl("/dashboard"),
       icon: <LayoutDashboard />,
       isActive: pathname === "/dashboard",
     },
     {
       title: "Standing",
-      url: "/standing",
+      url: createUrl("/standing"),
       icon: <Trophy />,
       isActive: pathname.startsWith("/standing"),
     },
     {
       title: "Schedule",
-      url: "/schedule",
+      url: createUrl("/schedule"),
       icon: <CalendarDays />,
       isActive: pathname.startsWith("/schedule"),
     },
     {
       title: "Prediction",
-      url: "/prediction",
+      url: createUrl("/prediction"),
       icon: <PieChartIcon />,
       isActive: pathname.startsWith("/prediction"),
     },
     {
       title: "History",
-      url: "/history",
+      url: createUrl("/history"),
       icon: <History />,
       isActive: pathname.startsWith("/history"),
     },

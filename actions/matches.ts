@@ -3,6 +3,8 @@
 import prisma from "@/lib/prisma";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
+import { MatchGroup, MatchFormat } from "@/lib/generated/prisma/enums";
+
 
 export type MatchWithTeams = {
   id: number;
@@ -17,6 +19,7 @@ export type MatchWithTeams = {
   teamBResult: number | null;
   teamAPrediction: number | null;
   teamBPrediction: number | null;
+  group: string;
 };
 
 export type WeekSchedule = {
@@ -24,13 +27,14 @@ export type WeekSchedule = {
   matches: MatchWithTeams[];
 };
 
-export async function getMatchSchedule(): Promise<WeekSchedule[]> {
+export async function getMatchSchedule(group?: MatchGroup): Promise<WeekSchedule[]> {
   const session = await auth.api.getSession({
     headers: await headers()
   });
   const userId = session?.user?.id;
 
   const matches = await prisma.match.findMany({
+    where: group ? { group } : undefined,
     include: {
       teamA: true,
       teamB: true,
@@ -73,6 +77,7 @@ export async function getMatchSchedule(): Promise<WeekSchedule[]> {
       teamBResult: match.teamBResult,
       teamAPrediction: preA,
       teamBPrediction: preB,
+      group: match.group,
     });
   }
 
@@ -125,3 +130,64 @@ export async function updateMatch(id: number, data: { teamAResult?: number | nul
   revalidatePath('/standing');
   revalidatePath('/prediction');
 }
+
+export async function getTeams(group?: MatchGroup) {
+  return await prisma.team.findMany({
+    where: group ? { group } : undefined,
+    orderBy: { name: 'asc' }
+  });
+}
+
+export async function createMatch(data: {
+  week: number;
+  day: number;
+  date: Date;
+  matchNo: number;
+  teamAId: number;
+  teamBId: number;
+  format: MatchFormat;
+  group: MatchGroup;
+}) {
+  const { revalidatePath } = await import("next/cache");
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+  const userRole = (session?.user as { role?: string } | undefined)?.role;
+
+  if (userRole !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  await prisma.match.create({
+    data
+  });
+
+  revalidatePath('/schedule');
+  revalidatePath('/standing');
+  revalidatePath('/prediction');
+}
+
+export async function createTeam(data: { name: string; logo?: string; group: MatchGroup }) {
+  const { revalidatePath } = await import("next/cache");
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+  const userRole = (session?.user as { role?: string } | undefined)?.role;
+
+  if (userRole !== "ADMIN") {
+    throw new Error("Unauthorized");
+  }
+
+  await prisma.team.create({
+    data: {
+      name: data.name,
+      logo: data.logo || null,
+      group: data.group,
+    }
+  });
+
+  revalidatePath('/schedule');
+  revalidatePath('/standing');
+  revalidatePath('/prediction');
+}
+

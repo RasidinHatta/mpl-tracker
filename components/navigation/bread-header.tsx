@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { 
     Breadcrumb, 
@@ -14,13 +14,21 @@ import {
 
 const BreadHeader = () => {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const currentGroupId = searchParams.get("group") ?? "MPLID";
     
     // Split path into segments and remove empty strings
     const segments = pathname.split('/').filter(Boolean);
     
     // Build cumulative paths for each segment
     const breadcrumbs = segments.map((segment, index) => {
-        const href = '/' + segments.slice(0, index + 1).join('/');
+        let href = '/' + segments.slice(0, index + 1).join('/');
+        
+        // Append group query param if applicable
+        if (currentGroupId) {
+            href += `?group=${currentGroupId}`;
+        }
+
         // Decode URL-encoded segments (e.g., %20 -> space)
         const label = decodeURIComponent(segment);
         // Check if this is the last segment (current page)

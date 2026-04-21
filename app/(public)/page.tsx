@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/themes/ModeToggle";
@@ -39,7 +40,9 @@ export default function LandingPage() {
         </div>
       </main>
 
-      <Footer />
+      <Suspense fallback={<div className="h-24" />}>
+        <Footer />
+      </Suspense>
     </div>
   );
 }
