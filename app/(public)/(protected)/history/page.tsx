@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { History } from "lucide-react";
-import { TeamAvatar } from "@/components/match-schedule";
-import { HistoryMatrix } from "@/components/history-matrix";
+import { TeamAvatar } from "@/components/mpl/match-schedule";
+import { HistoryMatrix } from "@/components/mpl/history-matrix";
 import { MatchGroup } from "@/lib/generated/prisma/enums";
 
 export const metadata = {

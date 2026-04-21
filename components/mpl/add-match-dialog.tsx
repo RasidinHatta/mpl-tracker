@@ -25,7 +25,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { createMatch } from "@/actions/mpl/matches";
 import { MatchFormat, MatchGroup } from "@/lib/generated/prisma/enums";
-import { TeamAvatar } from "@/components/match-schedule";
+import { TeamAvatar } from "@/components/mpl/match-schedule";
 
 type TeamType = {
   id: number;

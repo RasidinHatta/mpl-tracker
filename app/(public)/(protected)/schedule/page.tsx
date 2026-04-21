@@ -1,6 +1,6 @@
 import { getMatchSchedule, getTeams } from "@/actions/mpl/matches";
-import MatchSchedule from "@/components/match-schedule";
-import { AddMatchDialog } from "@/components/add-match-dialog";
+import MatchSchedule from "@/components/mpl/match-schedule";
+import { AddMatchDialog } from "@/components/mpl/add-match-dialog";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { CalendarDays, Trophy, TrendingUp } from "lucide-react";

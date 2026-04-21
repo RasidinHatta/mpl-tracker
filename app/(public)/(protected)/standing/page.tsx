@@ -2,9 +2,9 @@ import { Trophy } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getStandings } from "@/actions/mpl/standings";
-import { TeamAvatar } from "@/components/match-schedule";
+import { TeamAvatar } from "@/components/mpl/match-schedule";
 import { MatchGroup } from "@/lib/generated/prisma/enums";
-import { AddTeamDialog } from "@/components/add-team-dialog";
+import { AddTeamDialog } from "@/components/mpl/add-team-dialog";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 

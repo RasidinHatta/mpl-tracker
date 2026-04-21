@@ -1,11 +1,11 @@
 import { LayoutDashboard, Target, Trophy, CheckCircle2, ChevronRight, Calendar, Clock, Sword } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { AnimatedProgress } from "@/components/animated-progress";
+import { AnimatedProgress } from "@/components/mpl/animated-progress";
 import { getStandings } from "@/actions/mpl/standings";
 import { getMatchSchedule } from "@/actions/mpl/matches";
 import { getPredictionStats } from "@/actions/mpl/predictions";
-import { TeamAvatar } from "@/components/match-schedule";
+import { TeamAvatar } from "@/components/mpl/match-schedule";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MatchGroup } from "@/lib/generated/prisma/enums";
@@ -211,8 +211,8 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
                   <div key={team.teamId} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-black ${index === 0 ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-500" :
-                          index === 1 ? "bg-slate-300/30 text-slate-500 dark:text-slate-400" :
-                            "bg-amber-700/20 text-amber-700 dark:text-amber-600"
+                        index === 1 ? "bg-slate-300/30 text-slate-500 dark:text-slate-400" :
+                          "bg-amber-700/20 text-amber-700 dark:text-amber-600"
                         }`}>
                         {team.rank}
                       </div>

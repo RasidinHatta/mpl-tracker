@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { TeamAvatar } from "@/components/match-schedule";
+import { TeamAvatar } from "@/components/mpl/match-schedule";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 type Team = { id: number; name: string; logo: string | null };
@@ -19,8 +19,8 @@ export function HistoryMatrix({ teams, matches }: { teams: Team[]; matches: Matc
             <tr>
               <th className="p-2 border-b border-r bg-background/95 backdrop-blur-sm sticky left-0 top-0 z-30 min-w-[60px]"></th>
               {teams.map((team) => (
-                <th 
-                  key={team.id} 
+                <th
+                  key={team.id}
                   className={`p-2 border-b border-r min-w-[80px] transition-colors ${hoveredCol === team.id ? "bg-primary/20 dark:bg-primary/30" : "bg-muted/20"}`}
                   onMouseEnter={() => setHoveredCol(team.id)}
                   onMouseLeave={() => setHoveredCol(null)}
@@ -34,10 +34,10 @@ export function HistoryMatrix({ teams, matches }: { teams: Team[]; matches: Matc
           </thead>
           <tbody onMouseLeave={() => { setHoveredRow(null); setHoveredCol(null); }}>
             {teams.map((rowTeam) => (
-              <tr 
+              <tr
                 key={rowTeam.id}
               >
-                <td 
+                <td
                   className={`p-2 border-b border-r backdrop-blur-sm sticky left-0 z-10 w-[60px] transition-colors ${hoveredRow === rowTeam.id ? "bg-primary/20 dark:bg-primary/30" : "bg-background/95"}`}
                   onMouseEnter={() => setHoveredRow(rowTeam.id)}
                   onMouseLeave={() => setHoveredRow(null)}
@@ -89,7 +89,7 @@ export function HistoryMatrix({ teams, matches }: { teams: Team[]; matches: Matc
 
                   const isHovered = hoveredRow === rowTeam.id || hoveredCol === colTeam.id;
                   const isIntersection = hoveredRow === rowTeam.id && hoveredCol === colTeam.id;
-                  
+
                   return (
                     <td
                       key={colTeam.id}
@@ -101,7 +101,7 @@ export function HistoryMatrix({ teams, matches }: { teams: Team[]; matches: Matc
                     >
                       {/* Highlight Overlay */}
                       <div className={`absolute inset-0 pointer-events-none transition-all duration-200 ${isIntersection && !isSelf ? "bg-white/30 dark:bg-white/20 ring-2 ring-inset ring-primary z-20" : isHovered && !isSelf ? "bg-white/20 dark:bg-white/10" : "opacity-0"}`} />
-                      
+
                       <div className="relative z-0">
                         {!isSelf && (
                           <div className="flex flex-col items-center justify-center gap-0.5">
@@ -124,8 +124,8 @@ export function HistoryMatrix({ teams, matches }: { teams: Team[]; matches: Matc
             <tr>
               <td className="p-2 border-r bg-background/95 backdrop-blur-sm sticky left-0 z-10 w-[60px]"></td>
               {teams.map((team) => (
-                <td 
-                  key={team.id} 
+                <td
+                  key={team.id}
                   className={`p-2 border-r min-w-[80px] transition-colors ${hoveredCol === team.id ? "bg-primary/20 dark:bg-primary/30" : "bg-muted/20"}`}
                   onMouseEnter={() => setHoveredCol(team.id)}
                   onMouseLeave={() => setHoveredCol(null)}
