@@ -2,9 +2,9 @@ import { LayoutDashboard, Target, Trophy, CheckCircle2, ChevronRight, Calendar, 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedProgress } from "@/components/animated-progress";
-import { getStandings } from "@/actions/standings";
-import { getMatchSchedule } from "@/actions/matches";
-import { getPredictionStats } from "@/actions/predictions";
+import { getStandings } from "@/actions/mpl/standings";
+import { getMatchSchedule } from "@/actions/mpl/matches";
+import { getPredictionStats } from "@/actions/mpl/predictions";
 import { TeamAvatar } from "@/components/match-schedule";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -34,7 +34,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
   const matchGroup = group || allMatches[0]?.group || "";
   const completedMatches = allMatches.filter((m) => m.teamAResult !== null && m.teamBResult !== null);
   const upcomingMatches = allMatches.filter((m) => m.teamAResult === null || m.teamBResult === null);
-  
+
   const nextMatches = upcomingMatches.slice(0, 3);
   const recentMatches = [...completedMatches].reverse().slice(0, 3);
   const top3 = standings.slice(0, 3);
@@ -52,10 +52,10 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
       </div>
 
       <div className="grid gap-6 md:grid-cols-12">
-        
+
         {/* LEFT COLUMN (Main Content) */}
         <div className="md:col-span-8 flex flex-col gap-6">
-          
+
           {/* Upcoming Matches */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between">
@@ -68,7 +68,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
                 </Button>
               </Link>
             </div>
-            
+
             {nextMatches.length > 0 ? (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {nextMatches.map((match) => (
@@ -95,7 +95,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
                           <span className="text-xs font-bold truncate max-w-[80px]">{match.teamB.name}</span>
                         </div>
                       </div>
-                      
+
                       {/* Prediction Status inside Next Up */}
                       <div className="flex justify-center mt-1">
                         {match.teamAPrediction !== null ? (
@@ -128,7 +128,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
                 <HistoryIcon className="w-5 h-5 text-muted-foreground" /> Recent Results
               </h3>
             </div>
-            
+
             {recentMatches.length > 0 ? (
               <div className="flex flex-col gap-3">
                 {recentMatches.map((match) => (
@@ -158,7 +158,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
 
         {/* RIGHT COLUMN (Sidebar) */}
         <div className="md:col-span-4 flex flex-col gap-6">
-          
+
           {/* Prediction Snapshot */}
           <Card className="bg-linear-to-br from-primary/10 via-card to-card border-primary/20 overflow-hidden relative">
             <div className="absolute top-0 right-0 p-4 opacity-10">
@@ -179,9 +179,9 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
                     <span>Match Winners</span>
                     <span>{stats.correctWinners} / {stats.totalMatches}</span>
                   </div>
-                  <AnimatedProgress 
-                    value={stats.accuracy} 
-                    className="**:data-[slot=progress-track]:h-2 **:data-[slot=progress-track]:bg-red-500/80 **:data-[slot=progress-indicator]:bg-green-500 **:data-[slot=progress-indicator]:transition-all **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out" 
+                  <AnimatedProgress
+                    value={stats.accuracy}
+                    className="**:data-[slot=progress-track]:h-2 **:data-[slot=progress-track]:bg-red-500/80 **:data-[slot=progress-indicator]:bg-green-500 **:data-[slot=progress-indicator]:transition-all **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -189,9 +189,9 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
                     <span className="flex items-center gap-1 text-green-500"><CheckCircle2 className="w-3 h-3" /> Exact Scores</span>
                     <span>{stats.exactScores} / {stats.totalMatches}</span>
                   </div>
-                  <AnimatedProgress 
-                    value={stats.exactScoreAccuracy} 
-                    className="**:data-[slot=progress-track]:h-2 **:data-[slot=progress-track]:bg-red-500/80 **:data-[slot=progress-indicator]:bg-green-500 **:data-[slot=progress-indicator]:transition-all **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out" 
+                  <AnimatedProgress
+                    value={stats.exactScoreAccuracy}
+                    className="**:data-[slot=progress-track]:h-2 **:data-[slot=progress-track]:bg-red-500/80 **:data-[slot=progress-indicator]:bg-green-500 **:data-[slot=progress-indicator]:transition-all **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out"
                   />
                 </div>
               </div>
@@ -210,11 +210,10 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
                 {top3.map((team, index) => (
                   <div key={team.teamId} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-black ${
-                        index === 0 ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-500" :
-                        index === 1 ? "bg-slate-300/30 text-slate-500 dark:text-slate-400" :
-                        "bg-amber-700/20 text-amber-700 dark:text-amber-600"
-                      }`}>
+                      <div className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-black ${index === 0 ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-500" :
+                          index === 1 ? "bg-slate-300/30 text-slate-500 dark:text-slate-400" :
+                            "bg-amber-700/20 text-amber-700 dark:text-amber-600"
+                        }`}>
                         {team.rank}
                       </div>
                       <TeamAvatar name={team.teamName} logo={team.logo} color="left" size="small" />
@@ -241,7 +240,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
           </Card>
 
         </div>
-        
+
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { createMatch } from "@/actions/matches";
+import { createMatch } from "@/actions/mpl/matches";
 import { MatchFormat, MatchGroup } from "@/lib/generated/prisma/enums";
 import { TeamAvatar } from "@/components/match-schedule";
 
@@ -61,7 +61,7 @@ export function AddMatchDialog({ teams, group }: { teams: TeamType[], group: Mat
       setLoading(true);
       // Construct date string
       const dateTime = new Date(`${date}T${time}`);
-      
+
       await createMatch({
         week: parseInt(week),
         day: parseInt(day),
@@ -72,11 +72,11 @@ export function AddMatchDialog({ teams, group }: { teams: TeamType[], group: Mat
         format,
         group
       });
-      
+
       toast.success("Match added successfully");
       setOpen(false);
       router.refresh();
-      
+
       // Reset form
       setDate("");
       setTime("");
@@ -118,7 +118,7 @@ export function AddMatchDialog({ teams, group }: { teams: TeamType[], group: Mat
               <Input type="time" value={time} onChange={e => setTime(e.target.value)} />
             </div>
           </div>
-          
+
           <div className="grid grid-cols-3 gap-4">
             <div className="flex flex-col gap-2">
               <Label>Week</Label>

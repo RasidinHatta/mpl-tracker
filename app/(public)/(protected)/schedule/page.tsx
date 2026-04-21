@@ -1,4 +1,4 @@
-import { getMatchSchedule, getTeams } from "@/actions/matches";
+import { getMatchSchedule, getTeams } from "@/actions/mpl/matches";
 import MatchSchedule from "@/components/match-schedule";
 import { AddMatchDialog } from "@/components/add-match-dialog";
 import { headers } from "next/headers";

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { updateMatch, type MatchWithTeams } from "@/actions/matches";
+import { updateMatch, type MatchWithTeams } from "@/actions/mpl/matches";
 import { ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -31,7 +31,7 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
   const router = useRouter();
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === UserRole.ADMIN;
-  
+
   const getMaxScore = (format: string) => {
     switch (format) {
       case "BO3": return 2;
@@ -49,7 +49,7 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
     matchDate.setHours(0, 0, 0, 0);
     return today > matchDate;
   })();
-  
+
   const isValidScore = (a: string, b: string) => {
     if (!a && !b) return true; // both empty = clearing, allow
     if (!a || !b) return true; // partial, allow (server handles nulls)
@@ -133,7 +133,7 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
                 onChange={(e) => setTeamAPrediction(e.target.value)}
               />
             </div>
-            
+
             <div className="flex w-28 flex-col items-center justify-center">
               <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1">Prediction</span>
               <span className="text-lg font-medium text-muted-foreground/50">-</span>
@@ -165,7 +165,7 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
                   onChange={(e) => setTeamAResult(e.target.value)}
                 />
               </div>
-              
+
               <div className="flex w-28 flex-col items-center justify-center">
                 <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1">Result</span>
                 <span className="text-lg font-medium text-muted-foreground/50">-</span>

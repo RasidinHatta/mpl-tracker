@@ -10,7 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import type { WeekSchedule } from "@/actions/matches";
+import type { WeekSchedule } from "@/actions/mpl/matches";
 import { Trophy, Calendar, Clock, TrendingUp, ChevronRight, Swords } from "lucide-react";
 import { UpdateMatchDialog } from "./update-match-dialog";
 
@@ -40,10 +40,10 @@ function isMatchCompleted(match: { teamAResult: number | null; teamBResult: numb
 }
 
 export function TeamAvatar({ name, logo, color, size = "large" }: { name: string; logo?: string | null; color: "left" | "right"; size?: "large" | "small" }) {
-  const gradientClass = color === "left" 
-    ? "from-primary/20 via-primary/10 to-transparent" 
+  const gradientClass = color === "left"
+    ? "from-primary/20 via-primary/10 to-transparent"
     : "from-secondary/20 via-secondary/10 to-transparent";
-  
+
   const ringClass = color === "left"
     ? "ring-primary/30 group-hover:ring-primary/50"
     : "ring-secondary/30 group-hover:ring-secondary/50";
@@ -74,14 +74,14 @@ function MatchCard({
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Card 
+    <Card
       className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1 border-border/50 bg-card/50 backdrop-blur-sm"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Subtle gradient overlay on hover */}
       <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-secondary/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-      
+
       {/* Top accent line */}
       <div className="absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-primary via-primary/50 to-secondary opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
@@ -90,7 +90,7 @@ function MatchCard({
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <span className="font-bold text-foreground">Match {match.matchNo}</span>
           </div>
-          
+
           {completed ? (
             <Badge variant="secondary" className="h-5 gap-1 text-[10px] font-medium">
               <Trophy className="h-3 w-3" />

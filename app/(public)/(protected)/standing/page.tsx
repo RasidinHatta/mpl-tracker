@@ -1,7 +1,7 @@
 import { Trophy } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { getStandings } from "@/actions/standings";
+import { getStandings } from "@/actions/mpl/standings";
 import { TeamAvatar } from "@/components/match-schedule";
 import { MatchGroup } from "@/lib/generated/prisma/enums";
 import { AddTeamDialog } from "@/components/add-team-dialog";
@@ -34,7 +34,7 @@ export default async function StandingPage(props: { searchParams?: Promise<{ gro
           </h2>
           <h1 className="text-4xl font-bold tracking-tight">Standings</h1>
         </div>
-        
+
         {isAdmin && (
           <div className="pt-2 shrink-0 self-start md:self-auto">
             <AddTeamDialog group={group} />

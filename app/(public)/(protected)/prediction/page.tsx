@@ -5,9 +5,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Progress } from "@/components/ui/progress";
 import { AnimatedProgress } from "@/components/animated-progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getPredictionStats } from "@/actions/predictions";
-import { getStandings } from "@/actions/standings";
-import { getMatchSchedule } from "@/actions/matches";
+import { getPredictionStats } from "@/actions/mpl/predictions";
+import { getStandings } from "@/actions/mpl/standings";
+import { getMatchSchedule } from "@/actions/mpl/matches";
 import { TeamAvatar } from "@/components/match-schedule";
 import { MatchGroup } from "@/lib/generated/prisma/enums";
 
@@ -22,7 +22,7 @@ export default async function PredictionPage(props: { searchParams?: Promise<{ g
 
   const stats = await getPredictionStats(group);
   const weeklyMatches = await getMatchSchedule(group);
-  
+
   let currentWeek = 0;
   for (const week of weeklyMatches) {
     if (week.matches.some(m => m.teamAResult !== null && m.teamBResult !== null)) {
@@ -115,7 +115,7 @@ export default async function PredictionPage(props: { searchParams?: Promise<{ g
                     {week.matches.map((match) => {
                       const hasPrediction = match.teamAPrediction !== null && match.teamBPrediction !== null;
                       const hasResult = match.teamAResult !== null && match.teamBResult !== null;
-                      
+
                       let bgColor = "bg-muted"; // No prediction
                       if (hasPrediction && hasResult) {
                         const predictedWinnerA = match.teamAPrediction! > match.teamBPrediction!;
@@ -149,9 +149,9 @@ export default async function PredictionPage(props: { searchParams?: Promise<{ g
                   <span className="font-medium">Match Winner Accuracy</span>
                   <span className="font-bold">{stats.accuracy.toFixed(1)}%</span>
                 </div>
-                <AnimatedProgress 
-                  value={stats.accuracy} 
-                  className="**:data-[slot=progress-track]:h-3 **:data-[slot=progress-track]:bg-red-500 **:data-[slot=progress-indicator]:bg-green-500 **:data-[slot=progress-indicator]:transition-all **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out" 
+                <AnimatedProgress
+                  value={stats.accuracy}
+                  className="**:data-[slot=progress-track]:h-3 **:data-[slot=progress-track]:bg-red-500 **:data-[slot=progress-indicator]:bg-green-500 **:data-[slot=progress-indicator]:transition-all **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out"
                   title={`${stats.accuracy.toFixed(1)}% Correct, ${(100 - stats.accuracy).toFixed(1)}% Incorrect`}
                 />
               </div>
@@ -160,9 +160,9 @@ export default async function PredictionPage(props: { searchParams?: Promise<{ g
                   <span className="font-medium">Exact Score Accuracy</span>
                   <span className="font-bold">{stats.exactScoreAccuracy.toFixed(1)}%</span>
                 </div>
-                <AnimatedProgress 
-                  value={stats.exactScoreAccuracy} 
-                  className="**:data-[slot=progress-track]:h-3 **:data-[slot=progress-track]:bg-red-500 **:data-[slot=progress-indicator]:bg-green-500 **:data-[slot=progress-indicator]:transition-all **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out" 
+                <AnimatedProgress
+                  value={stats.exactScoreAccuracy}
+                  className="**:data-[slot=progress-track]:h-3 **:data-[slot=progress-track]:bg-red-500 **:data-[slot=progress-indicator]:bg-green-500 **:data-[slot=progress-indicator]:transition-all **:data-[slot=progress-indicator]:duration-1000 **:data-[slot=progress-indicator]:ease-out"
                   title={`${stats.exactScoreAccuracy.toFixed(1)}% Correct, ${(100 - stats.exactScoreAccuracy).toFixed(1)}% Incorrect`}
                 />
               </div>
@@ -239,7 +239,7 @@ export default async function PredictionPage(props: { searchParams?: Promise<{ g
                   </TabsTrigger>
                 ))}
               </TabsList>
-              
+
               {weeklyMatches.map((week) => (
                 <TabsContent key={week.week} value={week.week.toString()}>
                   <div className="rounded-md border overflow-hidden shadow-sm">

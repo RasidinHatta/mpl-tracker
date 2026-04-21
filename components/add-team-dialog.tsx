@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { createTeam } from "@/actions/matches";
+import { createTeam } from "@/actions/mpl/matches";
 import { MatchGroup } from "@/lib/generated/prisma/enums";
 
 export function AddTeamDialog({ group }: { group: MatchGroup }) {
@@ -40,11 +40,11 @@ export function AddTeamDialog({ group }: { group: MatchGroup }) {
         logo: logo || undefined,
         group
       });
-      
+
       toast.success("Team added successfully");
       setOpen(false);
       router.refresh();
-      
+
       // Reset form
       setName("");
       setLogo("");
