@@ -4,6 +4,7 @@ import { auth, ErrorCode } from "@/lib/auth";
 import { headers } from "next/headers";
 import { APIError } from "better-auth/api";
 import { signInSchema } from "@/lib/schema";
+import prisma from "@/lib/prisma";
 
 export async function signInEmailAction(formData: FormData) {
   const raw = {
@@ -19,6 +20,15 @@ export async function signInEmailAction(formData: FormData) {
   }
 
   const { email, password } = result.data;
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: { emailVerified: true },
+  });
+
+  if (user && !user.emailVerified) {
+    return { error: "Please verify your email before signing in. Check your inbox for the verification link." };
+  }
 
   try {
     await auth.api.signInEmail({

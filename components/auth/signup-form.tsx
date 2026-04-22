@@ -20,6 +20,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SignInOauthButton } from "@/components/auth/sign-in-oauth-button";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -50,8 +51,8 @@ export default function SignUpForm() {
       if (result.error) {
         setServerError(result.error);
       } else {
-        router.push("/");
-        router.refresh();
+        toast.success("Verification email sent! Please check your inbox.");
+        router.push("/sign-in");
       }
     });
   };

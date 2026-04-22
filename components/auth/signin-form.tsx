@@ -47,8 +47,7 @@ export default function SignInForm() {
       if (result.error) {
         setServerError(result.error);
       } else {
-        router.push("/");
-        router.refresh();
+        router.push("/dashboard");
       }
     });
   };

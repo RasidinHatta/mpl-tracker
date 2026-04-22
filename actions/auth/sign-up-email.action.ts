@@ -26,7 +26,7 @@ export async function signUpEmailAction(formData: FormData) {
       body: { name, email, password },
     });
 
-    return { error: null };
+    return { error: null, verificationEmailSent: true };
   } catch (err) {
     if (err instanceof APIError) {
       const errCode = err.body ? (err.body.code as ErrorCode) : "UNKNOWN";

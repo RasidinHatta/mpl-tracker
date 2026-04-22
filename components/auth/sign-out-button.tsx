@@ -3,13 +3,11 @@
 import { Button } from "@/components/ui/button";
 import { signOut } from "@/lib/auth.client";
 import { LogOutIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export const SignOutButton = () => {
   const [isPending, setIsPending] = useState(false);
-  const router = useRouter();
 
   async function handleClick() {
     await signOut({
@@ -24,8 +22,7 @@ export const SignOutButton = () => {
           toast.error(ctx.error.message);
         },
         onSuccess: () => {
-          toast.success("You’ve logged out. See you soon!");
-          router.push("/sign-in");
+          window.location.href = "/sign-in";
         },
       },
     });
