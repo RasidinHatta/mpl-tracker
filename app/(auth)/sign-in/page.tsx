@@ -6,9 +6,5 @@ export const metadata = {
 };
 
 export default function SignInPage() {
-  return (
-    <div className="container min-h-screen flex items-center justify-center">
-      <SignInForm />
-    </div>
-  );
+  return <SignInForm />;
 }

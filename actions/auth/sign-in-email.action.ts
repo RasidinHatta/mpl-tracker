@@ -3,10 +3,22 @@
 import { auth, ErrorCode } from "@/lib/auth";
 import { headers } from "next/headers";
 import { APIError } from "better-auth/api";
+import { signInSchema } from "@/lib/schema";
 
 export async function signInEmailAction(formData: FormData) {
-  const email = String(formData.get("email") ?? "");
-  const password = String(formData.get("password") ?? "");
+  const raw = {
+    email: String(formData.get("email") ?? ""),
+    password: String(formData.get("password") ?? ""),
+  };
+
+  const result = signInSchema.safeParse(raw);
+
+  if (!result.success) {
+    const errorMessages = result.error.issues.map((err) => err.message).join(", ");
+    return { error: errorMessages, fieldErrors: result.error.flatten().fieldErrors };
+  }
+
+  const { email, password } = result.data;
 
   try {
     await auth.api.signInEmail({

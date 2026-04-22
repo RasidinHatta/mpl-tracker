@@ -47,11 +47,21 @@ export default function AuthLayout({
       </div>
 
       {/* Form side */}
-      <div className="flex items-center justify-center p-6 sm:p-12 bg-background relative z-10 w-full min-h-screen">
+      <div className="flex items-center justify-center p-4 sm:p-12 bg-background relative z-10 w-full min-h-dvh md:border-l border-white/10">
+        {/* Mobile Background Image (Visible only on mobile) */}
+        <div className="absolute inset-0 z-0 md:hidden overflow-hidden">
+          <img
+            src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2940&auto=format&fit=crop"
+            alt="Mobile Background"
+            className="h-full w-full object-cover opacity-20"
+          />
+          <div className="absolute inset-0 bg-linear-to-b from-background/30 via-background/80 to-background" />
+        </div>
+
         {/* Subtle glow effect behind the form */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[400px] h-[400px] bg-primary/10 blur-[130px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[400px] h-[400px] bg-primary/20 blur-[120px] rounded-full pointer-events-none z-0" />
         
-        <div className="w-full max-w-md z-10 relative animate-in fade-in zoom-in-95 duration-500 flex flex-col justify-center">
+        <div className="w-full max-w-md z-10 relative animate-in fade-in zoom-in-95 duration-500 flex flex-col justify-center gap-6 sm:gap-0">
           {/* Mobile Header (Hidden on Desktop) */}
           <div className="md:hidden flex items-center justify-center gap-3 mb-8 font-bold text-3xl">
             <div className="bg-primary/20 p-2 rounded-xl border border-primary/30">
@@ -67,8 +77,8 @@ export default function AuthLayout({
             MPL Tracker
           </div>
 
-          <div className="w-full shadow-2xl relative">
-            <div className="absolute -inset-0.5 bg-linear-to-br from-primary/30 to-background rounded-xl blur-[2px] opacity-50" />
+          <div className="w-full relative px-1 sm:px-0 mt-4 sm:mt-0">
+            <div className="absolute -inset-0.5 bg-linear-to-br from-primary/30 to-background rounded-xl blur-[3px] opacity-50" />
             <div className="relative">
               {children}
             </div>
