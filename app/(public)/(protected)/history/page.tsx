@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma";
 import { History } from "lucide-react";
-import { TeamAvatar } from "@/components/mpl/match-schedule";
-import { HistoryMatrix } from "@/components/mpl/history-matrix";
+import { HistoryTabs } from "@/components/mpl/history-tabs";
 import { MatchGroup } from "@/lib/generated/prisma/enums";
 
 export const metadata = {
@@ -9,7 +8,9 @@ export const metadata = {
   description: "Cross-table matrix of all team head-to-head match history.",
 };
 
-export default async function HistoryPage(props: { searchParams?: Promise<{ group?: string }> }) {
+export default async function HistoryPage(props: {
+  searchParams?: Promise<{ group?: string }>;
+}) {
   const searchParams = await props.searchParams;
   const group = searchParams?.group as MatchGroup | undefined;
 
@@ -18,14 +19,31 @@ export default async function HistoryPage(props: { searchParams?: Promise<{ grou
     orderBy: { name: "asc" },
   });
 
-  const matches = await prisma.match.findMany({
-    where: {
-      teamAResult: { not: null },
-      teamBResult: { not: null },
-      group: group ? group : undefined,
+  // Fetch ALL matches (completed + upcoming) with team relations for the team-view tab
+  const allMatches = await prisma.match.findMany({
+    where: group ? { group } : undefined,
+    include: {
+      teamA: { select: { id: true, name: true, logo: true } },
+      teamB: { select: { id: true, name: true, logo: true } },
     },
     orderBy: [{ week: "asc" }, { date: "asc" }],
   });
+
+  // Slim version for the matrix (only completed, no relations needed)
+  const completedMatches = allMatches
+    .filter((m) => m.teamAResult !== null && m.teamBResult !== null)
+    .map((m) => ({
+      teamAId: m.teamAId,
+      teamBId: m.teamBId,
+      teamAResult: m.teamAResult,
+      teamBResult: m.teamBResult,
+    }));
+
+  // Serialize dates for client component
+  const serializedMatches = allMatches.map((m) => ({
+    ...m,
+    date: m.date.toISOString(),
+  }));
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 pt-0">
@@ -38,7 +56,11 @@ export default async function HistoryPage(props: { searchParams?: Promise<{ grou
         </div>
       </div>
 
-      <HistoryMatrix teams={teams} matches={matches} />
+      <HistoryTabs
+        teams={teams}
+        completedMatches={completedMatches}
+        allMatches={serializedMatches}
+      />
     </div>
   );
 }

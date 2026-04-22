@@ -17,6 +17,7 @@ export type TeamStanding = {
   netGameWin: number;
   gameWins: number;
   gameLosses: number;
+  totalMatches: number; // total scheduled matches (played + remaining)
 };
 
 export async function getStandings(usePredictions: boolean = false, forecastWeek: number | null = null, group?: MatchGroup): Promise<TeamStanding[]> {
@@ -115,6 +116,7 @@ export async function getStandings(usePredictions: boolean = false, forecastWeek
       netGameWin,
       gameWins,
       gameLosses,
+      totalMatches: team.matchesAsA.length + team.matchesAsB.length,
     };
   });
 
