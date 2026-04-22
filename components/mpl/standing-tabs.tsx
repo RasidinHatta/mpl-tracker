@@ -17,7 +17,6 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { TeamAvatar } from "@/components/mpl/match-schedule";
-import { Progress } from "@/components/ui/progress";
 import type { TeamStanding } from "@/actions/mpl/standings";
 import { BarChart3, Trophy, TrendingUp } from "lucide-react";
 
@@ -102,15 +101,9 @@ function computeChances(standings: TeamStanding[]): TeamWithChances[] {
   });
 }
 
-// ─── ChanceBar ────────────────────────────────────────────────────────────────
+// ─── ChancePct ────────────────────────────────────────────────────────────────
 
-function ChanceBar({
-  pct,
-  trackClass,
-}: {
-  pct: number;
-  trackClass: string;
-}) {
+function ChancePct({ pct }: { pct: number }) {
   const color =
     pct >= 90
       ? "text-green-500 dark:text-green-400"
@@ -121,14 +114,9 @@ function ChanceBar({
       : "text-red-500/70 dark:text-red-400/70";
 
   return (
-    <div className="flex items-center gap-2 justify-end">
-      <div className="w-20 hidden sm:block">
-        <Progress value={pct} className={`h-1.5 ${trackClass}`} />
-      </div>
-      <span className={`text-sm font-black tabular-nums w-18 text-right ${color}`}>
-        {pct.toFixed(2)}%
-      </span>
-    </div>
+    <span className={`text-sm font-black tabular-nums ${color}`}>
+      {pct.toFixed(2)}%
+    </span>
   );
 }
 
@@ -260,16 +248,22 @@ export function StandingTabs({ standings }: { standings: TeamStanding[] }) {
                     <TableHead className="text-foreground font-bold h-10 px-4 uppercase tracking-tight w-[300px] text-xs">
                       Team
                     </TableHead>
-                    <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">
-                      MP
+                    <TableHead className="text-center text-red-600 dark:text-red-500 font-bold uppercase tracking-tight h-10 text-xs">
+                      Match Point
                     </TableHead>
                     <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">
-                      NGW
+                      Match W-L
                     </TableHead>
-                    <TableHead className="text-right pr-4 text-amber-500 dark:text-amber-400 font-bold uppercase tracking-tight h-10 text-xs">
+                    <TableHead className="text-center text-red-600 dark:text-red-500 font-bold uppercase tracking-tight h-10 text-xs">
+                      Net Game Win
+                    </TableHead>
+                    <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">
+                      Game W-L
+                    </TableHead>
+                    <TableHead className="text-center text-amber-500 dark:text-amber-400 font-bold uppercase tracking-tight h-10 text-xs">
                       Upper Bracket
                     </TableHead>
-                    <TableHead className="text-right pr-4 text-primary font-bold uppercase tracking-tight h-10 text-xs">
+                    <TableHead className="text-center text-primary font-bold uppercase tracking-tight h-10 text-xs">
                       Playoff
                     </TableHead>
                   </TableRow>
@@ -329,25 +323,23 @@ export function StandingTabs({ standings }: { standings: TeamStanding[] }) {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell className="text-center font-black text-foreground text-sm">
+                        <TableCell className="text-center font-black text-red-600 dark:text-red-500 text-sm">
                           {team.matchPoints}
                         </TableCell>
-                        <TableCell className="text-center font-bold text-foreground text-sm">
-                          {team.netGameWin > 0
-                            ? `+${team.netGameWin}`
-                            : team.netGameWin}
+                        <TableCell className="text-center font-bold text-foreground text-sm tracking-tight">
+                          {team.matchWins} - {team.matchLosses}
                         </TableCell>
-                        <TableCell className="pr-4">
-                          <ChanceBar
-                            pct={team.upperBracketPct}
-                            trackClass="[&>div]:bg-amber-500"
-                          />
+                        <TableCell className="text-center font-black text-red-600 dark:text-red-500 text-sm">
+                          {team.netGameWin}
                         </TableCell>
-                        <TableCell className="pr-4">
-                          <ChanceBar
-                            pct={team.playoffPct}
-                            trackClass="[&>div]:bg-primary"
-                          />
+                        <TableCell className="text-center font-bold text-foreground text-sm tracking-tight">
+                          {team.gameWins} - {team.gameLosses}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <ChancePct pct={team.upperBracketPct} />
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <ChancePct pct={team.playoffPct} />
                         </TableCell>
                       </TableRow>
                     );
@@ -355,7 +347,7 @@ export function StandingTabs({ standings }: { standings: TeamStanding[] }) {
                   {standings.length === 0 && (
                     <TableRow>
                       <TableCell
-                        colSpan={5}
+                        colSpan={7}
                         className="text-center py-8 text-muted-foreground font-semibold"
                       >
                         No team standings available yet.
@@ -380,9 +372,6 @@ export function StandingTabs({ standings }: { standings: TeamStanding[] }) {
                 <div className="h-2.5 w-2.5 rounded-sm bg-muted-foreground/20" />
                 <span>Outside playoff contention</span>
               </div>
-              <span className="ml-auto italic">
-                MP = Match Points · NGW = Net Game Win
-              </span>
             </div>
           </CardContent>
         </Card>
