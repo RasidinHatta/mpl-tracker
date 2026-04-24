@@ -19,86 +19,118 @@ import {
 import { TeamAvatar } from "@/components/mpl/match-schedule";
 import type { TeamStanding } from "@/actions/mpl/standings";
 import { BarChart3, Trophy, TrendingUp } from "lucide-react";
+import type { RemainingMatchSlim } from "@/actions/mpl/standings";
 
-// ─── Chance Calculation ────────────────────────────────────────────────────────
+// ─── Monte Carlo simulation ────────────────────────────────────────────────────
 //
-// For each rank threshold (top-2 = Upper Bracket, top-6 = Playoff):
+// Algorithm (10 000 iterations):
 //
-//  • If team is INSIDE the zone  → chance = how secure is their lead over
-//    the first team outside the zone:  lead / (lead + their_remaining + 1) → [55, 99]
-//  • If team is OUTSIDE the zone → can they still mathematically catch up?
-//    pct = (remaining - gap) / (remaining + 1) capped → [0, 49]
-//  • Edge cases: already locked in (100) or mathematically eliminated (0).
+//  1. Copy current match-points and net-game-wins into scratch arrays.
+//  2. For every unplayed match, flip a biased coin (winProbA, default 0.5).
+//     The winner gains +1 match point.  Net-game-win delta is sampled as
+//     ±2 (2-0 result, 50% chance) or ±1 (2-1 result, 50% chance) to
+//     approximate a realistic BO3 score distribution.
+//  3. Sort teams by (matchPoints DESC, netGameWin DESC) — same tiebreaker
+//     used by the live standings.
+//  4. Tally how many times each team finishes in Top-2 (UB) and Top-6 (PO).
+//  5. Percentages = count / 10 000 × 100, displayed to 2 decimal places.
 //
-// Percentages are floating-point; display with toFixed(2).
+// No artificial clamping — probabilities reflect only simulation results.
+// Season-complete short-circuit: if no matches remain, emit 100% / 0%.
+//
+// Elo hook: replace winProbA in getRemainingMatches() when Elo ratings
+// are available; no changes needed here.
+
+const SIMULATIONS = 10_000;
+const UB_SPOTS = 2;
 
 type TeamWithChances = TeamStanding & {
   upperBracketPct: number; // 0.00 – 100.00 float
   playoffPct: number;
 };
 
-function computeChances(standings: TeamStanding[]): TeamWithChances[] {
+function computeChances(
+  standings: TeamStanding[],
+  remainingMatches: RemainingMatchSlim[]
+): TeamWithChances[] {
   const n = standings.length;
   if (n === 0) return [];
 
-  const UB_SPOTS = 2;
   const PO_SPOTS = Math.min(6, n);
 
-  const allUnplayed = standings.every(
-    (s) => s.matchWins + s.matchLosses === 0
-  );
+  // Fast-path: season already complete — use current order directly.
+  if (remainingMatches.length === 0) {
+    return standings.map((team, i) => ({
+      ...team,
+      upperBracketPct: i < UB_SPOTS ? 100.0 : 0.0,
+      playoffPct: i < PO_SPOTS ? 100.0 : 0.0,
+    }));
+  }
 
-  return standings.map((team, idx) => {
-    const rank = idx + 1;
-    const currentPts = team.matchPoints;
-    const playedMatches = team.matchWins + team.matchLosses;
-    const remaining = Math.max(0, team.totalMatches - playedMatches);
-    const maxPts = currentPts + remaining;
+  // teamId → standings array index (O(1) lookup inside simulation loop)
+  const idxById = new Map<number, number>();
+  standings.forEach((s, i) => idxById.set(s.teamId, i));
 
-    function chanceFor(spots: number): number {
-      // No data yet → equal split
-      if (allUnplayed) {
-        return rank <= spots
-          ? 50.0
-          : parseFloat(((spots / n) * 100).toFixed(2));
-      }
+  // Simulation counters — one cell per team index
+  const ubHits = new Float64Array(n);
+  const poHits = new Float64Array(n);
 
-      const thresholdTeam = standings[spots - 1];
-      const firstOutside = standings[spots]; // undefined if spots === n
+  // Scratch buffers reused every iteration (avoids GC pressure)
+  const simPts = new Float64Array(n);
+  const simNGW = new Float64Array(n);
 
-      if (rank <= spots) {
-        // Inside zone: how likely to stay?
-        if (!firstOutside) return 100.0;
+  // Rank-order array: order[0] = standings index of the 1st-place team.
+  // Re-sorted in-place each iteration.
+  const order = Array.from({ length: n }, (_, i) => i);
 
-        const theirRem = Math.max(
-          0,
-          firstOutside.totalMatches -
-            (firstOutside.matchWins + firstOutside.matchLosses)
-        );
+  for (let iter = 0; iter < SIMULATIONS; iter++) {
+    // 1. Reset to current standings
+    for (let i = 0; i < n; i++) {
+      simPts[i] = standings[i].matchPoints;
+      simNGW[i] = standings[i].netGameWin;
+    }
 
-        // They can never overtake even winning every remaining match
-        if (firstOutside.matchPoints + theirRem < currentPts) return 100.0;
+    // 2. Simulate remaining matches
+    for (const m of remainingMatches) {
+      const ai = idxById.get(m.teamAId);
+      const bi = idxById.get(m.teamBId);
+      if (ai === undefined || bi === undefined) continue;
 
-        const lead = currentPts - firstOutside.matchPoints; // positive
-        const raw = lead / (lead + theirRem + 1);
-        return parseFloat(Math.min(99, Math.max(55, raw * 100)).toFixed(2));
+      const aWins = Math.random() < m.winProbA;
+      // BO3-style NGW delta: 2 (2-0 sweep, 50 %) or 1 (2-1, 50 %)
+      const delta = Math.random() < 0.5 ? 2 : 1;
+
+      if (aWins) {
+        simPts[ai] += 1;
+        simNGW[ai] += delta;
+        simNGW[bi] -= delta;
       } else {
-        // Outside zone: can we climb in?
-        if (maxPts < thresholdTeam.matchPoints) return 0.0;
-        if (remaining === 0) return 0.0;
-
-        const gap = thresholdTeam.matchPoints - currentPts; // positive
-        const raw = Math.max(0, (remaining - gap) / (remaining + 1));
-        return parseFloat(Math.min(49, raw * 60).toFixed(2));
+        simPts[bi] += 1;
+        simNGW[bi] += delta;
+        simNGW[ai] -= delta;
       }
     }
 
-    return {
-      ...team,
-      upperBracketPct: chanceFor(UB_SPOTS),
-      playoffPct: chanceFor(PO_SPOTS),
-    };
-  });
+    // 3. Sort: Match Points DESC, then Net Game Win DESC
+    order.sort((a, b) => {
+      const pd = simPts[b] - simPts[a];
+      return pd !== 0 ? pd : simNGW[b] - simNGW[a];
+    });
+
+    // 4. Tally finishes
+    for (let rank = 0; rank < n; rank++) {
+      const ti = order[rank];
+      if (rank < UB_SPOTS) ubHits[ti]++;
+      if (rank < PO_SPOTS) poHits[ti]++;
+    }
+  }
+
+  // 5. Convert to percentages
+  return standings.map((team, i) => ({
+    ...team,
+    upperBracketPct: parseFloat(((ubHits[i] / SIMULATIONS) * 100).toFixed(2)),
+    playoffPct: parseFloat(((poHits[i] / SIMULATIONS) * 100).toFixed(2)),
+  }));
 }
 
 // ─── ChancePct ────────────────────────────────────────────────────────────────
@@ -122,8 +154,14 @@ function ChancePct({ pct }: { pct: number }) {
 
 // ─── StandingTabs ─────────────────────────────────────────────────────────────
 
-export function StandingTabs({ standings }: { standings: TeamStanding[] }) {
-  const withChances = computeChances(standings);
+export function StandingTabs({
+  standings,
+  remainingMatches,
+}: {
+  standings: TeamStanding[];
+  remainingMatches: RemainingMatchSlim[];
+}) {
+  const withChances = computeChances(standings, remainingMatches);
 
   return (
     <Tabs defaultValue="standings" className="w-full">

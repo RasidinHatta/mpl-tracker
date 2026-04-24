@@ -133,3 +133,35 @@ export async function getStandings(usePredictions: boolean = false, forecastWeek
 
   return standings;
 }
+
+// ─── Remaining matches (for Monte Carlo) ──────────────────────────────────────
+//
+// Each entry represents one unplayed match.
+// `winProbA` is the probability that Team A wins this match.
+// Default: 0.5 (equal). Future: replace with Elo-derived probability.
+
+export type RemainingMatchSlim = {
+  teamAId: number;
+  teamBId: number;
+  /** P(Team A wins). Default 0.5 — hook for Elo in the future. */
+  winProbA: number;
+};
+
+export async function getRemainingMatches(
+  group?: MatchGroup
+): Promise<RemainingMatchSlim[]> {
+  const matches = await prisma.match.findMany({
+    where: {
+      ...(group ? { group } : {}),
+      teamAResult: null,
+      teamBResult: null,
+    },
+    select: { teamAId: true, teamBId: true },
+  });
+
+  return matches.map((m) => ({
+    teamAId: m.teamAId,
+    teamBId: m.teamBId,
+    winProbA: 0.5, // equal probability — replace with Elo when available
+  }));
+}
