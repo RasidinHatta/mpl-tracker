@@ -31,7 +31,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
   ]);
 
   const allMatches = schedule.flatMap((w) => w.matches);
-  const matchGroup = group || allMatches[0]?.group || "";
+
   const completedMatches = allMatches.filter((m) => m.teamAResult !== null && m.teamBResult !== null);
   const upcomingMatches = allMatches.filter((m) => m.teamAResult === null || m.teamBResult === null);
 
@@ -47,7 +47,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
           <h2 className="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
             <LayoutDashboard size={16} /> Overview
           </h2>
-          <h1 className="text-4xl font-bold tracking-tight">Dashboard{matchGroup ? ` - ${matchGroup}` : ""}</h1>
+          <h1 className="text-4xl font-bold tracking-tight">Dashboard</h1>
         </div>
       </div>
 
@@ -62,7 +62,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
               <h3 className="text-lg font-bold flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-primary" /> Next Up
               </h3>
-              <Link href={`/schedule${matchGroup ? `?group=${matchGroup}` : ''}`}>
+              <Link href={`/schedule${group ? `?group=${group}` : ''}`}>
                 <Button variant="ghost" size="sm" className="text-xs">
                   View Full Schedule <ChevronRight className="w-3 h-3 ml-1" />
                 </Button>
@@ -103,7 +103,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
                             Predicted: {match.teamAPrediction} - {match.teamBPrediction}
                           </Badge>
                         ) : (
-                          <Link href={`/schedule${matchGroup ? `?group=${matchGroup}` : ''}`}>
+                          <Link href={`/schedule${group ? `?group=${group}` : ''}`}>
                             <Badge variant="secondary" className="text-[10px] hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">
                               + Add Prediction
                             </Badge>
@@ -230,7 +230,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
                 ))}
               </div>
               <div className="mt-6">
-                <Link href={`/standing${matchGroup ? `?group=${matchGroup}` : ''}`}>
+                <Link href={`/standing${group ? `?group=${group}` : ''}`}>
                   <Button variant="outline" className="w-full text-xs" size="sm">
                     View Full Standings
                   </Button>
