@@ -248,14 +248,8 @@ export function StandingTabs({ standings }: { standings: TeamStanding[] }) {
                     <TableHead className="text-foreground font-bold h-10 px-4 uppercase tracking-tight w-[300px] text-xs">
                       Team
                     </TableHead>
-                    <TableHead className="text-center text-red-600 dark:text-red-500 font-bold uppercase tracking-tight h-10 text-xs">
-                      Match Point
-                    </TableHead>
                     <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">
                       Match W-L
-                    </TableHead>
-                    <TableHead className="text-center text-red-600 dark:text-red-500 font-bold uppercase tracking-tight h-10 text-xs">
-                      Net Game Win
                     </TableHead>
                     <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">
                       Game W-L
@@ -323,14 +317,8 @@ export function StandingTabs({ standings }: { standings: TeamStanding[] }) {
                             </div>
                           </div>
                         </TableCell>
-                        <TableCell className="text-center font-black text-red-600 dark:text-red-500 text-sm">
-                          {team.matchPoints}
-                        </TableCell>
                         <TableCell className="text-center font-bold text-foreground text-sm tracking-tight">
                           {team.matchWins} - {team.matchLosses}
-                        </TableCell>
-                        <TableCell className="text-center font-black text-red-600 dark:text-red-500 text-sm">
-                          {team.netGameWin}
                         </TableCell>
                         <TableCell className="text-center font-bold text-foreground text-sm tracking-tight">
                           {team.gameWins} - {team.gameLosses}
