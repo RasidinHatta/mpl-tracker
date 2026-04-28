@@ -57,7 +57,9 @@ export const ModelName = {
   Verification: 'Verification',
   Team: 'Team',
   Match: 'Match',
-  UserPrediction: 'UserPrediction'
+  PlayoffMatch: 'PlayoffMatch',
+  UserPrediction: 'UserPrediction',
+  UserPlayoffPrediction: 'UserPlayoffPrediction'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -87,7 +89,8 @@ export const UserScalarFieldEnum = {
   role: 'role',
   banned: 'banned',
   banReason: 'banReason',
-  banExpires: 'banExpires'
+  banExpires: 'banExpires',
+  favoriteTeamId: 'favoriteTeamId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -166,6 +169,21 @@ export const MatchScalarFieldEnum = {
 export type MatchScalarFieldEnum = (typeof MatchScalarFieldEnum)[keyof typeof MatchScalarFieldEnum]
 
 
+export const PlayoffMatchScalarFieldEnum = {
+  id: 'id',
+  matchId: 'matchId',
+  group: 'group',
+  teamAId: 'teamAId',
+  teamBId: 'teamBId',
+  teamAResult: 'teamAResult',
+  teamBResult: 'teamBResult',
+  format: 'format',
+  date: 'date'
+} as const
+
+export type PlayoffMatchScalarFieldEnum = (typeof PlayoffMatchScalarFieldEnum)[keyof typeof PlayoffMatchScalarFieldEnum]
+
+
 export const UserPredictionScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -177,6 +195,19 @@ export const UserPredictionScalarFieldEnum = {
 } as const
 
 export type UserPredictionScalarFieldEnum = (typeof UserPredictionScalarFieldEnum)[keyof typeof UserPredictionScalarFieldEnum]
+
+
+export const UserPlayoffPredictionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  playoffMatchId: 'playoffMatchId',
+  teamAPrediction: 'teamAPrediction',
+  teamBPrediction: 'teamBPrediction'
+} as const
+
+export type UserPlayoffPredictionScalarFieldEnum = (typeof UserPlayoffPredictionScalarFieldEnum)[keyof typeof UserPlayoffPredictionScalarFieldEnum]
 
 
 export const SortOrder = {

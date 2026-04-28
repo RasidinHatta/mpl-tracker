@@ -12,15 +12,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { updateMatch, type MatchWithTeams } from "@/actions/mpl/matches";
-import { ChevronRight } from "lucide-react";
+import { updatePlayoffMatch, type PlayoffMatchWithTeams } from "@/actions/mpl/playoffs";
+import { Info } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { TeamAvatar } from "./match-schedule";
-import { useSession } from "@/lib/auth.client";
-import { UserRole } from "@/lib/generated/prisma/enums";
 
-export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
+export function UpdatePlayoffMatchDialog({ match, isAdmin }: { match: PlayoffMatchWithTeams, isAdmin: boolean }) {
   const [open, setOpen] = useState(false);
   const [teamAPrediction, setTeamAPrediction] = useState(match.teamAPrediction?.toString() || "");
   const [teamBPrediction, setTeamBPrediction] = useState(match.teamBPrediction?.toString() || "");
@@ -28,8 +26,6 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
   const [teamBResult, setTeamBResult] = useState(match.teamBResult?.toString() || "");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { data: session } = useSession();
-  const isAdmin = session?.user?.role === UserRole.ADMIN;
 
   const getMaxScore = (format: string) => {
     switch (format) {
@@ -41,13 +37,7 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
   };
   const maxScore = getMaxScore(match.format);
 
-  const isMatchCompleted = match.teamAResult !== null && match.teamBResult !== null || (() => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const matchDate = new Date(match.date);
-    matchDate.setHours(0, 0, 0, 0);
-    return today > matchDate;
-  })();
+  const isMatchCompleted = match.teamAResult !== null && match.teamBResult !== null;
 
   const isValidScore = (a: string, b: string) => {
     if (!a && !b) return true; // both empty = clearing, allow
@@ -72,7 +62,7 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
     }
     try {
       setLoading(true);
-      await updateMatch(match.id, {
+      await updatePlayoffMatch(match.id, {
         teamAPrediction: teamAPrediction ? parseInt(teamAPrediction) : null,
         teamBPrediction: teamBPrediction ? parseInt(teamBPrediction) : null,
         teamAResult: teamAResult ? parseInt(teamAResult) : null,
@@ -88,19 +78,23 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
     }
   };
 
+  // If teams are not set, cannot update
+  if (!match.teamA || !match.teamB) {
+    return null;
+  }
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs text-muted-foreground hover:text-foreground" />
+          <button className="h-4 w-4 bg-muted border border-border text-muted-foreground hover:bg-muted-foreground hover:text-background rounded-full flex items-center justify-center transition-colors shadow-sm" title="View / Update Match" />
         }
       >
-        View Details / Update
-        <ChevronRight className="h-3.5 w-3.5" />
+        <Info className="h-2.5 w-2.5" />
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Update Match Details</DialogTitle>
+          <DialogTitle>Update {match.matchId}</DialogTitle>
           <DialogDescription>
             Update prediction and result for {match.teamA.name} vs {match.teamB.name}.
           </DialogDescription>

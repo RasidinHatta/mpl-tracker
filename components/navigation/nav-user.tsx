@@ -28,7 +28,6 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import { UpdateUserForm } from "@/components/auth/update-user-form"
 import { ChangePasswordForm } from "@/components/auth/change-password-form"
@@ -45,7 +44,6 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
-import { Button } from "../ui/button"
 
 import { useState } from "react"
 

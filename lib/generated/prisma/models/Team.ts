@@ -210,6 +210,9 @@ export type TeamWhereInput = {
   group?: Prisma.EnumMatchGroupFilter<"Team"> | $Enums.MatchGroup
   matchesAsA?: Prisma.MatchListRelationFilter
   matchesAsB?: Prisma.MatchListRelationFilter
+  playoffMatchesAsA?: Prisma.PlayoffMatchListRelationFilter
+  playoffMatchesAsB?: Prisma.PlayoffMatchListRelationFilter
+  favoritedBy?: Prisma.UserListRelationFilter
 }
 
 export type TeamOrderByWithRelationInput = {
@@ -219,6 +222,9 @@ export type TeamOrderByWithRelationInput = {
   group?: Prisma.SortOrder
   matchesAsA?: Prisma.MatchOrderByRelationAggregateInput
   matchesAsB?: Prisma.MatchOrderByRelationAggregateInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchOrderByRelationAggregateInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchOrderByRelationAggregateInput
+  favoritedBy?: Prisma.UserOrderByRelationAggregateInput
 }
 
 export type TeamWhereUniqueInput = Prisma.AtLeast<{
@@ -231,6 +237,9 @@ export type TeamWhereUniqueInput = Prisma.AtLeast<{
   group?: Prisma.EnumMatchGroupFilter<"Team"> | $Enums.MatchGroup
   matchesAsA?: Prisma.MatchListRelationFilter
   matchesAsB?: Prisma.MatchListRelationFilter
+  playoffMatchesAsA?: Prisma.PlayoffMatchListRelationFilter
+  playoffMatchesAsB?: Prisma.PlayoffMatchListRelationFilter
+  favoritedBy?: Prisma.UserListRelationFilter
 }, "id" | "name">
 
 export type TeamOrderByWithAggregationInput = {
@@ -261,6 +270,9 @@ export type TeamCreateInput = {
   group?: $Enums.MatchGroup
   matchesAsA?: Prisma.MatchCreateNestedManyWithoutTeamAInput
   matchesAsB?: Prisma.MatchCreateNestedManyWithoutTeamBInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchCreateNestedManyWithoutTeamAInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchCreateNestedManyWithoutTeamBInput
+  favoritedBy?: Prisma.UserCreateNestedManyWithoutFavoriteTeamInput
 }
 
 export type TeamUncheckedCreateInput = {
@@ -270,6 +282,9 @@ export type TeamUncheckedCreateInput = {
   group?: $Enums.MatchGroup
   matchesAsA?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamAInput
   matchesAsB?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamBInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUncheckedCreateNestedManyWithoutTeamAInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUncheckedCreateNestedManyWithoutTeamBInput
+  favoritedBy?: Prisma.UserUncheckedCreateNestedManyWithoutFavoriteTeamInput
 }
 
 export type TeamUpdateInput = {
@@ -278,6 +293,9 @@ export type TeamUpdateInput = {
   group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchesAsA?: Prisma.MatchUpdateManyWithoutTeamANestedInput
   matchesAsB?: Prisma.MatchUpdateManyWithoutTeamBNestedInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUpdateManyWithoutTeamANestedInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUpdateManyWithoutTeamBNestedInput
+  favoritedBy?: Prisma.UserUpdateManyWithoutFavoriteTeamNestedInput
 }
 
 export type TeamUncheckedUpdateInput = {
@@ -287,6 +305,9 @@ export type TeamUncheckedUpdateInput = {
   group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchesAsA?: Prisma.MatchUncheckedUpdateManyWithoutTeamANestedInput
   matchesAsB?: Prisma.MatchUncheckedUpdateManyWithoutTeamBNestedInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUncheckedUpdateManyWithoutTeamANestedInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUncheckedUpdateManyWithoutTeamBNestedInput
+  favoritedBy?: Prisma.UserUncheckedUpdateManyWithoutFavoriteTeamNestedInput
 }
 
 export type TeamCreateManyInput = {
@@ -307,6 +328,11 @@ export type TeamUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
+}
+
+export type TeamNullableScalarRelationFilter = {
+  is?: Prisma.TeamWhereInput | null
+  isNot?: Prisma.TeamWhereInput | null
 }
 
 export type TeamCountOrderByAggregateInput = {
@@ -341,6 +367,22 @@ export type TeamSumOrderByAggregateInput = {
 export type TeamScalarRelationFilter = {
   is?: Prisma.TeamWhereInput
   isNot?: Prisma.TeamWhereInput
+}
+
+export type TeamCreateNestedOneWithoutFavoritedByInput = {
+  create?: Prisma.XOR<Prisma.TeamCreateWithoutFavoritedByInput, Prisma.TeamUncheckedCreateWithoutFavoritedByInput>
+  connectOrCreate?: Prisma.TeamCreateOrConnectWithoutFavoritedByInput
+  connect?: Prisma.TeamWhereUniqueInput
+}
+
+export type TeamUpdateOneWithoutFavoritedByNestedInput = {
+  create?: Prisma.XOR<Prisma.TeamCreateWithoutFavoritedByInput, Prisma.TeamUncheckedCreateWithoutFavoritedByInput>
+  connectOrCreate?: Prisma.TeamCreateOrConnectWithoutFavoritedByInput
+  upsert?: Prisma.TeamUpsertWithoutFavoritedByInput
+  disconnect?: Prisma.TeamWhereInput | boolean
+  delete?: Prisma.TeamWhereInput | boolean
+  connect?: Prisma.TeamWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TeamUpdateToOneWithWhereWithoutFavoritedByInput, Prisma.TeamUpdateWithoutFavoritedByInput>, Prisma.TeamUncheckedUpdateWithoutFavoritedByInput>
 }
 
 export type EnumMatchGroupFieldUpdateOperationsInput = {
@@ -383,11 +425,104 @@ export type TeamUpdateOneRequiredWithoutMatchesAsBNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TeamUpdateToOneWithWhereWithoutMatchesAsBInput, Prisma.TeamUpdateWithoutMatchesAsBInput>, Prisma.TeamUncheckedUpdateWithoutMatchesAsBInput>
 }
 
+export type TeamCreateNestedOneWithoutPlayoffMatchesAsAInput = {
+  create?: Prisma.XOR<Prisma.TeamCreateWithoutPlayoffMatchesAsAInput, Prisma.TeamUncheckedCreateWithoutPlayoffMatchesAsAInput>
+  connectOrCreate?: Prisma.TeamCreateOrConnectWithoutPlayoffMatchesAsAInput
+  connect?: Prisma.TeamWhereUniqueInput
+}
+
+export type TeamCreateNestedOneWithoutPlayoffMatchesAsBInput = {
+  create?: Prisma.XOR<Prisma.TeamCreateWithoutPlayoffMatchesAsBInput, Prisma.TeamUncheckedCreateWithoutPlayoffMatchesAsBInput>
+  connectOrCreate?: Prisma.TeamCreateOrConnectWithoutPlayoffMatchesAsBInput
+  connect?: Prisma.TeamWhereUniqueInput
+}
+
+export type TeamUpdateOneWithoutPlayoffMatchesAsANestedInput = {
+  create?: Prisma.XOR<Prisma.TeamCreateWithoutPlayoffMatchesAsAInput, Prisma.TeamUncheckedCreateWithoutPlayoffMatchesAsAInput>
+  connectOrCreate?: Prisma.TeamCreateOrConnectWithoutPlayoffMatchesAsAInput
+  upsert?: Prisma.TeamUpsertWithoutPlayoffMatchesAsAInput
+  disconnect?: Prisma.TeamWhereInput | boolean
+  delete?: Prisma.TeamWhereInput | boolean
+  connect?: Prisma.TeamWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TeamUpdateToOneWithWhereWithoutPlayoffMatchesAsAInput, Prisma.TeamUpdateWithoutPlayoffMatchesAsAInput>, Prisma.TeamUncheckedUpdateWithoutPlayoffMatchesAsAInput>
+}
+
+export type TeamUpdateOneWithoutPlayoffMatchesAsBNestedInput = {
+  create?: Prisma.XOR<Prisma.TeamCreateWithoutPlayoffMatchesAsBInput, Prisma.TeamUncheckedCreateWithoutPlayoffMatchesAsBInput>
+  connectOrCreate?: Prisma.TeamCreateOrConnectWithoutPlayoffMatchesAsBInput
+  upsert?: Prisma.TeamUpsertWithoutPlayoffMatchesAsBInput
+  disconnect?: Prisma.TeamWhereInput | boolean
+  delete?: Prisma.TeamWhereInput | boolean
+  connect?: Prisma.TeamWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TeamUpdateToOneWithWhereWithoutPlayoffMatchesAsBInput, Prisma.TeamUpdateWithoutPlayoffMatchesAsBInput>, Prisma.TeamUncheckedUpdateWithoutPlayoffMatchesAsBInput>
+}
+
+export type TeamCreateWithoutFavoritedByInput = {
+  name: string
+  logo?: string | null
+  group?: $Enums.MatchGroup
+  matchesAsA?: Prisma.MatchCreateNestedManyWithoutTeamAInput
+  matchesAsB?: Prisma.MatchCreateNestedManyWithoutTeamBInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchCreateNestedManyWithoutTeamAInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchCreateNestedManyWithoutTeamBInput
+}
+
+export type TeamUncheckedCreateWithoutFavoritedByInput = {
+  id?: number
+  name: string
+  logo?: string | null
+  group?: $Enums.MatchGroup
+  matchesAsA?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamAInput
+  matchesAsB?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamBInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUncheckedCreateNestedManyWithoutTeamAInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUncheckedCreateNestedManyWithoutTeamBInput
+}
+
+export type TeamCreateOrConnectWithoutFavoritedByInput = {
+  where: Prisma.TeamWhereUniqueInput
+  create: Prisma.XOR<Prisma.TeamCreateWithoutFavoritedByInput, Prisma.TeamUncheckedCreateWithoutFavoritedByInput>
+}
+
+export type TeamUpsertWithoutFavoritedByInput = {
+  update: Prisma.XOR<Prisma.TeamUpdateWithoutFavoritedByInput, Prisma.TeamUncheckedUpdateWithoutFavoritedByInput>
+  create: Prisma.XOR<Prisma.TeamCreateWithoutFavoritedByInput, Prisma.TeamUncheckedCreateWithoutFavoritedByInput>
+  where?: Prisma.TeamWhereInput
+}
+
+export type TeamUpdateToOneWithWhereWithoutFavoritedByInput = {
+  where?: Prisma.TeamWhereInput
+  data: Prisma.XOR<Prisma.TeamUpdateWithoutFavoritedByInput, Prisma.TeamUncheckedUpdateWithoutFavoritedByInput>
+}
+
+export type TeamUpdateWithoutFavoritedByInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
+  matchesAsA?: Prisma.MatchUpdateManyWithoutTeamANestedInput
+  matchesAsB?: Prisma.MatchUpdateManyWithoutTeamBNestedInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUpdateManyWithoutTeamANestedInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUpdateManyWithoutTeamBNestedInput
+}
+
+export type TeamUncheckedUpdateWithoutFavoritedByInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
+  matchesAsA?: Prisma.MatchUncheckedUpdateManyWithoutTeamANestedInput
+  matchesAsB?: Prisma.MatchUncheckedUpdateManyWithoutTeamBNestedInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUncheckedUpdateManyWithoutTeamANestedInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUncheckedUpdateManyWithoutTeamBNestedInput
+}
+
 export type TeamCreateWithoutMatchesAsAInput = {
   name: string
   logo?: string | null
   group?: $Enums.MatchGroup
   matchesAsB?: Prisma.MatchCreateNestedManyWithoutTeamBInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchCreateNestedManyWithoutTeamAInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchCreateNestedManyWithoutTeamBInput
+  favoritedBy?: Prisma.UserCreateNestedManyWithoutFavoriteTeamInput
 }
 
 export type TeamUncheckedCreateWithoutMatchesAsAInput = {
@@ -396,6 +531,9 @@ export type TeamUncheckedCreateWithoutMatchesAsAInput = {
   logo?: string | null
   group?: $Enums.MatchGroup
   matchesAsB?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamBInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUncheckedCreateNestedManyWithoutTeamAInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUncheckedCreateNestedManyWithoutTeamBInput
+  favoritedBy?: Prisma.UserUncheckedCreateNestedManyWithoutFavoriteTeamInput
 }
 
 export type TeamCreateOrConnectWithoutMatchesAsAInput = {
@@ -408,6 +546,9 @@ export type TeamCreateWithoutMatchesAsBInput = {
   logo?: string | null
   group?: $Enums.MatchGroup
   matchesAsA?: Prisma.MatchCreateNestedManyWithoutTeamAInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchCreateNestedManyWithoutTeamAInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchCreateNestedManyWithoutTeamBInput
+  favoritedBy?: Prisma.UserCreateNestedManyWithoutFavoriteTeamInput
 }
 
 export type TeamUncheckedCreateWithoutMatchesAsBInput = {
@@ -416,6 +557,9 @@ export type TeamUncheckedCreateWithoutMatchesAsBInput = {
   logo?: string | null
   group?: $Enums.MatchGroup
   matchesAsA?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamAInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUncheckedCreateNestedManyWithoutTeamAInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUncheckedCreateNestedManyWithoutTeamBInput
+  favoritedBy?: Prisma.UserUncheckedCreateNestedManyWithoutFavoriteTeamInput
 }
 
 export type TeamCreateOrConnectWithoutMatchesAsBInput = {
@@ -439,6 +583,9 @@ export type TeamUpdateWithoutMatchesAsAInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchesAsB?: Prisma.MatchUpdateManyWithoutTeamBNestedInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUpdateManyWithoutTeamANestedInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUpdateManyWithoutTeamBNestedInput
+  favoritedBy?: Prisma.UserUpdateManyWithoutFavoriteTeamNestedInput
 }
 
 export type TeamUncheckedUpdateWithoutMatchesAsAInput = {
@@ -447,6 +594,9 @@ export type TeamUncheckedUpdateWithoutMatchesAsAInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchesAsB?: Prisma.MatchUncheckedUpdateManyWithoutTeamBNestedInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUncheckedUpdateManyWithoutTeamANestedInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUncheckedUpdateManyWithoutTeamBNestedInput
+  favoritedBy?: Prisma.UserUncheckedUpdateManyWithoutFavoriteTeamNestedInput
 }
 
 export type TeamUpsertWithoutMatchesAsBInput = {
@@ -465,6 +615,9 @@ export type TeamUpdateWithoutMatchesAsBInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchesAsA?: Prisma.MatchUpdateManyWithoutTeamANestedInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUpdateManyWithoutTeamANestedInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUpdateManyWithoutTeamBNestedInput
+  favoritedBy?: Prisma.UserUpdateManyWithoutFavoriteTeamNestedInput
 }
 
 export type TeamUncheckedUpdateWithoutMatchesAsBInput = {
@@ -473,6 +626,125 @@ export type TeamUncheckedUpdateWithoutMatchesAsBInput = {
   logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
   matchesAsA?: Prisma.MatchUncheckedUpdateManyWithoutTeamANestedInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUncheckedUpdateManyWithoutTeamANestedInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUncheckedUpdateManyWithoutTeamBNestedInput
+  favoritedBy?: Prisma.UserUncheckedUpdateManyWithoutFavoriteTeamNestedInput
+}
+
+export type TeamCreateWithoutPlayoffMatchesAsAInput = {
+  name: string
+  logo?: string | null
+  group?: $Enums.MatchGroup
+  matchesAsA?: Prisma.MatchCreateNestedManyWithoutTeamAInput
+  matchesAsB?: Prisma.MatchCreateNestedManyWithoutTeamBInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchCreateNestedManyWithoutTeamBInput
+  favoritedBy?: Prisma.UserCreateNestedManyWithoutFavoriteTeamInput
+}
+
+export type TeamUncheckedCreateWithoutPlayoffMatchesAsAInput = {
+  id?: number
+  name: string
+  logo?: string | null
+  group?: $Enums.MatchGroup
+  matchesAsA?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamAInput
+  matchesAsB?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamBInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUncheckedCreateNestedManyWithoutTeamBInput
+  favoritedBy?: Prisma.UserUncheckedCreateNestedManyWithoutFavoriteTeamInput
+}
+
+export type TeamCreateOrConnectWithoutPlayoffMatchesAsAInput = {
+  where: Prisma.TeamWhereUniqueInput
+  create: Prisma.XOR<Prisma.TeamCreateWithoutPlayoffMatchesAsAInput, Prisma.TeamUncheckedCreateWithoutPlayoffMatchesAsAInput>
+}
+
+export type TeamCreateWithoutPlayoffMatchesAsBInput = {
+  name: string
+  logo?: string | null
+  group?: $Enums.MatchGroup
+  matchesAsA?: Prisma.MatchCreateNestedManyWithoutTeamAInput
+  matchesAsB?: Prisma.MatchCreateNestedManyWithoutTeamBInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchCreateNestedManyWithoutTeamAInput
+  favoritedBy?: Prisma.UserCreateNestedManyWithoutFavoriteTeamInput
+}
+
+export type TeamUncheckedCreateWithoutPlayoffMatchesAsBInput = {
+  id?: number
+  name: string
+  logo?: string | null
+  group?: $Enums.MatchGroup
+  matchesAsA?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamAInput
+  matchesAsB?: Prisma.MatchUncheckedCreateNestedManyWithoutTeamBInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUncheckedCreateNestedManyWithoutTeamAInput
+  favoritedBy?: Prisma.UserUncheckedCreateNestedManyWithoutFavoriteTeamInput
+}
+
+export type TeamCreateOrConnectWithoutPlayoffMatchesAsBInput = {
+  where: Prisma.TeamWhereUniqueInput
+  create: Prisma.XOR<Prisma.TeamCreateWithoutPlayoffMatchesAsBInput, Prisma.TeamUncheckedCreateWithoutPlayoffMatchesAsBInput>
+}
+
+export type TeamUpsertWithoutPlayoffMatchesAsAInput = {
+  update: Prisma.XOR<Prisma.TeamUpdateWithoutPlayoffMatchesAsAInput, Prisma.TeamUncheckedUpdateWithoutPlayoffMatchesAsAInput>
+  create: Prisma.XOR<Prisma.TeamCreateWithoutPlayoffMatchesAsAInput, Prisma.TeamUncheckedCreateWithoutPlayoffMatchesAsAInput>
+  where?: Prisma.TeamWhereInput
+}
+
+export type TeamUpdateToOneWithWhereWithoutPlayoffMatchesAsAInput = {
+  where?: Prisma.TeamWhereInput
+  data: Prisma.XOR<Prisma.TeamUpdateWithoutPlayoffMatchesAsAInput, Prisma.TeamUncheckedUpdateWithoutPlayoffMatchesAsAInput>
+}
+
+export type TeamUpdateWithoutPlayoffMatchesAsAInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
+  matchesAsA?: Prisma.MatchUpdateManyWithoutTeamANestedInput
+  matchesAsB?: Prisma.MatchUpdateManyWithoutTeamBNestedInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUpdateManyWithoutTeamBNestedInput
+  favoritedBy?: Prisma.UserUpdateManyWithoutFavoriteTeamNestedInput
+}
+
+export type TeamUncheckedUpdateWithoutPlayoffMatchesAsAInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
+  matchesAsA?: Prisma.MatchUncheckedUpdateManyWithoutTeamANestedInput
+  matchesAsB?: Prisma.MatchUncheckedUpdateManyWithoutTeamBNestedInput
+  playoffMatchesAsB?: Prisma.PlayoffMatchUncheckedUpdateManyWithoutTeamBNestedInput
+  favoritedBy?: Prisma.UserUncheckedUpdateManyWithoutFavoriteTeamNestedInput
+}
+
+export type TeamUpsertWithoutPlayoffMatchesAsBInput = {
+  update: Prisma.XOR<Prisma.TeamUpdateWithoutPlayoffMatchesAsBInput, Prisma.TeamUncheckedUpdateWithoutPlayoffMatchesAsBInput>
+  create: Prisma.XOR<Prisma.TeamCreateWithoutPlayoffMatchesAsBInput, Prisma.TeamUncheckedCreateWithoutPlayoffMatchesAsBInput>
+  where?: Prisma.TeamWhereInput
+}
+
+export type TeamUpdateToOneWithWhereWithoutPlayoffMatchesAsBInput = {
+  where?: Prisma.TeamWhereInput
+  data: Prisma.XOR<Prisma.TeamUpdateWithoutPlayoffMatchesAsBInput, Prisma.TeamUncheckedUpdateWithoutPlayoffMatchesAsBInput>
+}
+
+export type TeamUpdateWithoutPlayoffMatchesAsBInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
+  matchesAsA?: Prisma.MatchUpdateManyWithoutTeamANestedInput
+  matchesAsB?: Prisma.MatchUpdateManyWithoutTeamBNestedInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUpdateManyWithoutTeamANestedInput
+  favoritedBy?: Prisma.UserUpdateManyWithoutFavoriteTeamNestedInput
+}
+
+export type TeamUncheckedUpdateWithoutPlayoffMatchesAsBInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  logo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  group?: Prisma.EnumMatchGroupFieldUpdateOperationsInput | $Enums.MatchGroup
+  matchesAsA?: Prisma.MatchUncheckedUpdateManyWithoutTeamANestedInput
+  matchesAsB?: Prisma.MatchUncheckedUpdateManyWithoutTeamBNestedInput
+  playoffMatchesAsA?: Prisma.PlayoffMatchUncheckedUpdateManyWithoutTeamANestedInput
+  favoritedBy?: Prisma.UserUncheckedUpdateManyWithoutFavoriteTeamNestedInput
 }
 
 
@@ -483,11 +755,17 @@ export type TeamUncheckedUpdateWithoutMatchesAsBInput = {
 export type TeamCountOutputType = {
   matchesAsA: number
   matchesAsB: number
+  playoffMatchesAsA: number
+  playoffMatchesAsB: number
+  favoritedBy: number
 }
 
 export type TeamCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   matchesAsA?: boolean | TeamCountOutputTypeCountMatchesAsAArgs
   matchesAsB?: boolean | TeamCountOutputTypeCountMatchesAsBArgs
+  playoffMatchesAsA?: boolean | TeamCountOutputTypeCountPlayoffMatchesAsAArgs
+  playoffMatchesAsB?: boolean | TeamCountOutputTypeCountPlayoffMatchesAsBArgs
+  favoritedBy?: boolean | TeamCountOutputTypeCountFavoritedByArgs
 }
 
 /**
@@ -514,6 +792,27 @@ export type TeamCountOutputTypeCountMatchesAsBArgs<ExtArgs extends runtime.Types
   where?: Prisma.MatchWhereInput
 }
 
+/**
+ * TeamCountOutputType without action
+ */
+export type TeamCountOutputTypeCountPlayoffMatchesAsAArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlayoffMatchWhereInput
+}
+
+/**
+ * TeamCountOutputType without action
+ */
+export type TeamCountOutputTypeCountPlayoffMatchesAsBArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PlayoffMatchWhereInput
+}
+
+/**
+ * TeamCountOutputType without action
+ */
+export type TeamCountOutputTypeCountFavoritedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserWhereInput
+}
+
 
 export type TeamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -522,6 +821,9 @@ export type TeamSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   group?: boolean
   matchesAsA?: boolean | Prisma.Team$matchesAsAArgs<ExtArgs>
   matchesAsB?: boolean | Prisma.Team$matchesAsBArgs<ExtArgs>
+  playoffMatchesAsA?: boolean | Prisma.Team$playoffMatchesAsAArgs<ExtArgs>
+  playoffMatchesAsB?: boolean | Prisma.Team$playoffMatchesAsBArgs<ExtArgs>
+  favoritedBy?: boolean | Prisma.Team$favoritedByArgs<ExtArgs>
   _count?: boolean | Prisma.TeamCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["team"]>
 
@@ -550,6 +852,9 @@ export type TeamOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type TeamInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   matchesAsA?: boolean | Prisma.Team$matchesAsAArgs<ExtArgs>
   matchesAsB?: boolean | Prisma.Team$matchesAsBArgs<ExtArgs>
+  playoffMatchesAsA?: boolean | Prisma.Team$playoffMatchesAsAArgs<ExtArgs>
+  playoffMatchesAsB?: boolean | Prisma.Team$playoffMatchesAsBArgs<ExtArgs>
+  favoritedBy?: boolean | Prisma.Team$favoritedByArgs<ExtArgs>
   _count?: boolean | Prisma.TeamCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TeamIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -560,6 +865,9 @@ export type $TeamPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     matchesAsA: Prisma.$MatchPayload<ExtArgs>[]
     matchesAsB: Prisma.$MatchPayload<ExtArgs>[]
+    playoffMatchesAsA: Prisma.$PlayoffMatchPayload<ExtArgs>[]
+    playoffMatchesAsB: Prisma.$PlayoffMatchPayload<ExtArgs>[]
+    favoritedBy: Prisma.$UserPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -962,6 +1270,9 @@ export interface Prisma__TeamClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   matchesAsA<T extends Prisma.Team$matchesAsAArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Team$matchesAsAArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   matchesAsB<T extends Prisma.Team$matchesAsBArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Team$matchesAsBArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  playoffMatchesAsA<T extends Prisma.Team$playoffMatchesAsAArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Team$playoffMatchesAsAArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlayoffMatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  playoffMatchesAsB<T extends Prisma.Team$playoffMatchesAsBArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Team$playoffMatchesAsBArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PlayoffMatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  favoritedBy<T extends Prisma.Team$favoritedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Team$favoritedByArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1433,6 +1744,78 @@ export type Team$matchesAsBArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.MatchScalarFieldEnum | Prisma.MatchScalarFieldEnum[]
+}
+
+/**
+ * Team.playoffMatchesAsA
+ */
+export type Team$playoffMatchesAsAArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlayoffMatch
+   */
+  select?: Prisma.PlayoffMatchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlayoffMatch
+   */
+  omit?: Prisma.PlayoffMatchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayoffMatchInclude<ExtArgs> | null
+  where?: Prisma.PlayoffMatchWhereInput
+  orderBy?: Prisma.PlayoffMatchOrderByWithRelationInput | Prisma.PlayoffMatchOrderByWithRelationInput[]
+  cursor?: Prisma.PlayoffMatchWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlayoffMatchScalarFieldEnum | Prisma.PlayoffMatchScalarFieldEnum[]
+}
+
+/**
+ * Team.playoffMatchesAsB
+ */
+export type Team$playoffMatchesAsBArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PlayoffMatch
+   */
+  select?: Prisma.PlayoffMatchSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PlayoffMatch
+   */
+  omit?: Prisma.PlayoffMatchOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PlayoffMatchInclude<ExtArgs> | null
+  where?: Prisma.PlayoffMatchWhereInput
+  orderBy?: Prisma.PlayoffMatchOrderByWithRelationInput | Prisma.PlayoffMatchOrderByWithRelationInput[]
+  cursor?: Prisma.PlayoffMatchWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PlayoffMatchScalarFieldEnum | Prisma.PlayoffMatchScalarFieldEnum[]
+}
+
+/**
+ * Team.favoritedBy
+ */
+export type Team$favoritedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
+  cursor?: Prisma.UserWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
 }
 
 /**

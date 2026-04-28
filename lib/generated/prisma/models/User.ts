@@ -20,8 +20,18 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  favoriteTeamId: number | null
+}
+
+export type UserSumAggregateOutputType = {
+  favoriteTeamId: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -36,6 +46,7 @@ export type UserMinAggregateOutputType = {
   banned: boolean | null
   banReason: string | null
   banExpires: Date | null
+  favoriteTeamId: number | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -50,6 +61,7 @@ export type UserMaxAggregateOutputType = {
   banned: boolean | null
   banReason: string | null
   banExpires: Date | null
+  favoriteTeamId: number | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -64,9 +76,18 @@ export type UserCountAggregateOutputType = {
   banned: number
   banReason: number
   banExpires: number
+  favoriteTeamId: number
   _all: number
 }
 
+
+export type UserAvgAggregateInputType = {
+  favoriteTeamId?: true
+}
+
+export type UserSumAggregateInputType = {
+  favoriteTeamId?: true
+}
 
 export type UserMinAggregateInputType = {
   id?: true
@@ -80,6 +101,7 @@ export type UserMinAggregateInputType = {
   banned?: true
   banReason?: true
   banExpires?: true
+  favoriteTeamId?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -94,6 +116,7 @@ export type UserMaxAggregateInputType = {
   banned?: true
   banReason?: true
   banExpires?: true
+  favoriteTeamId?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -108,6 +131,7 @@ export type UserCountAggregateInputType = {
   banned?: true
   banReason?: true
   banExpires?: true
+  favoriteTeamId?: true
   _all?: true
 }
 
@@ -149,6 +173,18 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -179,6 +215,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
+  _avg?: UserAvgAggregateInputType
+  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -195,7 +233,10 @@ export type UserGroupByOutputType = {
   banned: boolean | null
   banReason: string | null
   banExpires: Date | null
+  favoriteTeamId: number | null
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -230,9 +271,12 @@ export type UserWhereInput = {
   banned?: Prisma.BoolNullableFilter<"User"> | boolean | null
   banReason?: Prisma.StringNullableFilter<"User"> | string | null
   banExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  favoriteTeamId?: Prisma.IntNullableFilter<"User"> | number | null
+  favoriteTeam?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   predictions?: Prisma.UserPredictionListRelationFilter
+  playoffPredictions?: Prisma.UserPlayoffPredictionListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -247,9 +291,12 @@ export type UserOrderByWithRelationInput = {
   banned?: Prisma.SortOrderInput | Prisma.SortOrder
   banReason?: Prisma.SortOrderInput | Prisma.SortOrder
   banExpires?: Prisma.SortOrderInput | Prisma.SortOrder
+  favoriteTeamId?: Prisma.SortOrderInput | Prisma.SortOrder
+  favoriteTeam?: Prisma.TeamOrderByWithRelationInput
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   accounts?: Prisma.AccountOrderByRelationAggregateInput
   predictions?: Prisma.UserPredictionOrderByRelationAggregateInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -267,9 +314,12 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   banned?: Prisma.BoolNullableFilter<"User"> | boolean | null
   banReason?: Prisma.StringNullableFilter<"User"> | string | null
   banExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  favoriteTeamId?: Prisma.IntNullableFilter<"User"> | number | null
+  favoriteTeam?: Prisma.XOR<Prisma.TeamNullableScalarRelationFilter, Prisma.TeamWhereInput> | null
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
   predictions?: Prisma.UserPredictionListRelationFilter
+  playoffPredictions?: Prisma.UserPlayoffPredictionListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -284,9 +334,12 @@ export type UserOrderByWithAggregationInput = {
   banned?: Prisma.SortOrderInput | Prisma.SortOrder
   banReason?: Prisma.SortOrderInput | Prisma.SortOrder
   banExpires?: Prisma.SortOrderInput | Prisma.SortOrder
+  favoriteTeamId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
+  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
+  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -304,6 +357,7 @@ export type UserScalarWhereWithAggregatesInput = {
   banned?: Prisma.BoolNullableWithAggregatesFilter<"User"> | boolean | null
   banReason?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   banExpires?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  favoriteTeamId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
 }
 
 export type UserCreateInput = {
@@ -318,9 +372,11 @@ export type UserCreateInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  favoriteTeam?: Prisma.TeamCreateNestedOneWithoutFavoritedByInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   predictions?: Prisma.UserPredictionCreateNestedManyWithoutUserInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -335,9 +391,11 @@ export type UserUncheckedCreateInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  favoriteTeamId?: number | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   predictions?: Prisma.UserPredictionUncheckedCreateNestedManyWithoutUserInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -352,9 +410,11 @@ export type UserUpdateInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  favoriteTeam?: Prisma.TeamUpdateOneWithoutFavoritedByNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   predictions?: Prisma.UserPredictionUpdateManyWithoutUserNestedInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -369,9 +429,11 @@ export type UserUncheckedUpdateInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  favoriteTeamId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   predictions?: Prisma.UserPredictionUncheckedUpdateManyWithoutUserNestedInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -386,6 +448,7 @@ export type UserCreateManyInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  favoriteTeamId?: number | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -414,6 +477,7 @@ export type UserUncheckedUpdateManyInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  favoriteTeamId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -428,6 +492,11 @@ export type UserCountOrderByAggregateInput = {
   banned?: Prisma.SortOrder
   banReason?: Prisma.SortOrder
   banExpires?: Prisma.SortOrder
+  favoriteTeamId?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+  favoriteTeamId?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -442,6 +511,7 @@ export type UserMaxOrderByAggregateInput = {
   banned?: Prisma.SortOrder
   banReason?: Prisma.SortOrder
   banExpires?: Prisma.SortOrder
+  favoriteTeamId?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -456,11 +526,26 @@ export type UserMinOrderByAggregateInput = {
   banned?: Prisma.SortOrder
   banReason?: Prisma.SortOrder
   banExpires?: Prisma.SortOrder
+  favoriteTeamId?: Prisma.SortOrder
+}
+
+export type UserSumOrderByAggregateInput = {
+  favoriteTeamId?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
   is?: Prisma.UserWhereInput
   isNot?: Prisma.UserWhereInput
+}
+
+export type UserListRelationFilter = {
+  every?: Prisma.UserWhereInput
+  some?: Prisma.UserWhereInput
+  none?: Prisma.UserWhereInput
+}
+
+export type UserOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type StringFieldUpdateOperationsInput = {
@@ -491,6 +576,14 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type UserCreateNestedOneWithoutSessionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutSessionsInput
@@ -519,6 +612,48 @@ export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsInput, Prisma.UserUpdateWithoutAccountsInput>, Prisma.UserUncheckedUpdateWithoutAccountsInput>
 }
 
+export type UserCreateNestedManyWithoutFavoriteTeamInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFavoriteTeamInput, Prisma.UserUncheckedCreateWithoutFavoriteTeamInput> | Prisma.UserCreateWithoutFavoriteTeamInput[] | Prisma.UserUncheckedCreateWithoutFavoriteTeamInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFavoriteTeamInput | Prisma.UserCreateOrConnectWithoutFavoriteTeamInput[]
+  createMany?: Prisma.UserCreateManyFavoriteTeamInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
+export type UserUncheckedCreateNestedManyWithoutFavoriteTeamInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFavoriteTeamInput, Prisma.UserUncheckedCreateWithoutFavoriteTeamInput> | Prisma.UserCreateWithoutFavoriteTeamInput[] | Prisma.UserUncheckedCreateWithoutFavoriteTeamInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFavoriteTeamInput | Prisma.UserCreateOrConnectWithoutFavoriteTeamInput[]
+  createMany?: Prisma.UserCreateManyFavoriteTeamInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
+export type UserUpdateManyWithoutFavoriteTeamNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFavoriteTeamInput, Prisma.UserUncheckedCreateWithoutFavoriteTeamInput> | Prisma.UserCreateWithoutFavoriteTeamInput[] | Prisma.UserUncheckedCreateWithoutFavoriteTeamInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFavoriteTeamInput | Prisma.UserCreateOrConnectWithoutFavoriteTeamInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutFavoriteTeamInput | Prisma.UserUpsertWithWhereUniqueWithoutFavoriteTeamInput[]
+  createMany?: Prisma.UserCreateManyFavoriteTeamInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutFavoriteTeamInput | Prisma.UserUpdateWithWhereUniqueWithoutFavoriteTeamInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutFavoriteTeamInput | Prisma.UserUpdateManyWithWhereWithoutFavoriteTeamInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
+export type UserUncheckedUpdateManyWithoutFavoriteTeamNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFavoriteTeamInput, Prisma.UserUncheckedCreateWithoutFavoriteTeamInput> | Prisma.UserCreateWithoutFavoriteTeamInput[] | Prisma.UserUncheckedCreateWithoutFavoriteTeamInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFavoriteTeamInput | Prisma.UserCreateOrConnectWithoutFavoriteTeamInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutFavoriteTeamInput | Prisma.UserUpsertWithWhereUniqueWithoutFavoriteTeamInput[]
+  createMany?: Prisma.UserCreateManyFavoriteTeamInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutFavoriteTeamInput | Prisma.UserUpdateWithWhereUniqueWithoutFavoriteTeamInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutFavoriteTeamInput | Prisma.UserUpdateManyWithWhereWithoutFavoriteTeamInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
 export type UserCreateNestedOneWithoutPredictionsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutPredictionsInput, Prisma.UserUncheckedCreateWithoutPredictionsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutPredictionsInput
@@ -533,6 +668,20 @@ export type UserUpdateOneRequiredWithoutPredictionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPredictionsInput, Prisma.UserUpdateWithoutPredictionsInput>, Prisma.UserUncheckedUpdateWithoutPredictionsInput>
 }
 
+export type UserCreateNestedOneWithoutPlayoffPredictionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPlayoffPredictionsInput, Prisma.UserUncheckedCreateWithoutPlayoffPredictionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPlayoffPredictionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPlayoffPredictionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPlayoffPredictionsInput, Prisma.UserUncheckedCreateWithoutPlayoffPredictionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPlayoffPredictionsInput
+  upsert?: Prisma.UserUpsertWithoutPlayoffPredictionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPlayoffPredictionsInput, Prisma.UserUpdateWithoutPlayoffPredictionsInput>, Prisma.UserUncheckedUpdateWithoutPlayoffPredictionsInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   createdAt?: Date | string
@@ -545,8 +694,10 @@ export type UserCreateWithoutSessionsInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  favoriteTeam?: Prisma.TeamCreateNestedOneWithoutFavoritedByInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   predictions?: Prisma.UserPredictionCreateNestedManyWithoutUserInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -561,8 +712,10 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  favoriteTeamId?: number | null
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   predictions?: Prisma.UserPredictionUncheckedCreateNestedManyWithoutUserInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -593,8 +746,10 @@ export type UserUpdateWithoutSessionsInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  favoriteTeam?: Prisma.TeamUpdateOneWithoutFavoritedByNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   predictions?: Prisma.UserPredictionUpdateManyWithoutUserNestedInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -609,8 +764,10 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  favoriteTeamId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   predictions?: Prisma.UserPredictionUncheckedUpdateManyWithoutUserNestedInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -625,8 +782,10 @@ export type UserCreateWithoutAccountsInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  favoriteTeam?: Prisma.TeamCreateNestedOneWithoutFavoritedByInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   predictions?: Prisma.UserPredictionCreateNestedManyWithoutUserInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -641,8 +800,10 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  favoriteTeamId?: number | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   predictions?: Prisma.UserPredictionUncheckedCreateNestedManyWithoutUserInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -673,8 +834,10 @@ export type UserUpdateWithoutAccountsInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  favoriteTeam?: Prisma.TeamUpdateOneWithoutFavoritedByNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   predictions?: Prisma.UserPredictionUpdateManyWithoutUserNestedInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -689,8 +852,90 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  favoriteTeamId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   predictions?: Prisma.UserPredictionUncheckedUpdateManyWithoutUserNestedInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutFavoriteTeamInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: $Enums.UserRole
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  predictions?: Prisma.UserPredictionCreateNestedManyWithoutUserInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFavoriteTeamInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: $Enums.UserRole
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  predictions?: Prisma.UserPredictionUncheckedCreateNestedManyWithoutUserInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFavoriteTeamInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFavoriteTeamInput, Prisma.UserUncheckedCreateWithoutFavoriteTeamInput>
+}
+
+export type UserCreateManyFavoriteTeamInputEnvelope = {
+  data: Prisma.UserCreateManyFavoriteTeamInput | Prisma.UserCreateManyFavoriteTeamInput[]
+  skipDuplicates?: boolean
+}
+
+export type UserUpsertWithWhereUniqueWithoutFavoriteTeamInput = {
+  where: Prisma.UserWhereUniqueInput
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFavoriteTeamInput, Prisma.UserUncheckedUpdateWithoutFavoriteTeamInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFavoriteTeamInput, Prisma.UserUncheckedCreateWithoutFavoriteTeamInput>
+}
+
+export type UserUpdateWithWhereUniqueWithoutFavoriteTeamInput = {
+  where: Prisma.UserWhereUniqueInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFavoriteTeamInput, Prisma.UserUncheckedUpdateWithoutFavoriteTeamInput>
+}
+
+export type UserUpdateManyWithWhereWithoutFavoriteTeamInput = {
+  where: Prisma.UserScalarWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutFavoriteTeamInput>
+}
+
+export type UserScalarWhereInput = {
+  AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+  OR?: Prisma.UserScalarWhereInput[]
+  NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+  id?: Prisma.StringFilter<"User"> | string
+  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  name?: Prisma.StringFilter<"User"> | string
+  email?: Prisma.StringFilter<"User"> | string
+  emailVerified?: Prisma.BoolFilter<"User"> | boolean
+  image?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
+  banned?: Prisma.BoolNullableFilter<"User"> | boolean | null
+  banReason?: Prisma.StringNullableFilter<"User"> | string | null
+  banExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  favoriteTeamId?: Prisma.IntNullableFilter<"User"> | number | null
 }
 
 export type UserCreateWithoutPredictionsInput = {
@@ -705,8 +950,10 @@ export type UserCreateWithoutPredictionsInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  favoriteTeam?: Prisma.TeamCreateNestedOneWithoutFavoritedByInput
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPredictionsInput = {
@@ -721,8 +968,10 @@ export type UserUncheckedCreateWithoutPredictionsInput = {
   banned?: boolean | null
   banReason?: string | null
   banExpires?: Date | string | null
+  favoriteTeamId?: number | null
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPredictionsInput = {
@@ -753,8 +1002,10 @@ export type UserUpdateWithoutPredictionsInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  favoriteTeam?: Prisma.TeamUpdateOneWithoutFavoritedByNestedInput
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPredictionsInput = {
@@ -769,8 +1020,162 @@ export type UserUncheckedUpdateWithoutPredictionsInput = {
   banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  favoriteTeamId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPlayoffPredictionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: $Enums.UserRole
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  favoriteTeam?: Prisma.TeamCreateNestedOneWithoutFavoritedByInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  predictions?: Prisma.UserPredictionCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutPlayoffPredictionsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: $Enums.UserRole
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+  favoriteTeamId?: number | null
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  predictions?: Prisma.UserPredictionUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutPlayoffPredictionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlayoffPredictionsInput, Prisma.UserUncheckedCreateWithoutPlayoffPredictionsInput>
+}
+
+export type UserUpsertWithoutPlayoffPredictionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPlayoffPredictionsInput, Prisma.UserUncheckedUpdateWithoutPlayoffPredictionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPlayoffPredictionsInput, Prisma.UserUncheckedCreateWithoutPlayoffPredictionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPlayoffPredictionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPlayoffPredictionsInput, Prisma.UserUncheckedUpdateWithoutPlayoffPredictionsInput>
+}
+
+export type UserUpdateWithoutPlayoffPredictionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  favoriteTeam?: Prisma.TeamUpdateOneWithoutFavoritedByNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  predictions?: Prisma.UserPredictionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPlayoffPredictionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  favoriteTeamId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  predictions?: Prisma.UserPredictionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateManyFavoriteTeamInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  email: string
+  emailVerified: boolean
+  image?: string | null
+  role?: $Enums.UserRole
+  banned?: boolean | null
+  banReason?: string | null
+  banExpires?: Date | string | null
+}
+
+export type UserUpdateWithoutFavoriteTeamInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  predictions?: Prisma.UserPredictionUpdateManyWithoutUserNestedInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFavoriteTeamInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  predictions?: Prisma.UserPredictionUncheckedUpdateManyWithoutUserNestedInput
+  playoffPredictions?: Prisma.UserPlayoffPredictionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateManyWithoutFavoriteTeamInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  banned?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  banReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  banExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -782,12 +1187,14 @@ export type UserCountOutputType = {
   sessions: number
   accounts: number
   predictions: number
+  playoffPredictions: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   predictions?: boolean | UserCountOutputTypeCountPredictionsArgs
+  playoffPredictions?: boolean | UserCountOutputTypeCountPlayoffPredictionsArgs
 }
 
 /**
@@ -821,6 +1228,13 @@ export type UserCountOutputTypeCountPredictionsArgs<ExtArgs extends runtime.Type
   where?: Prisma.UserPredictionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPlayoffPredictionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserPlayoffPredictionWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -834,9 +1248,12 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   banned?: boolean
   banReason?: boolean
   banExpires?: boolean
+  favoriteTeamId?: boolean
+  favoriteTeam?: boolean | Prisma.User$favoriteTeamArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   predictions?: boolean | Prisma.User$predictionsArgs<ExtArgs>
+  playoffPredictions?: boolean | Prisma.User$playoffPredictionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -852,6 +1269,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   banned?: boolean
   banReason?: boolean
   banExpires?: boolean
+  favoriteTeamId?: boolean
+  favoriteTeam?: boolean | Prisma.User$favoriteTeamArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -866,6 +1285,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   banned?: boolean
   banReason?: boolean
   banExpires?: boolean
+  favoriteTeamId?: boolean
+  favoriteTeam?: boolean | Prisma.User$favoriteTeamArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -880,24 +1301,33 @@ export type UserSelectScalar = {
   banned?: boolean
   banReason?: boolean
   banExpires?: boolean
+  favoriteTeamId?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "email" | "emailVerified" | "image" | "role" | "banned" | "banReason" | "banExpires", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "email" | "emailVerified" | "image" | "role" | "banned" | "banReason" | "banExpires" | "favoriteTeamId", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  favoriteTeam?: boolean | Prisma.User$favoriteTeamArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   predictions?: boolean | Prisma.User$predictionsArgs<ExtArgs>
+  playoffPredictions?: boolean | Prisma.User$playoffPredictionsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  favoriteTeam?: boolean | Prisma.User$favoriteTeamArgs<ExtArgs>
+}
+export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  favoriteTeam?: boolean | Prisma.User$favoriteTeamArgs<ExtArgs>
+}
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    favoriteTeam: Prisma.$TeamPayload<ExtArgs> | null
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     accounts: Prisma.$AccountPayload<ExtArgs>[]
     predictions: Prisma.$UserPredictionPayload<ExtArgs>[]
+    playoffPredictions: Prisma.$UserPlayoffPredictionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -911,6 +1341,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     banned: boolean | null
     banReason: string | null
     banExpires: Date | null
+    favoriteTeamId: number | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1305,9 +1736,11 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  favoriteTeam<T extends Prisma.User$favoriteTeamArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$favoriteTeamArgs<ExtArgs>>): Prisma.Prisma__TeamClient<runtime.Types.Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   predictions<T extends Prisma.User$predictionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$predictionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPredictionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  playoffPredictions<T extends Prisma.User$playoffPredictionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$playoffPredictionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPlayoffPredictionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1348,6 +1781,7 @@ export interface UserFieldRefs {
   readonly banned: Prisma.FieldRef<"User", 'Boolean'>
   readonly banReason: Prisma.FieldRef<"User", 'String'>
   readonly banExpires: Prisma.FieldRef<"User", 'DateTime'>
+  readonly favoriteTeamId: Prisma.FieldRef<"User", 'Int'>
 }
     
 
@@ -1602,6 +2036,10 @@ export type UserCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    */
   data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1672,6 +2110,10 @@ export type UserUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many Users to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1738,6 +2180,25 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to delete.
    */
   limit?: number
+}
+
+/**
+ * User.favoriteTeam
+ */
+export type User$favoriteTeamArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Team
+   */
+  select?: Prisma.TeamSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Team
+   */
+  omit?: Prisma.TeamOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TeamInclude<ExtArgs> | null
+  where?: Prisma.TeamWhereInput
 }
 
 /**
@@ -1810,6 +2271,30 @@ export type User$predictionsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.UserPredictionScalarFieldEnum | Prisma.UserPredictionScalarFieldEnum[]
+}
+
+/**
+ * User.playoffPredictions
+ */
+export type User$playoffPredictionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserPlayoffPrediction
+   */
+  select?: Prisma.UserPlayoffPredictionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserPlayoffPrediction
+   */
+  omit?: Prisma.UserPlayoffPredictionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserPlayoffPredictionInclude<ExtArgs> | null
+  where?: Prisma.UserPlayoffPredictionWhereInput
+  orderBy?: Prisma.UserPlayoffPredictionOrderByWithRelationInput | Prisma.UserPlayoffPredictionOrderByWithRelationInput[]
+  cursor?: Prisma.UserPlayoffPredictionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserPlayoffPredictionScalarFieldEnum | Prisma.UserPlayoffPredictionScalarFieldEnum[]
 }
 
 /**

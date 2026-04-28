@@ -40,7 +40,8 @@ export async function signInEmailAction(formData: FormData) {
   } catch (err) {
     if (err instanceof APIError) {
       const errCode = err.body ? (err.body.code as ErrorCode) : "UNKNOWN";
-      return { error: err.message || "An error occurred during sign in." };
+      const errMessages = errCode.replace("_", " ").toLowerCase();
+      return { error: errMessages };
     }
 
     if (err instanceof Error) return { error: err.message };

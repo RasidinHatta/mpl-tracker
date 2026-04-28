@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function AuthLayout({
   children,
 }: {
@@ -8,10 +10,12 @@ export default function AuthLayout({
       {/* Visual / Branding side */}
       <div className="relative hidden md:flex flex-col p-12 lg:col-span-2 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2940&auto=format&fit=crop"
             alt="Esports Arena Background"
-            className="h-full w-full object-cover opacity-50 transition-transform duration-1000 hover:scale-105"
+            fill
+            priority
+            className="object-cover opacity-50 transition-transform duration-1000 hover:scale-105"
           />
         </div>
 
@@ -50,10 +54,11 @@ export default function AuthLayout({
       <div className="flex items-center justify-center p-4 sm:p-12 bg-background relative z-10 w-full min-h-dvh md:border-l border-white/10">
         {/* Mobile Background Image (Visible only on mobile) */}
         <div className="absolute inset-0 z-0 md:hidden overflow-hidden">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2940&auto=format&fit=crop"
             alt="Mobile Background"
-            className="h-full w-full object-cover opacity-20"
+            fill
+            className="object-cover opacity-20"
           />
           <div className="absolute inset-0 bg-linear-to-b from-background/30 via-background/80 to-background" />
         </div>

@@ -7,11 +7,11 @@ import {
   CardContent,
   CardHeader,
 } from "@/components/ui/card";
+/* eslint-disable @next/next/no-img-element */
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import type { WeekSchedule } from "@/actions/mpl/matches";
-import { Trophy, Calendar, Clock, TrendingUp, ChevronRight, Swords } from "lucide-react";
+import { Trophy, Calendar, TrendingUp } from "lucide-react";
 import { UpdateMatchDialog } from "./update-match-dialog";
 
 function formatDate(date: Date | string) {

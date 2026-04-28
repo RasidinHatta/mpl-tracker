@@ -17,7 +17,7 @@ import { NavUser } from "./nav-user"
 
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  user?: any;
+  user?: { name: string, email: string, image?: string | null };
 }
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
@@ -62,6 +62,12 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       icon: <History />,
       isActive: pathname.startsWith("/history"),
     },
+    {
+      title: "Playoff",
+      url: createUrl("/playoff"),
+      icon: <Trophy />,
+      isActive: pathname.startsWith("/playoff"),
+    },
   ]
 
   return (
@@ -74,7 +80,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
           <NavMain items={navMain} />
         </SidebarContent>
         <SidebarFooter>
-          {user && <NavUser user={user} />}
+          {user && <NavUser user={{ ...user, image: user.image ?? null }} />}
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>

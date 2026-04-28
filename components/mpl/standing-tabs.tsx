@@ -49,7 +49,7 @@ type TeamWithChances = TeamStanding & {
   playoffPct: number;
 };
 
-function computeChances(
+export function computeChances(
   standings: TeamStanding[],
   remainingMatches: RemainingMatchSlim[]
 ): TeamWithChances[] {

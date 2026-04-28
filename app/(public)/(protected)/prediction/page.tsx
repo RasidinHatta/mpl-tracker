@@ -2,7 +2,7 @@ import React from "react";
 import { PieChart, Target, CheckCircle2, Trophy, BarChart3, TrendingUp, XCircle, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Progress } from "@/components/ui/progress";
+
 import { AnimatedProgress } from "@/components/mpl/animated-progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getPredictionStats } from "@/actions/mpl/predictions";

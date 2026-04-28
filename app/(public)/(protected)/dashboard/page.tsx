@@ -1,14 +1,18 @@
-import { LayoutDashboard, Target, Trophy, CheckCircle2, ChevronRight, Calendar, Clock, Sword } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { LayoutDashboard, Target, Trophy, CheckCircle2, ChevronRight, Calendar } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AnimatedProgress } from "@/components/mpl/animated-progress";
-import { getStandings } from "@/actions/mpl/standings";
+import { getStandings, getRemainingMatches } from "@/actions/mpl/standings";
 import { getMatchSchedule } from "@/actions/mpl/matches";
-import { getPredictionStats } from "@/actions/mpl/predictions";
+import { getPredictionStats, getGlobalLeaderboard } from "@/actions/mpl/predictions";
+import { getFavoriteTeam } from "@/actions/user/favorite-team";
 import { TeamAvatar } from "@/components/mpl/match-schedule";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MatchGroup } from "@/lib/generated/prisma/enums";
+
+// Import new components
+import { FavoriteTeamCard, GlobalLeaderboardCard, ClinchFeedCard } from "@/components/mpl/dashboard-cards";
 
 export const metadata = {
   title: "MPL Tracker — Dashboard",
@@ -22,12 +26,16 @@ function formatDateShort(date: Date) {
 
 export default async function DashboardPage(props: { searchParams?: Promise<{ group?: string }> }) {
   const searchParams = await props.searchParams;
-  const group = searchParams?.group as MatchGroup | undefined;
+  const groupParam = searchParams?.group as MatchGroup | undefined;
+  const group = groupParam || MatchGroup.MPLID;
 
-  const [schedule, standings, stats] = await Promise.all([
+  const [schedule, standings, stats, favoriteTeam, globalLeaderboard, remainingMatches] = await Promise.all([
     getMatchSchedule(group),
     getStandings(false, null, group),
     getPredictionStats(group),
+    getFavoriteTeam(),
+    getGlobalLeaderboard(group),
+    getRemainingMatches(group)
   ]);
 
   const allMatches = schedule.flatMap((w) => w.matches);
@@ -55,6 +63,14 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
 
         {/* LEFT COLUMN (Main Content) */}
         <div className="md:col-span-8 flex flex-col gap-6">
+
+          <FavoriteTeamCard
+            favoriteTeam={favoriteTeam}
+            standings={standings}
+            remainingMatches={remainingMatches}
+            teams={standings.map(s => ({ id: s.teamId, name: s.teamName, logo: s.logo }))}
+          />
+          <ClinchFeedCard standings={standings} remainingMatches={remainingMatches} />
 
           {/* Upcoming Matches */}
           <div className="flex flex-col gap-4">
@@ -198,6 +214,9 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
             </CardContent>
           </Card>
 
+          {/* Global Leaderboard */}
+          <GlobalLeaderboardCard leaderboard={globalLeaderboard} />
+
           {/* Top 3 Podiums */}
           <Card className="flex-1">
             <CardHeader className="pb-4">
@@ -207,7 +226,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
             </CardHeader>
             <CardContent className="px-5">
               <div className="space-y-5">
-                {top3.map((team, index) => (
+                {top3.map((team, index: number) => (
                   <div key={team.teamId} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-black ${index === 0 ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-500" :
@@ -246,7 +265,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
   );
 }
 
-function HistoryIcon(props: any) {
+function HistoryIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

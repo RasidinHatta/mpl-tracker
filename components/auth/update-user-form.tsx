@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,11 +19,6 @@ export const UpdateUserForm = ({ name, image }: UpdateUserFormProps) => {
   const [inputValue, setInputValue] = useState(name || "");
   const router = useRouter();
 
-  useEffect(() => {
-    setInputValue(name || "");
-  }, [name]);
-
-  // @ts-ignore
   async function handleSubmit(evt: React.SubmitEvent<HTMLFormElement>) {
     evt.preventDefault();
     const formData = new FormData(evt.target as HTMLFormElement);
@@ -42,7 +37,7 @@ export const UpdateUserForm = ({ name, image }: UpdateUserFormProps) => {
         onResponse: () => {
           setIsPending(false);
         },
-        onError: (ctx: any) => {
+        onError: (ctx: { error: { message: string } }) => {
           toast.error(ctx.error.message);
         },
         onSuccess: () => {
@@ -54,7 +49,7 @@ export const UpdateUserForm = ({ name, image }: UpdateUserFormProps) => {
   }
 
   return (
-    <form className="max-w-sm w-full space-y-4" onSubmit={handleSubmit as any}>
+    <form className="max-w-sm w-full space-y-4" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-2">
         <Label htmlFor="name">Name</Label>
         <Input 

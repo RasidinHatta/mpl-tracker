@@ -4,7 +4,7 @@ import { AddMatchDialog } from "@/components/mpl/add-match-dialog";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { CalendarDays, Trophy, TrendingUp } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+
 import { MatchGroup } from "@/lib/generated/prisma/enums";
 
 export const metadata = {

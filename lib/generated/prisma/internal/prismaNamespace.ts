@@ -390,7 +390,9 @@ export const ModelName = {
   Verification: 'Verification',
   Team: 'Team',
   Match: 'Match',
-  UserPrediction: 'UserPrediction'
+  PlayoffMatch: 'PlayoffMatch',
+  UserPrediction: 'UserPrediction',
+  UserPlayoffPrediction: 'UserPlayoffPrediction'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "team" | "match" | "userPrediction"
+    modelProps: "user" | "session" | "account" | "verification" | "team" | "match" | "playoffMatch" | "userPrediction" | "userPlayoffPrediction"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -854,6 +856,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PlayoffMatch: {
+      payload: Prisma.$PlayoffMatchPayload<ExtArgs>
+      fields: Prisma.PlayoffMatchFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PlayoffMatchFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayoffMatchPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PlayoffMatchFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayoffMatchPayload>
+        }
+        findFirst: {
+          args: Prisma.PlayoffMatchFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayoffMatchPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PlayoffMatchFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayoffMatchPayload>
+        }
+        findMany: {
+          args: Prisma.PlayoffMatchFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayoffMatchPayload>[]
+        }
+        create: {
+          args: Prisma.PlayoffMatchCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayoffMatchPayload>
+        }
+        createMany: {
+          args: Prisma.PlayoffMatchCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PlayoffMatchCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayoffMatchPayload>[]
+        }
+        delete: {
+          args: Prisma.PlayoffMatchDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayoffMatchPayload>
+        }
+        update: {
+          args: Prisma.PlayoffMatchUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayoffMatchPayload>
+        }
+        deleteMany: {
+          args: Prisma.PlayoffMatchDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PlayoffMatchUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PlayoffMatchUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayoffMatchPayload>[]
+        }
+        upsert: {
+          args: Prisma.PlayoffMatchUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PlayoffMatchPayload>
+        }
+        aggregate: {
+          args: Prisma.PlayoffMatchAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePlayoffMatch>
+        }
+        groupBy: {
+          args: Prisma.PlayoffMatchGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlayoffMatchGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PlayoffMatchCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PlayoffMatchCountAggregateOutputType> | number
+        }
+      }
+    }
     UserPrediction: {
       payload: Prisma.$UserPredictionPayload<ExtArgs>
       fields: Prisma.UserPredictionFieldRefs
@@ -928,6 +1004,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserPlayoffPrediction: {
+      payload: Prisma.$UserPlayoffPredictionPayload<ExtArgs>
+      fields: Prisma.UserPlayoffPredictionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserPlayoffPredictionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPlayoffPredictionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserPlayoffPredictionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPlayoffPredictionPayload>
+        }
+        findFirst: {
+          args: Prisma.UserPlayoffPredictionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPlayoffPredictionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserPlayoffPredictionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPlayoffPredictionPayload>
+        }
+        findMany: {
+          args: Prisma.UserPlayoffPredictionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPlayoffPredictionPayload>[]
+        }
+        create: {
+          args: Prisma.UserPlayoffPredictionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPlayoffPredictionPayload>
+        }
+        createMany: {
+          args: Prisma.UserPlayoffPredictionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserPlayoffPredictionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPlayoffPredictionPayload>[]
+        }
+        delete: {
+          args: Prisma.UserPlayoffPredictionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPlayoffPredictionPayload>
+        }
+        update: {
+          args: Prisma.UserPlayoffPredictionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPlayoffPredictionPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserPlayoffPredictionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserPlayoffPredictionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserPlayoffPredictionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPlayoffPredictionPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserPlayoffPredictionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPlayoffPredictionPayload>
+        }
+        aggregate: {
+          args: Prisma.UserPlayoffPredictionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserPlayoffPrediction>
+        }
+        groupBy: {
+          args: Prisma.UserPlayoffPredictionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserPlayoffPredictionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserPlayoffPredictionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserPlayoffPredictionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -978,7 +1128,8 @@ export const UserScalarFieldEnum = {
   role: 'role',
   banned: 'banned',
   banReason: 'banReason',
-  banExpires: 'banExpires'
+  banExpires: 'banExpires',
+  favoriteTeamId: 'favoriteTeamId'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1057,6 +1208,21 @@ export const MatchScalarFieldEnum = {
 export type MatchScalarFieldEnum = (typeof MatchScalarFieldEnum)[keyof typeof MatchScalarFieldEnum]
 
 
+export const PlayoffMatchScalarFieldEnum = {
+  id: 'id',
+  matchId: 'matchId',
+  group: 'group',
+  teamAId: 'teamAId',
+  teamBId: 'teamBId',
+  teamAResult: 'teamAResult',
+  teamBResult: 'teamBResult',
+  format: 'format',
+  date: 'date'
+} as const
+
+export type PlayoffMatchScalarFieldEnum = (typeof PlayoffMatchScalarFieldEnum)[keyof typeof PlayoffMatchScalarFieldEnum]
+
+
 export const UserPredictionScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -1068,6 +1234,19 @@ export const UserPredictionScalarFieldEnum = {
 } as const
 
 export type UserPredictionScalarFieldEnum = (typeof UserPredictionScalarFieldEnum)[keyof typeof UserPredictionScalarFieldEnum]
+
+
+export const UserPlayoffPredictionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId',
+  playoffMatchId: 'playoffMatchId',
+  teamAPrediction: 'teamAPrediction',
+  teamBPrediction: 'teamBPrediction'
+} as const
+
+export type UserPlayoffPredictionScalarFieldEnum = (typeof UserPlayoffPredictionScalarFieldEnum)[keyof typeof UserPlayoffPredictionScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1305,7 +1484,9 @@ export type GlobalOmitConfig = {
   verification?: Prisma.VerificationOmit
   team?: Prisma.TeamOmit
   match?: Prisma.MatchOmit
+  playoffMatch?: Prisma.PlayoffMatchOmit
   userPrediction?: Prisma.UserPredictionOmit
+  userPlayoffPrediction?: Prisma.UserPlayoffPredictionOmit
 }
 
 /* Types for Logging */

@@ -10,7 +10,6 @@ import { toast } from "sonner";
 export const ChangePasswordForm = () => {
   const [isPending, setIsPending] = useState(false);
 
-  // @ts-ignore - TS has slightly confusing generic event types for React 19 forms
   async function handleSubmit(evt: React.SubmitEvent<HTMLFormElement>) {
     evt.preventDefault();
     const formData = new FormData(evt.target as HTMLFormElement);
@@ -30,7 +29,7 @@ export const ChangePasswordForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit as any} className="max-w-sm w-full space-y-4">
+    <form onSubmit={handleSubmit} className="max-w-sm w-full space-y-4">
       <div className="flex flex-col gap-2">
         <Label htmlFor="currentPassword">Current Password</Label>
         <Input type="password" id="currentPassword" name="currentPassword" />

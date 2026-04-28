@@ -77,10 +77,11 @@ Built on **Better Auth** with two roles:
 | Page | Description |
 |---|---|
 | `/` | Landing page with feature overview |
+| `/dashboard` | User overview with upcoming matches, recent results, prediction accuracy, and top standings |
 | `/schedule` | Weekly match schedule. Admins can add matches and update results. |
 | `/standing` | Live standings table + Bracket Chances tab |
 | `/history` | Head-to-Head matrix + per-team match breakdown |
-| `/predict` | Submit score predictions for upcoming matches |
+| `/prediction` | Submit score predictions for upcoming matches |
 
 ---
 

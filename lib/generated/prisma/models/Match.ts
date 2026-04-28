@@ -634,14 +634,6 @@ export type EnumMatchFormatFieldUpdateOperationsInput = {
   set?: $Enums.MatchFormat
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type MatchCreateNestedOneWithoutPredictionsInput = {
   create?: Prisma.XOR<Prisma.MatchCreateWithoutPredictionsInput, Prisma.MatchUncheckedCreateWithoutPredictionsInput>
   connectOrCreate?: Prisma.MatchCreateOrConnectWithoutPredictionsInput

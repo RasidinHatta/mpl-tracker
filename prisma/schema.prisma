@@ -46,10 +46,14 @@ model User {
   banReason     String?
   banExpires    DateTime?
 
+  favoriteTeamId Int?
+  favoriteTeam   Team? @relation("FavoriteTeam", fields: [favoriteTeamId], references: [id], onDelete: SetNull)
+
   // Relations
-  sessions    Session[]
-  accounts    Account[]
-  predictions UserPrediction[]
+  sessions          Session[]
+  accounts          Account[]
+  predictions       UserPrediction[]
+  playoffPredictions UserPlayoffPrediction[]
 
   @@map("users")
 }
@@ -116,6 +120,9 @@ model Team {
 
   matchesAsA Match[] @relation("TeamA")
   matchesAsB Match[] @relation("TeamB")
+  playoffMatchesAsA PlayoffMatch[] @relation("PlayoffTeamA")
+  playoffMatchesAsB PlayoffMatch[] @relation("PlayoffTeamB")
+  favoritedBy User[] @relation("FavoriteTeam")
 
   @@map("teams")
 }
@@ -144,6 +151,28 @@ model Match {
   @@map("matches")
 }
 
+model PlayoffMatch {
+  id        Int         @id @default(autoincrement())
+  matchId   String      // e.g. "UBQ1", "UBQ2", "UBS1", "UBS2", "UBF", "LBSF", "LBF", "GF"
+  group     MatchGroup  @default(MPLID)
+  
+  teamAId   Int?
+  teamBId   Int?
+  teamA     Team?       @relation("PlayoffTeamA", fields: [teamAId], references: [id])
+  teamB     Team?       @relation("PlayoffTeamB", fields: [teamBId], references: [id])
+  
+  teamAResult Int?
+  teamBResult Int?
+  
+  format    MatchFormat @default(BO5)
+  date      DateTime?
+  
+  predictions UserPlayoffPrediction[]
+
+  @@unique([group, matchId])
+  @@map("playoff_matches")
+}
+
 // ═══════════════════════════════════════════════════════════════
 // USER PREDICTIONS
 // ═══════════════════════════════════════════════════════════════
@@ -166,4 +195,24 @@ model UserPrediction {
   @@index([userId])
   @@index([matchId])
   @@map("user_predictions")
+}
+
+model UserPlayoffPrediction {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId         String
+  playoffMatchId Int
+
+  teamAPrediction Int?
+  teamBPrediction Int?
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  playoffMatch PlayoffMatch @relation(fields: [playoffMatchId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, playoffMatchId])
+  @@index([userId])
+  @@index([playoffMatchId])
+  @@map("user_playoff_predictions")
 }

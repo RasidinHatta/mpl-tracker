@@ -72,7 +72,17 @@ export type Team = Prisma.TeamModel
  */
 export type Match = Prisma.MatchModel
 /**
+ * Model PlayoffMatch
+ * 
+ */
+export type PlayoffMatch = Prisma.PlayoffMatchModel
+/**
  * Model UserPrediction
  * 
  */
 export type UserPrediction = Prisma.UserPredictionModel
+/**
+ * Model UserPlayoffPrediction
+ * 
+ */
+export type UserPlayoffPrediction = Prisma.UserPlayoffPredictionModel
