@@ -64,38 +64,40 @@ export default function LandingPage() {
   const heroInView = useInView(heroRef, { once: true, margin: "-100px" });
 
   return (
-    <div className="flex flex-col min-h-screen bg-background relative overflow-hidden">
+    <div className="flex flex-col min-h-screen bg-background relative">
       {/* Background gradients */}
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={heroInView ? { opacity: 1 } : {}}
-        transition={{ duration: 1 }}
-        className="absolute top-0 right-0 -mr-20 -mt-20 w-160 h-160 rounded-full bg-primary/10 blur-3xl pointer-events-none"
-      />
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={heroInView ? { opacity: 1 } : {}}
-        transition={{ duration: 1, delay: 0.2 }}
-        className="absolute bottom-0 left-0 -ml-20 -mb-20 w-160 h-160 rounded-full bg-blue-500/10 blur-3xl pointer-events-none"
-      />
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={heroInView ? { opacity: 1, scale: 1 } : {}}
-        transition={{ duration: 1.5, delay: 0.3 }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-linear-to-tr from-primary/5 to-blue-500/5 blur-3xl pointer-events-none"
-      />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={heroInView ? { opacity: 1 } : {}}
+          transition={{ duration: 1 }}
+          className="absolute top-0 right-0 -mr-20 -mt-20 w-160 h-160 rounded-full bg-primary/10 blur-3xl pointer-events-none"
+        />
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={heroInView ? { opacity: 1 } : {}}
+          transition={{ duration: 1, delay: 0.2 }}
+          className="absolute bottom-0 left-0 -ml-20 -mb-20 w-160 h-160 rounded-full bg-blue-500/10 blur-3xl pointer-events-none"
+        />
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={heroInView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 1.5, delay: 0.3 }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-linear-to-tr from-primary/5 to-blue-500/5 blur-3xl pointer-events-none"
+        />
 
-      {/* Animated floating shapes */}
-      <FloatingShape className="absolute top-20 left-[10%] w-4 h-4 bg-primary/30 rounded-full" />
-      <FloatingShape className="absolute top-40 right-[15%] w-3 h-3 bg-blue-500/30 rounded-full" delay={1} />
-      <FloatingShape className="absolute bottom-32 left-[20%] w-2 h-2 bg-yellow-500/30 rounded-full" delay={2} />
-      <FloatingShape className="absolute bottom-20 right-[25%] w-3 h-3 bg-primary/20 rounded-full" delay={1.5} />
-      <FloatingShape className="absolute top-60 left-[5%] w-2 h-2 bg-blue-500/20 rounded-full" delay={0.5} />
+        {/* Animated floating shapes */}
+        <FloatingShape className="absolute top-20 left-[10%] w-4 h-4 bg-primary/30 rounded-full" />
+        <FloatingShape className="absolute top-40 right-[15%] w-3 h-3 bg-blue-500/30 rounded-full" delay={1} />
+        <FloatingShape className="absolute bottom-32 left-[20%] w-2 h-2 bg-yellow-500/30 rounded-full" delay={2} />
+        <FloatingShape className="absolute bottom-20 right-[25%] w-3 h-3 bg-primary/20 rounded-full" delay={1.5} />
+        <FloatingShape className="absolute top-60 left-[5%] w-2 h-2 bg-blue-500/20 rounded-full" delay={0.5} />
+      </div>
 
       {/* Header */}
       <motion.header 
         style={{ opacity: headerOpacity, scale: headerScale }}
-        className="flex items-center justify-between p-6 md:px-8 w-full z-10 sticky top-0 bg-background/80 backdrop-blur-md"
+        className="flex items-center justify-between p-6 md:px-8 w-full z-50 sticky top-0 bg-background/80 backdrop-blur-md"
       >
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
