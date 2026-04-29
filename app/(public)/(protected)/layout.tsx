@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { Separator } from "@/components/ui/separator";
-import Footer from "@/components/shadcn-studio/blocks/footer-component-01/footer-component-01";
+import Footer from "@/components/navigation/footer";
 
 export default async function ProtectedLayout({
     children,

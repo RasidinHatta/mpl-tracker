@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu"
-import Logo from "../shadcn-studio/logo"
+import Logo from "./logo"
 import { ChevronsUpDown } from "lucide-react"
 import { MatchGroup } from "@/lib/generated/prisma/enums"
 

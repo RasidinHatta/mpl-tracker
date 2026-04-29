@@ -4,7 +4,7 @@ import { ModeToggle } from "@/components/themes/ModeToggle";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
-import Footer from "../shadcn-studio/blocks/footer-component-01/footer-component-01";
+import Footer from "@/components/navigation/footer";
 
 export default async function ProtectedLayout({
     children,

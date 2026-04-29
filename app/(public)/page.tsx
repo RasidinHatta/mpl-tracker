@@ -4,7 +4,7 @@ import { Suspense, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/themes/ModeToggle";
-import Footer from "@/components/shadcn-studio/blocks/footer-component-01/footer-component-01";
+import Footer from "@/components/navigation/footer";
 import { Trophy, Activity, Calendar, TrendingUp, Target, Users, Zap } from "lucide-react";
 import { motion, useScroll, useTransform, useInView } from "motion/react";
 

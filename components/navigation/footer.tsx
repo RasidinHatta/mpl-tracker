@@ -2,7 +2,7 @@
 
 import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
-import Logo from '@/components/shadcn-studio/logo'
+import Logo from '@/components/navigation/logo'
 import { useSearchParams } from 'next/navigation'
 
 const Footer = () => {
@@ -37,6 +37,12 @@ const Footer = () => {
           </Link>
           <Link href={createUrl('/prediction')} className='opacity-80 transition-opacity duration-300 hover:opacity-100'>
             Predictions
+          </Link>
+          <Link href={createUrl('/history')} className='opacity-80 transition-opacity duration-300 hover:opacity-100'>
+            History
+          </Link>
+          <Link href={createUrl('/playoff')} className='opacity-80 transition-opacity duration-300 hover:opacity-100'>
+            Playoff
           </Link>
         </div>
       </div>
