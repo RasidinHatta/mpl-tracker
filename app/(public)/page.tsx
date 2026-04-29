@@ -121,7 +121,7 @@ export default function LandingPage() {
               Sign In
             </Button>
           </Link>
-          <Link href="/sign-up">
+          <Link href="/sign-up" className="hidden sm:inline-flex">
             <Button className="font-medium rounded-full shadow-sm">
               Get Started
             </Button>

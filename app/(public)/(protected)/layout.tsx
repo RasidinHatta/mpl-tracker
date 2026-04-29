@@ -25,7 +25,7 @@ export default async function ProtectedLayout({
             <SidebarProvider>
                 <AppSidebar user={session?.user} />
                 <SidebarInset>
-                    <header className="flex h-16 justify-between shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+                    <header className="sticky top-0 z-50 flex h-16 justify-between shrink-0 items-center gap-2 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 border-b">
                         <div className="flex items-center gap-2 px-4">
                             <SidebarTrigger className="-ml-1 text-foreground" />
                             <Separator
