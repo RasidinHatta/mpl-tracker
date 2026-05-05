@@ -44,6 +44,17 @@ import type { RemainingMatchSlim } from "@/actions/mpl/standings";
 const SIMULATIONS = 10_000;
 const UB_SPOTS = 2;
 
+// Seeded PRNG (mulberry32) — matches NestJS makePrng(42) for reproducible results
+function makePrng(seed = 42): () => number {
+  let s = seed;
+  return () => {
+    s |= 0; s = s + 0x6D2B79F5 | 0;
+    let t = Math.imul(s ^ s >>> 15, 1 | s);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
 type TeamWithChances = TeamStanding & {
   upperBracketPct: number; // 0.00 – 100.00 float
   playoffPct: number;
@@ -83,6 +94,7 @@ export function computeChances(
   // Re-sorted in-place each iteration.
   const order = Array.from({ length: n }, (_, i) => i);
 
+  const rand = makePrng(42);
   for (let iter = 0; iter < SIMULATIONS; iter++) {
     // 1. Reset to current standings
     for (let i = 0; i < n; i++) {
@@ -96,9 +108,9 @@ export function computeChances(
       const bi = idxById.get(m.teamBId);
       if (ai === undefined || bi === undefined) continue;
 
-      const aWins = Math.random() < m.winProbA;
+      const aWins = rand() < m.winProbA;
       // BO3-style NGW delta: 2 (2-0 sweep, 50 %) or 1 (2-1, 50 %)
-      const delta = Math.random() < 0.5 ? 2 : 1;
+      const delta = rand() < 0.5 ? 2 : 1;
 
       if (aWins) {
         simPts[ai] += 1;
