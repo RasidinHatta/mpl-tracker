@@ -175,14 +175,17 @@ export function StandingOverview({ historyData, standings }: { historyData: Stan
                       key={`${team.teamId}-${pt.week}-logo`}
                       onMouseEnter={() => setHoveredTeam(team.teamId)}
                       onMouseLeave={() => setHoveredTeam(null)}
-                      className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-auto transition-all duration-300 ${isHovered ? 'z-40 scale-125' : 'z-20 scale-100'} ${isOtherHovered ? 'opacity-10' : 'opacity-100'}`}
+                      className={`absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer pointer-events-auto transition-all duration-300 ${isHovered ? 'z-40' : 'z-20'} ${isOtherHovered ? 'opacity-10' : 'opacity-100'}`}
                       style={{ left: pt.x, top: pt.y }}
                       title={`${team.teamName} - Week ${pt.week} (Rank ${pt.rank})`}
                     >
-                      <div className="w-7 h-7 flex items-center justify-center bg-white rounded-[6px] shadow-[0_0_8px_rgba(255,255,255,0.4)] overflow-hidden relative">
-                        <div className="absolute inset-0 flex items-center justify-center scale-[1.35]">
-                          <TeamAvatar name={team.teamName} logo={team.logo} color="left" size="small" />
-                        </div>
+                      <div 
+                        className="rounded-[8px] transition-shadow duration-300"
+                        style={{
+                          boxShadow: isHovered ? `0 0 16px ${color}, 0 0 8px ${color}` : '0 0 8px rgba(255,255,255,0.4)'
+                        }}
+                      >
+                        <TeamAvatar name={team.teamName} logo={team.logo} color="left" size="small" />
                       </div>
                     </div>
                   );
@@ -193,12 +196,12 @@ export function StandingOverview({ historyData, standings }: { historyData: Stan
                     key={`${team.teamId}-${pt.week}`}
                     onMouseEnter={() => setHoveredTeam(team.teamId)}
                     onMouseLeave={() => setHoveredTeam(null)}
-                    className={`absolute w-7 h-7 rounded-none -translate-x-1/2 -translate-y-1/2 transition-all duration-300 cursor-pointer pointer-events-auto ${isHovered ? 'z-30 scale-150' : 'z-10 scale-100'} ${isOtherHovered ? 'opacity-10' : 'opacity-100'}`}
+                    className={`absolute w-7 h-7 rounded-none -translate-x-1/2 -translate-y-1/2 transition-all duration-300 cursor-pointer pointer-events-auto ${isHovered ? 'z-30' : 'z-10'} ${isOtherHovered ? 'opacity-10' : 'opacity-100'}`}
                     style={{
                       left: pt.x,
                       top: pt.y,
                       backgroundColor: color,
-                      boxShadow: isHovered ? `0 0 12px ${color}` : 'none'
+                      boxShadow: isHovered ? `0 0 16px ${color}, 0 0 8px ${color}` : 'none'
                     }}
                     title={`${team.teamName} - Week ${pt.week} (Rank ${pt.rank})`}
                   />

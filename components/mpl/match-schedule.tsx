@@ -54,7 +54,7 @@ export function TeamAvatar({ name, logo, color, size = "large" }: { name: string
   return (
     <div className={`relative flex ${sizeClass} items-center justify-center overflow-hidden bg-white bg-linear-to-br ${gradientClass} ring-1 ${ringClass} transition-all duration-300`}>
       {logo ? (
-        <img src={logo} alt={`${name} logo`} className="h-full w-full object-contain p-[2px]" />
+        <img src={logo} alt={`${name} logo`} className="h-full w-full object-contain p-1" />
       ) : (
         <span className={`${textClass} font-bold text-foreground/90`}>
           {name.slice(0, 2).toUpperCase()}
