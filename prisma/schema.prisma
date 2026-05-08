@@ -116,6 +116,7 @@ model Team {
   id    Int        @id @default(autoincrement())
   name  String     @unique
   logo  String?
+  color String?
   group MatchGroup @default(MPLID)
 
   matchesAsA Match[] @relation("TeamA")

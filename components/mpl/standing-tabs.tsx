@@ -18,8 +18,10 @@ import {
 } from "@/components/ui/card";
 import { TeamAvatar } from "@/components/mpl/match-schedule";
 import type { TeamStanding } from "@/actions/mpl/standings";
-import { BarChart3, Trophy, TrendingUp } from "lucide-react";
-import type { RemainingMatchSlim } from "@/actions/mpl/standings";
+import { BarChart3, Trophy, TrendingUp, LineChart } from "lucide-react";
+import type { RemainingMatchSlim, StandingsHistoryResult } from "@/actions/mpl/standings";
+import { StandingOverview } from "./standing-overview";
+import { TeamEditor } from "./team-color-editor";
 
 // ─── Monte Carlo simulation ────────────────────────────────────────────────────
 //
@@ -152,10 +154,10 @@ function ChancePct({ pct }: { pct: number }) {
     pct >= 90
       ? "text-green-500 dark:text-green-400"
       : pct >= 50
-      ? "text-amber-500 dark:text-amber-400"
-      : pct > 0
-      ? "text-muted-foreground"
-      : "text-red-500/70 dark:text-red-400/70";
+        ? "text-amber-500 dark:text-amber-400"
+        : pct > 0
+          ? "text-muted-foreground"
+          : "text-red-500/70 dark:text-red-400/70";
 
   return (
     <span className={`text-sm font-black tabular-nums ${color}`}>
@@ -169,18 +171,26 @@ function ChancePct({ pct }: { pct: number }) {
 export function StandingTabs({
   standings,
   remainingMatches,
+  historyData,
+  isAdmin,
 }: {
   standings: TeamStanding[];
   remainingMatches: RemainingMatchSlim[];
+  historyData: StandingsHistoryResult;
+  isAdmin?: boolean;
 }) {
   const withChances = computeChances(standings, remainingMatches);
 
   return (
     <Tabs defaultValue="standings" className="w-full">
-      <TabsList className="mb-6 h-10 gap-1">
+      <TabsList className="mb-6 h-10 gap-1 flex flex-wrap">
         <TabsTrigger value="standings" className="gap-1.5">
           <Trophy className="h-3.5 w-3.5" />
           Standings
+        </TabsTrigger>
+        <TabsTrigger value="overview" className="gap-1.5">
+          <LineChart className="h-3.5 w-3.5" />
+          Overview
         </TabsTrigger>
         <TabsTrigger value="chances" className="gap-1.5">
           <TrendingUp className="h-3.5 w-3.5" />
@@ -242,6 +252,9 @@ export function StandingTabs({
                             <span className="font-bold text-sm text-foreground uppercase tracking-tight">
                               {team.teamName}
                             </span>
+                            {isAdmin && (
+                              <TeamEditor teamId={team.teamId} initialName={team.teamName} initialLogo={team.logo} initialColor={team.color} />
+                            )}
                           </div>
                         </div>
                       </TableCell>
@@ -272,6 +285,24 @@ export function StandingTabs({
                 </TableBody>
               </Table>
             </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
+
+      {/* ── Tab: Overview ────────────────────────────────────────────── */}
+      <TabsContent value="overview">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <LineChart className="h-4 w-4" />
+              Standing Overview
+            </CardTitle>
+            <CardDescription>
+              Track team rank progression from week to week.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <StandingOverview historyData={historyData} standings={standings} />
           </CardContent>
         </Card>
       </TabsContent>
@@ -319,24 +350,22 @@ export function StandingTabs({
                     return (
                       <TableRow
                         key={team.teamId}
-                        className={`border-border transition-colors ${
-                          isUB
-                            ? "bg-amber-500/5 hover:bg-amber-500/10"
-                            : isPO
+                        className={`border-border transition-colors ${isUB
+                          ? "bg-amber-500/5 hover:bg-amber-500/10"
+                          : isPO
                             ? "bg-primary/5 hover:bg-primary/10"
                             : "hover:bg-muted/50"
-                        }`}
+                          }`}
                       >
                         <TableCell className="p-0 align-middle">
                           <div className="flex items-center">
                             <div
-                              className={`flex h-12 w-6 shrink-0 items-center justify-center font-black text-lg mr-4 ${
-                                isUB
-                                  ? "bg-amber-500/30 text-amber-600 dark:text-amber-400"
-                                  : isPO
+                              className={`flex h-12 w-6 shrink-0 items-center justify-center font-black text-lg mr-4 ${isUB
+                                ? "bg-amber-500/30 text-amber-600 dark:text-amber-400"
+                                : isPO
                                   ? "bg-primary/20 text-primary"
                                   : "bg-muted-foreground/20 text-foreground"
-                              }`}
+                                }`}
                             >
                               {team.rank}
                             </div>

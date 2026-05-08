@@ -1,5 +1,5 @@
 import { Trophy } from "lucide-react";
-import { getStandings, getRemainingMatches } from "@/actions/mpl/standings";
+import { getStandings, getRemainingMatches, getStandingsHistory } from "@/actions/mpl/standings";
 import { MatchGroup } from "@/lib/generated/prisma/enums";
 import { AddTeamDialog } from "@/components/mpl/add-team-dialog";
 import { StandingTabs } from "@/components/mpl/standing-tabs";
@@ -17,9 +17,10 @@ export default async function StandingPage(props: {
   const searchParams = await props.searchParams;
   const groupParam = searchParams?.group as MatchGroup | undefined;
   const group = groupParam || MatchGroup.MPLID;
-  const [standings, remainingMatches] = await Promise.all([
-    getStandings(false, null, groupParam),
-    getRemainingMatches(groupParam),
+  const [standings, remainingMatches, historyData] = await Promise.all([
+    getStandings(false, null, group),
+    getRemainingMatches(group),
+    getStandingsHistory(group),
   ]);
 
   const session = await auth.api.getSession({
@@ -45,7 +46,7 @@ export default async function StandingPage(props: {
         )}
       </div>
 
-      <StandingTabs standings={standings} remainingMatches={remainingMatches} />
+      <StandingTabs standings={standings} remainingMatches={remainingMatches} historyData={historyData} isAdmin={isAdmin} />
     </div>
   );
 }

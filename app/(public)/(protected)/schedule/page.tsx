@@ -17,8 +17,8 @@ export default async function SchedulePage(props: { searchParams?: Promise<{ gro
   const searchParams = await props.searchParams;
   const groupParam = searchParams?.group as MatchGroup | undefined;
   const group = groupParam || MatchGroup.MPLID; // Use default if none selected
-  const schedule = await getMatchSchedule(groupParam);
-  const teams = await getTeams(groupParam);
+  const schedule = await getMatchSchedule(group);
+  const teams = await getTeams(group);
 
   const session = await auth.api.getSession({
     headers: await headers()

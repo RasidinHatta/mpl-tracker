@@ -179,7 +179,15 @@ export default function MatchSchedule({
     );
   }
 
-  const defaultWeek = `week-${schedule[0].week}`;
+  let defaultWeekNum = schedule[0].week;
+  for (const week of schedule) {
+    defaultWeekNum = week.week;
+    const isCompleted = week.matches.length > 0 && week.matches.every(isMatchCompleted);
+    if (!isCompleted) {
+      break;
+    }
+  }
+  const defaultWeek = `week-${defaultWeekNum}`;
 
   return (
     <Tabs defaultValue={defaultWeek} className="w-full">

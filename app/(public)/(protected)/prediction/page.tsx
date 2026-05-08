@@ -1,7 +1,9 @@
 import React from "react";
-import { PieChart, Target, CheckCircle2, Trophy, BarChart3, TrendingUp, XCircle, Clock } from "lucide-react";
+import Link from "next/link";
+import { PieChart, Target, CheckCircle2, Trophy, BarChart3, TrendingUp, XCircle, Clock, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 import { AnimatedProgress } from "@/components/mpl/animated-progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,20 +20,31 @@ export const metadata = {
 
 export default async function PredictionPage(props: { searchParams?: Promise<{ group?: string }> }) {
   const searchParams = await props.searchParams;
-  const group = searchParams?.group as MatchGroup | undefined;
+  const groupParam = searchParams?.group as MatchGroup | undefined;
+  const group = groupParam || MatchGroup.MPLID; // Default to MPLID
 
   const stats = await getPredictionStats(group);
   const weeklyMatches = await getMatchSchedule(group);
 
   let currentWeek = 0;
+  let maxWeek = 0;
   for (const week of weeklyMatches) {
+    maxWeek = Math.max(maxWeek, week.week);
     if (week.matches.some(m => m.teamAResult !== null && m.teamBResult !== null)) {
       currentWeek = Math.max(currentWeek, week.week);
     }
   }
-  const nextWeek = currentWeek + 1;
+  const nextWeek = maxWeek > 0 ? Math.min(currentWeek + 1, maxWeek) : 1;
 
-  const predictedStandings = await getStandings(true, nextWeek, group);
+  const remainingWeeks = Array.from({ length: Math.max(0, maxWeek - nextWeek + 1) }, (_, i) => nextWeek + i);
+  if (remainingWeeks.length === 0) remainingWeeks.push(nextWeek);
+
+  const predictedStandingsByWeek = await Promise.all(
+    remainingWeeks.map(async (week) => ({
+      week,
+      standings: await getStandings(true, week, group)
+    }))
+  );
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 pt-0">
@@ -171,54 +184,81 @@ export default async function PredictionPage(props: { searchParams?: Promise<{ g
         </Card>
 
         <Card className="md:col-span-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2"><TrendingUp className="w-5 h-5 text-primary" /> Forecasted Standings (Week {nextWeek})</CardTitle>
-            <CardDescription>What the standings would look like if your Week {nextWeek} predictions come true.</CardDescription>
+          <CardHeader className="flex flex-row items-start md:items-center justify-between">
+            <div className="space-y-1.5">
+              <CardTitle className="flex items-center gap-2"><TrendingUp className="w-5 h-5 text-primary" /> Forecasted Standings</CardTitle>
+              <CardDescription>What the standings would look like if your predictions come true.</CardDescription>
+            </div>
+            <Link href="/schedule">
+              <Button variant="outline" size="sm" className="hidden sm:flex">
+                <Plus className="w-4 h-4 mr-2" /> Add Prediction
+              </Button>
+            </Link>
           </CardHeader>
           <CardContent>
-            <div className="rounded-md border overflow-hidden shadow-sm">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-muted hover:bg-muted border-none">
-                    <TableHead className="text-foreground font-bold h-10 px-4 uppercase tracking-tight text-xs">Team</TableHead>
-                    <TableHead className="text-center text-red-600 dark:text-red-500 font-bold uppercase tracking-tight h-10 text-xs">Match Point</TableHead>
-                    <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">Match W-L</TableHead>
-                    <TableHead className="text-center text-red-600 dark:text-red-500 font-bold uppercase tracking-tight h-10 text-xs">Net Game</TableHead>
-                    <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">Game W-L</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {predictedStandings.map((team) => (
-                    <TableRow key={team.teamId} className="hover:bg-muted/50 border-border transition-colors">
-                      <TableCell className="p-0 align-middle">
-                        <div className="flex items-center h-full">
-                          <div className="flex h-12 w-6 shrink-0 items-center justify-center bg-muted-foreground/20 text-foreground font-black text-lg mr-3">
-                            {team.rank}
-                          </div>
-                          <div className="flex items-center gap-3 py-1">
-                            <div className="shrink-0">
-                              <TeamAvatar name={team.teamName} logo={team.logo} color="left" size="small" />
-                            </div>
-                            <span className="font-bold text-sm text-foreground uppercase tracking-tight">{team.teamName}</span>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center font-black text-red-600 dark:text-red-500 text-sm">{team.matchPoints}</TableCell>
-                      <TableCell className="text-center font-bold text-foreground text-sm tracking-tight">{team.matchWins} - {team.matchLosses}</TableCell>
-                      <TableCell className="text-center font-black text-red-600 dark:text-red-500 text-sm">{team.netGameWin}</TableCell>
-                      <TableCell className="text-center font-bold text-foreground text-sm tracking-tight">{team.gameWins} - {team.gameLosses}</TableCell>
-                    </TableRow>
+            {predictedStandingsByWeek.length > 0 ? (
+              <Tabs defaultValue={predictedStandingsByWeek[0].week.toString()} className="w-full">
+                <TabsList className="mb-4 flex flex-wrap h-auto">
+                  {predictedStandingsByWeek.map(({ week }) => (
+                    <TabsTrigger key={week} value={week.toString()}>
+                      Week {week}
+                    </TabsTrigger>
                   ))}
-                  {predictedStandings.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={5} className="text-center py-8 text-muted-foreground font-semibold">
-                        No team standings available yet.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+                </TabsList>
+
+                {predictedStandingsByWeek.map(({ week, standings }) => (
+                  <TabsContent key={week} value={week.toString()}>
+                    <div className="rounded-md border overflow-hidden shadow-sm">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="bg-muted hover:bg-muted border-none">
+                            <TableHead className="text-foreground font-bold h-10 px-4 uppercase tracking-tight text-xs">Team</TableHead>
+                            <TableHead className="text-center text-red-600 dark:text-red-500 font-bold uppercase tracking-tight h-10 text-xs">Match Point</TableHead>
+                            <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">Match W-L</TableHead>
+                            <TableHead className="text-center text-red-600 dark:text-red-500 font-bold uppercase tracking-tight h-10 text-xs">Net Game</TableHead>
+                            <TableHead className="text-center text-foreground font-bold uppercase tracking-tight h-10 text-xs">Game W-L</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {standings.map((team) => (
+                            <TableRow key={team.teamId} className="hover:bg-muted/50 border-border transition-colors">
+                              <TableCell className="p-0 align-middle">
+                                <div className="flex items-center h-full">
+                                  <div className="flex h-12 w-6 shrink-0 items-center justify-center bg-muted-foreground/20 text-foreground font-black text-lg mr-3">
+                                    {team.rank}
+                                  </div>
+                                  <div className="flex items-center gap-3 py-1">
+                                    <div className="shrink-0">
+                                      <TeamAvatar name={team.teamName} logo={team.logo} color="left" size="small" />
+                                    </div>
+                                    <span className="font-bold text-sm text-foreground uppercase tracking-tight">{team.teamName}</span>
+                                  </div>
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-center font-black text-red-600 dark:text-red-500 text-sm">{team.matchPoints}</TableCell>
+                              <TableCell className="text-center font-bold text-foreground text-sm tracking-tight">{team.matchWins} - {team.matchLosses}</TableCell>
+                              <TableCell className="text-center font-black text-red-600 dark:text-red-500 text-sm">{team.netGameWin}</TableCell>
+                              <TableCell className="text-center font-bold text-foreground text-sm tracking-tight">{team.gameWins} - {team.gameLosses}</TableCell>
+                            </TableRow>
+                          ))}
+                          {standings.length === 0 && (
+                            <TableRow>
+                              <TableCell colSpan={5} className="text-center py-8 text-muted-foreground font-semibold">
+                                No team standings available yet.
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </TabsContent>
+                ))}
+              </Tabs>
+            ) : (
+              <div className="text-center py-8 text-muted-foreground font-semibold">
+                No team standings available yet.
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
