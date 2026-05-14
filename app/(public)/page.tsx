@@ -64,7 +64,7 @@ export default function LandingPage() {
   const heroInView = useInView(heroRef, { once: true, margin: "-100px" });
 
   return (
-    <div className="flex flex-col min-h-screen bg-background relative">
+    <div className="flex flex-col min-h-screen bg-background relative" suppressHydrationWarning={true}>
       {/* Background gradients */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <motion.div 
