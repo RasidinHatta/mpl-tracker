@@ -11,6 +11,17 @@ type Props = {
   isAdmin: boolean;
 };
 
+function formatMatchDate(date: Date | string | null) {
+  if (!date) return null;
+  const value = new Date(date);
+  if (Number.isNaN(value.getTime())) return null;
+
+  return value.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
+
 export function PlayoffBracket({ matches, isAdmin }: Props) {
   const getMatch = (id: string) => matches.find((m) => m.matchId === id);
 
@@ -82,12 +93,14 @@ function MatchCard({ match, isAdmin, title, placeholderA = "TBD", placeholderB =
     return null;
   };
   const winner = getWinner();
+  const dateLabel = formatMatchDate(match.date);
 
   return (
     <div className="relative w-full" id={`match-${matchId}`}>
-      {title && (
-        <div className="absolute -top-4 left-0 text-[10px] font-semibold text-muted-foreground tracking-wider uppercase">
-          {title}
+      {(title || dateLabel) && (
+        <div className="absolute -top-4 left-0 right-0 flex items-center justify-between gap-2 text-[10px] font-semibold text-muted-foreground">
+          {title && <span className="tracking-wider uppercase">{title}</span>}
+          {dateLabel && <span className="text-muted-foreground/80">{dateLabel}</span>}
         </div>
       )}
 

@@ -123,7 +123,13 @@ export async function initializePlayoffBracket(
 
 export async function updatePlayoffMatch(
   id: number,
-  data: { teamAResult?: number | null; teamBResult?: number | null; teamAPrediction?: number | null; teamBPrediction?: number | null }
+  data: {
+    teamAResult?: number | null;
+    teamBResult?: number | null;
+    teamAPrediction?: number | null;
+    teamBPrediction?: number | null;
+    date?: Date | null;
+  }
 ) {
   const { revalidatePath } = await import("next/cache");
   const session = await auth.api.getSession({
@@ -132,17 +138,20 @@ export async function updatePlayoffMatch(
   const userId = session?.user?.id;
   const userRole = (session?.user as { role?: string } | undefined)?.role;
 
-  if (userRole === "ADMIN" && (data.teamAResult !== undefined || data.teamBResult !== undefined)) {
+  if (userRole === "ADMIN" && (data.teamAResult !== undefined || data.teamBResult !== undefined || data.date !== undefined)) {
     const updated = await prisma.playoffMatch.update({
       where: { id },
       data: {
         ...(data.teamAResult !== undefined && { teamAResult: data.teamAResult ?? null }),
         ...(data.teamBResult !== undefined && { teamBResult: data.teamBResult ?? null }),
+        ...(data.date !== undefined && { date: data.date }),
       },
     });
 
-    // Trigger auto propagation
-    await propagatePlayoffResults(updated.group);
+    if (data.teamAResult !== undefined || data.teamBResult !== undefined) {
+      // Trigger auto propagation
+      await propagatePlayoffResults(updated.group);
+    }
   }
   
   if (userId && (data.teamAPrediction !== undefined || data.teamBPrediction !== undefined)) {

@@ -18,12 +18,24 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { TeamAvatar } from "./match-schedule";
 
+function toDateInputValue(date: Date | string | null) {
+  if (!date) return "";
+  const value = new Date(date);
+  if (Number.isNaN(value.getTime())) return "";
+
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, "0");
+  const day = String(value.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 export function UpdatePlayoffMatchDialog({ match, isAdmin }: { match: PlayoffMatchWithTeams, isAdmin: boolean }) {
   const [open, setOpen] = useState(false);
   const [teamAPrediction, setTeamAPrediction] = useState(match.teamAPrediction?.toString() || "");
   const [teamBPrediction, setTeamBPrediction] = useState(match.teamBPrediction?.toString() || "");
   const [teamAResult, setTeamAResult] = useState(match.teamAResult?.toString() || "");
   const [teamBResult, setTeamBResult] = useState(match.teamBResult?.toString() || "");
+  const [date, setDate] = useState(toDateInputValue(match.date));
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -62,11 +74,15 @@ export function UpdatePlayoffMatchDialog({ match, isAdmin }: { match: PlayoffMat
     }
     try {
       setLoading(true);
+      const hasTeams = Boolean(match.teamA && match.teamB);
       await updatePlayoffMatch(match.id, {
-        teamAPrediction: teamAPrediction ? parseInt(teamAPrediction) : null,
-        teamBPrediction: teamBPrediction ? parseInt(teamBPrediction) : null,
-        teamAResult: teamAResult ? parseInt(teamAResult) : null,
-        teamBResult: teamBResult ? parseInt(teamBResult) : null,
+        ...(hasTeams && {
+          teamAPrediction: teamAPrediction ? parseInt(teamAPrediction) : null,
+          teamBPrediction: teamBPrediction ? parseInt(teamBPrediction) : null,
+          teamAResult: teamAResult ? parseInt(teamAResult) : null,
+          teamBResult: teamBResult ? parseInt(teamBResult) : null,
+        }),
+        ...(isAdmin && { date: date ? new Date(`${date}T00:00:00`) : null }),
       });
       toast.success("Match updated successfully");
       setOpen(false);
@@ -78,8 +94,8 @@ export function UpdatePlayoffMatchDialog({ match, isAdmin }: { match: PlayoffMat
     }
   };
 
-  // If teams are not set, cannot update
-  if (!match.teamA || !match.teamB) {
+  // Non-admin users can only predict matches once both teams are known.
+  if ((!match.teamA || !match.teamB) && !isAdmin) {
     return null;
   }
 
@@ -96,24 +112,48 @@ export function UpdatePlayoffMatchDialog({ match, isAdmin }: { match: PlayoffMat
         <DialogHeader>
           <DialogTitle>Update {match.matchId}</DialogTitle>
           <DialogDescription>
-            Update prediction and result for {match.teamA.name} vs {match.teamB.name}.
+            {match.teamA && match.teamB
+              ? `Update prediction and result for ${match.teamA.name} vs ${match.teamB.name}.`
+              : "Update playoff match details before both teams are known."}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-6 py-6">
           {/* Teams Header */}
           <div className="flex items-center justify-between px-4 sm:px-8">
             <div className="flex flex-col items-center gap-2">
-              <TeamAvatar name={match.teamA.name} logo={match.teamA.logo} color="left" />
-              <span className="text-sm font-semibold">{match.teamA.name}</span>
+              {match.teamA ? (
+                <>
+                  <TeamAvatar name={match.teamA.name} logo={match.teamA.logo} color="left" />
+                  <span className="text-sm font-semibold">{match.teamA.name}</span>
+                </>
+              ) : (
+                <span className="text-sm font-semibold text-muted-foreground">TBD</span>
+              )}
             </div>
             <span className="text-muted-foreground font-medium text-sm">VS</span>
             <div className="flex flex-col items-center gap-2">
-              <TeamAvatar name={match.teamB.name} logo={match.teamB.logo} color="right" />
-              <span className="text-sm font-semibold">{match.teamB.name}</span>
+              {match.teamB ? (
+                <>
+                  <TeamAvatar name={match.teamB.name} logo={match.teamB.logo} color="right" />
+                  <span className="text-sm font-semibold">{match.teamB.name}</span>
+                </>
+              ) : (
+                <span className="text-sm font-semibold text-muted-foreground">TBD</span>
+              )}
             </div>
           </div>
 
+          {isAdmin && (
+            <div className="px-4 sm:px-8">
+              <label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-2 block">
+                Match date
+              </label>
+              <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+            </div>
+          )}
+
           {/* Prediction Row */}
+          {match.teamA && match.teamB && (
           <div className="flex items-center justify-between gap-2 px-4 sm:px-8 mt-4">
             <div className="flex flex-1 items-center justify-center">
               <Input
@@ -144,9 +184,10 @@ export function UpdatePlayoffMatchDialog({ match, isAdmin }: { match: PlayoffMat
               />
             </div>
           </div>
+          )}
 
           {/* Result Row */}
-          {isAdmin && (
+          {isAdmin && match.teamA && match.teamB && (
             <div className="flex items-center justify-between gap-2 px-4 sm:px-8">
               <div className="flex flex-1 items-center justify-center">
                 <Input
