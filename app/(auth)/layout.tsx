@@ -22,15 +22,15 @@ export default function AuthLayout({
         {/* Branding content */}
         <div className="relative z-10 flex flex-col h-full w-full justify-between text-white">
           <div className="flex items-center gap-3 font-bold text-3xl font-heading tracking-tight">
-            <div className="bg-primary/20 p-2.5 rounded-xl backdrop-blur-md border border-primary/30 shadow-[0_0_15px_rgba(var(--primary),0.5)]">
-              <svg className="size-8 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-                <path d="M4 22h16" />
-                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-              </svg>
+            <div className="relative size-13 overflow-hidden rounded-xl border border-primary/30 bg-background shadow-[0_0_15px_rgba(var(--primary),0.5)]">
+              <Image
+                src="/mpl-tracker-logo.png"
+                alt="MPL Tracker logo"
+                fill
+                sizes="52px"
+                className="object-cover"
+                priority
+              />
             </div>
             <span className="bg-linear-to-r from-white to-white/60 bg-clip-text text-transparent">MPL Tracker</span>
           </div>
@@ -69,15 +69,15 @@ export default function AuthLayout({
         <div className="w-full max-w-md z-10 relative animate-in fade-in zoom-in-95 duration-500 flex flex-col justify-center gap-6 sm:gap-0">
           {/* Mobile Header (Hidden on Desktop) */}
           <div className="md:hidden flex items-center justify-center gap-3 mb-8 font-bold text-3xl">
-            <div className="bg-primary/20 p-2 rounded-xl border border-primary/30">
-              <svg className="size-7 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-                <path d="M4 22h16" />
-                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-              </svg>
+            <div className="relative size-11 overflow-hidden rounded-xl border border-primary/30 bg-background">
+              <Image
+                src="/mpl-tracker-logo.png"
+                alt="MPL Tracker logo"
+                fill
+                sizes="44px"
+                className="object-cover"
+                priority
+              />
             </div>
             MPL Tracker
           </div>

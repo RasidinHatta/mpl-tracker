@@ -20,6 +20,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "MPL Tracker",
   description: "Track MPL match schedules, results, and predictions.",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/mpl-tracker-logo.png",
+  },
 };
 
 export default function RootLayout({

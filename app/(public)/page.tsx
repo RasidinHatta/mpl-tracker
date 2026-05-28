@@ -2,10 +2,11 @@
 
 import { Suspense, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/themes/ModeToggle";
 import Footer from "@/components/navigation/footer";
-import { Trophy, Activity, Calendar, TrendingUp, Target, Users, Zap } from "lucide-react";
+import { Activity, Calendar, TrendingUp, Target, Users, Zap } from "lucide-react";
 import { motion, useScroll, useTransform, useInView } from "motion/react";
 
 const fadeInUp = {
@@ -104,12 +105,19 @@ export default function LandingPage() {
           animate={{ opacity: 1, x: 0 }}
           className="font-bold text-2xl tracking-tight flex items-center gap-2"
         >
-          <motion.div 
-            whileHover={{ rotate: 360 }}
-            transition={{ duration: 0.5 }}
-            className="bg-primary text-primary-foreground p-1.5 rounded-lg shadow-sm"
+          <motion.div
+            whileHover={{ scale: 1.06 }}
+            transition={{ duration: 0.2 }}
+            className="relative size-9 overflow-hidden rounded-lg bg-background ring-1 ring-border shadow-sm"
           >
-            <Trophy className="w-5 h-5" />
+            <Image
+              src="/mpl-tracker-logo.png"
+              alt="MPL Tracker logo"
+              fill
+              sizes="36px"
+              className="object-cover"
+              priority
+            />
           </motion.div>
           MPL Tracker
         </motion.div>
