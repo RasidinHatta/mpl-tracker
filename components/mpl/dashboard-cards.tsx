@@ -11,6 +11,8 @@ import { Team } from "@/lib/generated/prisma/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { setFavoriteTeam } from "@/actions/user/favorite-team";
 import { useTransition } from "react";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 function formatPct(pct: number) {
   if (pct === 100) return "100%";
@@ -20,7 +22,7 @@ function formatPct(pct: number) {
   return `${Math.round(pct)}%`;
 }
 
-export function FavoriteTeamCard({ favoriteTeam, standings, remainingMatches, teams }: { favoriteTeam: Team | null, standings?: TeamStanding[], remainingMatches?: RemainingMatchSlim[], teams: { id: number, name: string, logo: string | null }[] }) {
+export function FavoriteTeamCard({ favoriteTeam, standings, remainingMatches, teams, isSignedIn = true }: { favoriteTeam: Team | null, standings?: TeamStanding[], remainingMatches?: RemainingMatchSlim[], teams: { id: number, name: string, logo: string | null }[], isSignedIn?: boolean }) {
   const [isPending, startTransition] = useTransition();
 
   const handleSelectTeam = (val: string | null) => {
@@ -43,21 +45,27 @@ export function FavoriteTeamCard({ favoriteTeam, standings, remainingMatches, te
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-2 mt-2">
-            <Select onValueChange={handleSelectTeam} disabled={isPending}>
-              <SelectTrigger className="w-[200px]">
-                {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <SelectValue placeholder="+ Choose Favorite Team" />}
-              </SelectTrigger>
-              <SelectContent>
-                {teams.map(t => (
-                  <SelectItem key={t.id} value={String(t.id)}>
-                    <div className="flex items-center gap-2">
-                      <TeamAvatar name={t.name} logo={t.logo} size="small" color="left" />
-                      {t.name}
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {isSignedIn ? (
+              <Select onValueChange={handleSelectTeam} disabled={isPending}>
+                <SelectTrigger className="w-[200px]">
+                  {isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <SelectValue placeholder="+ Choose Favorite Team" />}
+                </SelectTrigger>
+                <SelectContent>
+                  {teams.map(t => (
+                    <SelectItem key={t.id} value={String(t.id)}>
+                      <div className="flex items-center gap-2">
+                        <TeamAvatar name={t.name} logo={t.logo} size="small" color="left" />
+                        {t.name}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <Link href="/sign-in" className={buttonVariants({ size: "sm" })}>
+                Sign in to choose team
+              </Link>
+            )}
           </div>
         </CardContent>
       </Card>

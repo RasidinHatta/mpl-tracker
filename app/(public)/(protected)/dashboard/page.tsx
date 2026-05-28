@@ -11,6 +11,8 @@ import { TeamAvatar } from "@/components/mpl/match-schedule";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { MatchGroup } from "@/lib/generated/prisma/enums";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 // Import new components
 import { FavoriteTeamCard, GlobalLeaderboardCard, ClinchFeedCard } from "@/components/mpl/dashboard-cards";
@@ -52,6 +54,9 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
   const searchParams = await props.searchParams;
   const groupParam = searchParams?.group as MatchGroup | undefined;
   const group = groupParam || MatchGroup.MPLID;
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   const [schedule, playoffMatches, standings, stats, favoriteTeam, globalLeaderboard, remainingMatches] = await Promise.all([
     getMatchSchedule(group),
@@ -133,6 +138,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
             standings={standings}
             remainingMatches={remainingMatches}
             teams={standings.map(s => ({ id: s.teamId, name: s.teamName, logo: s.logo }))}
+            isSignedIn={Boolean(session?.user)}
           />
           <ClinchFeedCard standings={standings} remainingMatches={remainingMatches} />
 

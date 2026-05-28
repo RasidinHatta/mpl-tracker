@@ -12,6 +12,7 @@ export async function updateTeam(teamId: number, data: { name?: string; logo?: s
     
     // Revalidate paths where standings are displayed
     revalidatePath("/standing");
+    revalidatePath("/admin");
     revalidatePath("/");
     
     return { success: true };
@@ -20,4 +21,3 @@ export async function updateTeam(teamId: number, data: { name?: string; logo?: s
     return { success: false, error: "Failed to update team" };
   }
 }
-

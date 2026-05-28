@@ -17,7 +17,7 @@ import { NavUser } from "./nav-user"
 
 
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  user?: { name: string, email: string, image?: string | null };
+  user?: { name: string, email: string, image?: string | null, role?: string };
 }
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {

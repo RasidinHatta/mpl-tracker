@@ -11,8 +11,8 @@ export const authRoutes = [
 ];
 
 export const protectedRoutes = [
-  "/dashboard",
-  "/dashboard/*",
+  "/admin",
+  "/admin/*",
   "/prediction",
   "/prediction/*",
   "/history",

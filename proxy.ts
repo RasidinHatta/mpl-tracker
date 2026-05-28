@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSessionCookie } from "better-auth/cookies";
+import { getCookieCache, getSessionCookie } from "better-auth/cookies";
 import { authRoutes, protectedRoutes, publicRoutes } from "./route";
 
 export async function proxy(req: NextRequest) {
@@ -40,6 +40,22 @@ export async function proxy(req: NextRequest) {
   // Redirect unauthenticated users away from protected routes
   if (isOnProtectedRoute && !isLoggedIn) {
     return NextResponse.redirect(new URL("/sign-in", req.url));
+  }
+
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    let userRole: string | undefined;
+    try {
+      const sessionCache = await getCookieCache(req, {
+        secret: process.env.BETTER_AUTH_SECRET,
+      });
+      userRole = (sessionCache?.user as { role?: string } | undefined)?.role;
+    } catch {
+      userRole = undefined;
+    }
+
+    if (userRole !== "ADMIN") {
+      return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
   }
 
   // Redirect authenticated users away from auth pages

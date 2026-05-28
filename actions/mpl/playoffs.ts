@@ -119,6 +119,7 @@ export async function initializePlayoffBracket(
   }
 
   revalidatePath('/playoff');
+  revalidatePath('/admin');
 }
 
 export async function updatePlayoffMatch(
@@ -176,6 +177,7 @@ export async function updatePlayoffMatch(
   }
 
   revalidatePath('/playoff');
+  revalidatePath('/admin');
 }
 
 // Logic to auto-advance winners/losers

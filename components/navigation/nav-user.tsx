@@ -20,8 +20,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { ChevronsUpDownIcon, BadgeCheckIcon, BellIcon } from "lucide-react"
+import { ChevronsUpDownIcon, BadgeCheckIcon, ShieldCheckIcon } from "lucide-react"
 import { SignOutButton } from "../auth/sign-out-button"
+import Link from "next/link"
 import {
     Dialog,
     DialogContent,
@@ -50,7 +51,7 @@ import { useState } from "react"
 export function NavUser({
     user,
 }: {
-    user: { name: string; email: string; image: string | null } | null
+    user: { name: string; email: string; image: string | null; role?: string } | null
 }) {
     const { isMobile } = useSidebar()
     const [isProfileOpen, setIsProfileOpen] = useState(false)
@@ -112,12 +113,14 @@ export function NavUser({
                                     </div>
                                 </DropdownMenuItem>
 
-                                <DropdownMenuItem>
-                                    <div className="flex cursor-pointer items-center w-full">
-                                        <BellIcon className="mr-2 h-4 w-4" />
-                                        Notifications
-                                    </div>
-                                </DropdownMenuItem>
+                                {user.role === "ADMIN" && (
+                                    <DropdownMenuItem>
+                                        <Link href="/admin" className="flex cursor-pointer items-center w-full">
+                                            <ShieldCheckIcon className="mr-2 h-4 w-4" />
+                                            Admin
+                                        </Link>
+                                    </DropdownMenuItem>
+                                )}
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="p-0">

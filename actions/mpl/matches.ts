@@ -129,6 +129,7 @@ export async function updateMatch(id: number, data: { teamAResult?: number | nul
   revalidatePath('/schedule');
   revalidatePath('/standing');
   revalidatePath('/prediction');
+  revalidatePath('/admin');
 }
 
 export async function getTeams(group?: MatchGroup) {
@@ -165,6 +166,7 @@ export async function createMatch(data: {
   revalidatePath('/schedule');
   revalidatePath('/standing');
   revalidatePath('/prediction');
+  revalidatePath('/admin');
 }
 
 export async function createTeam(data: { name: string; logo?: string; group: MatchGroup }) {
@@ -189,5 +191,6 @@ export async function createTeam(data: { name: string; logo?: string; group: Mat
   revalidatePath('/schedule');
   revalidatePath('/standing');
   revalidatePath('/prediction');
+  revalidatePath('/admin');
 }
 
