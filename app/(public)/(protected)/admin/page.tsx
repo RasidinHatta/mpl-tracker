@@ -299,11 +299,19 @@ export default async function AdminPage(props: { searchParams?: Promise<{ group?
                       <div className="text-sm font-bold">{match.matchId}</div>
                       <div className="text-xs text-muted-foreground">{formatDate(match.date)}</div>
                     </div>
-                    <div className="flex min-w-0 flex-1 items-center justify-end gap-3">
-                      <span className="truncate text-sm">{match.teamA?.name ?? "TBD"}</span>
-                      <span className="text-sm font-black">{match.teamAResult ?? "-"} : {match.teamBResult ?? "-"}</span>
-                      <span className="truncate text-sm">{match.teamB?.name ?? "TBD"}</span>
-                      <UpdatePlayoffMatchDialog match={match} isAdmin />
+                    <div className="grid w-full items-center gap-2 sm:w-[320px] sm:grid-cols-[minmax(0,1fr)_64px_minmax(0,1fr)_24px]">
+                      <div className="min-w-0 text-right">
+                        <span className="block truncate text-sm font-semibold">{match.teamA?.name ?? "TBD"}</span>
+                      </div>
+                      <div className="text-center text-sm font-black tabular-nums">
+                        {match.teamAResult ?? "-"} : {match.teamBResult ?? "-"}
+                      </div>
+                      <div className="min-w-0 text-left">
+                        <span className="block truncate text-sm font-semibold">{match.teamB?.name ?? "TBD"}</span>
+                      </div>
+                      <div className="flex justify-end">
+                        <UpdatePlayoffMatchDialog match={match} isAdmin />
+                      </div>
                     </div>
                   </div>
                 ))}
