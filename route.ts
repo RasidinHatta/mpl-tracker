@@ -13,7 +13,6 @@ export const authRoutes = [
 export const protectedRoutes = [
   "/admin",
   "/admin/*",
-  "/settings",
 ];
 
 export const publicRoutes = [
