@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://mpl-tracker-taupe.vercel.app/</loc>
+  </url>
+  <url>
+    <loc>https://mpl-tracker-taupe.vercel.app/dashboard</loc>
+  </url>
+  <url>
+    <loc>https://mpl-tracker-taupe.vercel.app/standing</loc>
+  </url>
+  <url>
+    <loc>https://mpl-tracker-taupe.vercel.app/schedule</loc>
+  </url>
+  <url>
+    <loc>https://mpl-tracker-taupe.vercel.app/history</loc>
+  </url>
+  <url>
+    <loc>https://mpl-tracker-taupe.vercel.app/playoff</loc>
+  </url>
+</urlset>
