@@ -20,22 +20,13 @@ function xmlEscape(value: string) {
 
 export function GET() {
   const siteUrl = getSiteUrl();
-  const lastModified = new Date().toISOString();
-  const urls = [
-    { path: "/", changeFrequency: "weekly", priority: "1.0" },
-    { path: "/dashboard", changeFrequency: "daily", priority: "0.9" },
-    { path: "/standing", changeFrequency: "daily", priority: "0.8" },
-    { path: "/schedule", changeFrequency: "daily", priority: "0.8" },
-  ];
+  const urls = ["/", "/dashboard", "/standing", "/schedule", "/history", "/playoff"];
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls
-  .map((entry) => `  <url>
-    <loc>${xmlEscape(`${siteUrl}${entry.path}`)}</loc>
-    <lastmod>${lastModified}</lastmod>
-    <changefreq>${entry.changeFrequency}</changefreq>
-    <priority>${entry.priority}</priority>
+  .map((path) => `  <url>
+    <loc>${xmlEscape(`${siteUrl}${path}`)}</loc>
   </url>`)
   .join("\n")}
 </urlset>
