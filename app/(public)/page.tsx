@@ -221,9 +221,15 @@ export default function LandingPage() {
               <div className="relative">
                 <motion.div 
                   whileHover={{ scale: 1.1 }}
-                  className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5 text-primary shadow-inner"
+                  className="relative h-14 w-14 overflow-hidden rounded-2xl bg-white mb-5 shadow-inner ring-1 ring-border"
                 >
-                  <span className="font-black text-xl">ID</span>
+                  <Image
+                    src="/mpl-id.png"
+                    alt="MPL Indonesia logo"
+                    fill
+                    sizes="56px"
+                    className="object-contain p-2"
+                  />
                 </motion.div>
                 <motion.div
                   animate={{ scale: [1, 1.5, 1], opacity: [1, 0, 1] }}
@@ -245,9 +251,15 @@ export default function LandingPage() {
               <div className="relative">
                 <motion.div 
                   whileHover={{ scale: 1.1 }}
-                  className="h-14 w-14 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-5 text-blue-500 shadow-inner"
+                  className="relative h-14 w-14 overflow-hidden rounded-2xl bg-white mb-5 shadow-inner ring-1 ring-border"
                 >
-                  <span className="font-black text-xl">PH</span>
+                  <Image
+                    src="/mpl-ph.png"
+                    alt="MPL Philippines logo"
+                    fill
+                    sizes="56px"
+                    className="object-contain p-2"
+                  />
                 </motion.div>
                 <motion.div
                   animate={{ scale: [1, 1.5, 1], opacity: [1, 0, 1] }}
@@ -269,9 +281,15 @@ export default function LandingPage() {
               <div className="relative">
                 <motion.div 
                   whileHover={{ scale: 1.1 }}
-                  className="h-14 w-14 rounded-2xl bg-yellow-500/10 flex items-center justify-center mb-5 text-yellow-600 dark:text-yellow-500 shadow-inner"
+                  className="relative h-14 w-14 overflow-hidden rounded-2xl bg-white mb-5 shadow-inner ring-1 ring-border"
                 >
-                  <span className="font-black text-xl">MY</span>
+                  <Image
+                    src="/mpl-my.png"
+                    alt="MPL Malaysia logo"
+                    fill
+                    sizes="56px"
+                    className="object-contain p-2"
+                  />
                 </motion.div>
                 <motion.div
                   animate={{ scale: [1, 1.5, 1], opacity: [1, 0, 1] }}

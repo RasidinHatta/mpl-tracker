@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { CalendarDays, ChevronLeft, ChevronRight, ShieldCheck, Swords, Trophy, Users } from "lucide-react";
@@ -40,9 +41,15 @@ function getGroup(value?: string): MatchGroup {
   return Object.values(MatchGroup).includes(value as MatchGroup) ? value as MatchGroup : MatchGroup.MPLID;
 }
 
+const groupLogos: Record<MatchGroup, string> = {
+  [MatchGroup.MPLID]: "/mpl-id.png",
+  [MatchGroup.MPLPH]: "/mpl-ph.png",
+  [MatchGroup.MPLMY]: "/mpl-my.png",
+};
+
 function groupLinkClass(active: boolean) {
   return cn(
-    "inline-flex h-7 items-center justify-center rounded-md border px-2.5 text-[0.8rem] font-medium transition-colors",
+    "inline-flex h-8 items-center justify-center gap-2 rounded-md border px-2.5 text-[0.8rem] font-medium transition-colors",
     active
       ? "border-primary bg-primary text-primary-foreground"
       : "border-border bg-background hover:bg-muted"
@@ -98,6 +105,15 @@ export default async function AdminPage(props: { searchParams?: Promise<{ group?
         <div className="flex flex-wrap gap-2">
           {Object.values(MatchGroup).map((item) => (
             <Link key={item} href={`/admin?group=${item}`} className={groupLinkClass(group === item)}>
+              <span className="relative size-5 overflow-hidden rounded bg-white ring-1 ring-border">
+                <Image
+                  src={groupLogos[item]}
+                  alt={`${item} logo`}
+                  fill
+                  sizes="20px"
+                  className="object-contain p-0.5"
+                />
+              </span>
               {item}
             </Link>
           ))}

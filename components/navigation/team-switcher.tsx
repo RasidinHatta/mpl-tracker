@@ -16,24 +16,25 @@ import {
   DropdownMenuTrigger,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu"
-import Logo from "./logo"
+import Image from "next/image"
 import { ChevronsUpDown } from "lucide-react"
 import { MatchGroup } from "@/lib/generated/prisma/enums"
 
 const groups = [
-  { name: "MPL ID", id: MatchGroup.MPLID },
-  { name: "MPL PH", id: MatchGroup.MPLPH },
-  { name: "MPL MY", id: MatchGroup.MPLMY },
+  { name: "MPL ID", id: MatchGroup.MPLID, logo: "/mpl-id.png" },
+  { name: "MPL PH", id: MatchGroup.MPLPH, logo: "/mpl-ph.png" },
+  { name: "MPL MY", id: MatchGroup.MPLMY, logo: "/mpl-my.png" },
 ]
 
 export function TeamSwitcher() {
-  const { isMobile } = useSidebar()
+  const { isMobile, state } = useSidebar()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
   const currentGroupId = searchParams.get("group") ?? "MPLID"
   const activeGroup = groups.find((g) => g.id === currentGroupId) || groups[0]
+  const isCollapsed = state === "collapsed" && !isMobile
 
   const setGroup = (groupId: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -49,17 +50,23 @@ export function TeamSwitcher() {
             <SidebarMenuButton
               size="lg"
               asChild
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground w-full"
+              className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground w-full ${isCollapsed ? "justify-center" : ""}`}
             >
-              <div>
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Logo />
+              <div aria-label={`Selected group: ${activeGroup.name}`}>
+                <div className="relative flex aspect-square size-8 items-center justify-center overflow-hidden rounded-lg bg-white ring-1 ring-border">
+                  <Image
+                    src={activeGroup.logo}
+                    alt={`${activeGroup.name} logo`}
+                    fill
+                    sizes="32px"
+                    className="object-contain p-1"
+                  />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
+                <div className={isCollapsed ? "hidden" : "grid flex-1 text-left text-sm leading-tight"}>
                   <span className='text-xl font-black tracking-tight'>MPL<span className="text-primary tracking-normal">Tracker</span></span>
                   <span className="truncate text-xs">{activeGroup.name}</span>
                 </div>
-                <ChevronsUpDown className="ml-auto size-4" />
+                <ChevronsUpDown className={isCollapsed ? "hidden" : "ml-auto size-4"} />
               </div>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
@@ -79,7 +86,16 @@ export function TeamSwitcher() {
                   onClick={() => setGroup(group.id)}
                   className="gap-2 p-2"
                 >
-                  {group.name}
+                  <span className="relative flex size-7 shrink-0 overflow-hidden rounded-md bg-white ring-1 ring-border">
+                    <Image
+                      src={group.logo}
+                      alt={`${group.name} logo`}
+                      fill
+                      sizes="28px"
+                      className="object-contain p-1"
+                    />
+                  </span>
+                  <span>{group.name}</span>
                 </DropdownMenuItem>
               ))}
             </DropdownMenuGroup>
