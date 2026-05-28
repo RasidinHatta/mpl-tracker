@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /settings
+Disallow: /prediction
+
+Sitemap: https://mpl-tracker-taupe.vercel.app/sitemap.xml
