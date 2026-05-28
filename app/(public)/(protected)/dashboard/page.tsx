@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { AnimatedProgress } from "@/components/mpl/animated-progress";
 import { getStandings, getRemainingMatches } from "@/actions/mpl/standings";
 import { getMatchSchedule } from "@/actions/mpl/matches";
+import { getPlayoffMatches } from "@/actions/mpl/playoffs";
 import { getPredictionStats, getGlobalLeaderboard } from "@/actions/mpl/predictions";
 import { getFavoriteTeam } from "@/actions/user/favorite-team";
 import { TeamAvatar } from "@/components/mpl/match-schedule";
@@ -24,13 +25,37 @@ function formatDateShort(date: Date) {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
+function getPlayoffPlaceholder(matchId: string) {
+  switch (matchId) {
+    case "UBQ1":
+      return { teamA: "Seed 3", teamB: "Seed 6", label: "M1" };
+    case "UBQ2":
+      return { teamA: "Seed 4", teamB: "Seed 5", label: "M2" };
+    case "UBS1":
+      return { teamA: "Seed 1", teamB: "Winner M1", label: "M3" };
+    case "UBS2":
+      return { teamA: "Seed 2", teamB: "Winner M2", label: "M4" };
+    case "UBF":
+      return { teamA: "Winner M3", teamB: "Winner M4", label: "M5" };
+    case "LBSF":
+      return { teamA: "Loser M3", teamB: "Loser M4", label: "M6" };
+    case "LBF":
+      return { teamA: "Winner M6", teamB: "Loser M5", label: "M7" };
+    case "GF":
+      return { teamA: "Winner M5", teamB: "Winner M7", label: "M8" };
+    default:
+      return { teamA: "TBD", teamB: "TBD", label: matchId };
+  }
+}
+
 export default async function DashboardPage(props: { searchParams?: Promise<{ group?: string }> }) {
   const searchParams = await props.searchParams;
   const groupParam = searchParams?.group as MatchGroup | undefined;
   const group = groupParam || MatchGroup.MPLID;
 
-  const [schedule, standings, stats, favoriteTeam, globalLeaderboard, remainingMatches] = await Promise.all([
+  const [schedule, playoffMatches, standings, stats, favoriteTeam, globalLeaderboard, remainingMatches] = await Promise.all([
     getMatchSchedule(group),
+    getPlayoffMatches(group),
     getStandings(false, null, group),
     getPredictionStats(group),
     getFavoriteTeam(),
@@ -42,10 +67,49 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
 
   const completedMatches = allMatches.filter((m) => m.teamAResult !== null && m.teamBResult !== null);
   const upcomingMatches = allMatches.filter((m) => m.teamAResult === null || m.teamBResult === null);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const upcomingPlayoffMatches = playoffMatches
+    .filter((m) => m.date && (m.teamAResult === null || m.teamBResult === null) && new Date(m.date) >= today)
+    .sort((a, b) => new Date(a.date!).getTime() - new Date(b.date!).getTime());
 
-  const nextMatches = upcomingMatches.slice(0, 3);
+  const nextRegularMatches = upcomingMatches.slice(0, 3).map((match) => ({
+    id: `regular-${match.id}`,
+    label: `Match ${match.matchNo}`,
+    date: match.date,
+    teamAName: match.teamA.name,
+    teamALogo: match.teamA.logo,
+    teamBName: match.teamB.name,
+    teamBLogo: match.teamB.logo,
+    teamAPrediction: match.teamAPrediction,
+    teamBPrediction: match.teamBPrediction,
+    predictionHref: `/schedule${group ? `?group=${group}` : ''}`,
+    canPredict: true,
+  }));
+  const nextPlayoffMatches = upcomingPlayoffMatches.slice(0, 3).map((match) => {
+    const placeholder = getPlayoffPlaceholder(match.matchId);
+
+    return {
+      id: `playoff-${match.id}`,
+      label: `Playoff ${placeholder.label}`,
+      date: match.date!,
+      teamAName: match.teamA?.name ?? placeholder.teamA,
+      teamALogo: match.teamA?.logo ?? null,
+      teamBName: match.teamB?.name ?? placeholder.teamB,
+      teamBLogo: match.teamB?.logo ?? null,
+      teamAPrediction: match.teamAPrediction,
+      teamBPrediction: match.teamBPrediction,
+      predictionHref: `/playoff${group ? `?group=${group}` : ''}`,
+      canPredict: Boolean(match.teamA && match.teamB),
+    };
+  });
+  const nextMatches = nextRegularMatches.length > 0 ? nextRegularMatches : nextPlayoffMatches;
   const recentMatches = [...completedMatches].reverse().slice(0, 3);
   const top3 = standings.slice(0, 3);
+  const nextUpHref = nextRegularMatches.length > 0
+    ? `/schedule${group ? `?group=${group}` : ''}`
+    : `/playoff${group ? `?group=${group}` : ''}`;
+  const nextUpLabel = nextRegularMatches.length > 0 ? "View Full Schedule" : "View Playoff";
 
   return (
     <div className="flex flex-1 flex-col gap-6 p-4 pt-0">
@@ -78,9 +142,9 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
               <h3 className="text-lg font-bold flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-primary" /> Next Up
               </h3>
-              <Link href={`/schedule${group ? `?group=${group}` : ''}`}>
+              <Link href={nextUpHref}>
                 <Button variant="ghost" size="sm" className="text-xs">
-                  View Full Schedule <ChevronRight className="w-3 h-3 ml-1" />
+                  {nextUpLabel} <ChevronRight className="w-3 h-3 ml-1" />
                 </Button>
               </Link>
             </div>
@@ -92,7 +156,7 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
                     <div className="absolute top-0 inset-x-0 h-1 bg-linear-to-r from-primary/50 to-secondary/50 opacity-0 group-hover:opacity-100 transition-opacity" />
                     <CardHeader className="p-4 pb-2">
                       <div className="flex items-center justify-between text-[10px] uppercase font-bold text-muted-foreground tracking-wider">
-                        <span>Match {match.matchNo}</span>
+                        <span>{match.label}</span>
                         <span>{formatDateShort(match.date)}</span>
                       </div>
                     </CardHeader>
@@ -100,15 +164,15 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
                       {/* Teams */}
                       <div className="flex items-center justify-between">
                         <div className="flex flex-col items-center gap-1.5 flex-1">
-                          <TeamAvatar name={match.teamA.name} logo={match.teamA.logo} color="left" size="small" />
-                          <span className="text-xs font-bold truncate max-w-[80px]">{match.teamA.name}</span>
+                          <TeamAvatar name={match.teamAName} logo={match.teamALogo} color="left" size="small" />
+                          <span className="text-xs font-bold truncate max-w-[80px]">{match.teamAName}</span>
                         </div>
                         <div className="flex flex-col items-center justify-center px-1">
                           <span className="text-[10px] font-black text-muted-foreground/40 bg-muted px-1.5 py-0.5 rounded-sm">VS</span>
                         </div>
                         <div className="flex flex-col items-center gap-1.5 flex-1">
-                          <TeamAvatar name={match.teamB.name} logo={match.teamB.logo} color="right" size="small" />
-                          <span className="text-xs font-bold truncate max-w-[80px]">{match.teamB.name}</span>
+                          <TeamAvatar name={match.teamBName} logo={match.teamBLogo} color="right" size="small" />
+                          <span className="text-xs font-bold truncate max-w-[80px]">{match.teamBName}</span>
                         </div>
                       </div>
 
@@ -118,8 +182,12 @@ export default async function DashboardPage(props: { searchParams?: Promise<{ gr
                           <Badge variant="outline" className="text-[10px] tracking-tight bg-primary/5 border-primary/20 text-primary">
                             Predicted: {match.teamAPrediction} - {match.teamBPrediction}
                           </Badge>
+                        ) : !match.canPredict ? (
+                          <Badge variant="outline" className="text-[10px] tracking-tight border-dashed text-muted-foreground">
+                            Awaiting teams
+                          </Badge>
                         ) : (
-                          <Link href={`/schedule${group ? `?group=${group}` : ''}`}>
+                          <Link href={match.predictionHref}>
                             <Badge variant="secondary" className="text-[10px] hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">
                               + Add Prediction
                             </Badge>
