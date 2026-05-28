@@ -244,19 +244,25 @@ export default async function AdminPage(props: { searchParams?: Promise<{ group?
                           </Badge>
                           <span className="text-sm text-muted-foreground">{formatDate(match.date)}</span>
                         </div>
-                        <div className="flex items-center justify-between gap-3 sm:min-w-[360px]">
-                          <div className="flex min-w-0 flex-1 items-center justify-end gap-2">
-                            <span className="truncate text-sm font-semibold">{match.teamA.name}</span>
+                        <div className="grid w-full items-center gap-2 sm:w-[460px] sm:grid-cols-[minmax(0,1fr)_32px_64px_32px_minmax(0,1fr)_auto]">
+                          <div className="min-w-0 text-right">
+                            <span className="block truncate text-sm font-semibold">{match.teamA.name}</span>
+                          </div>
+                          <div className="flex justify-center">
                             <TeamAvatar name={match.teamA.name} logo={match.teamA.logo} color="left" size="small" />
                           </div>
-                          <div className="min-w-16 text-center text-sm font-black">
+                          <div className="text-center text-sm font-black tabular-nums">
                             {match.teamAResult ?? "-"} : {match.teamBResult ?? "-"}
                           </div>
-                          <div className="flex min-w-0 flex-1 items-center gap-2">
+                          <div className="flex justify-center">
                             <TeamAvatar name={match.teamB.name} logo={match.teamB.logo} color="right" size="small" />
-                            <span className="truncate text-sm font-semibold">{match.teamB.name}</span>
                           </div>
-                          <UpdateMatchDialog match={match} />
+                          <div className="min-w-0 text-left">
+                            <span className="block truncate text-sm font-semibold">{match.teamB.name}</span>
+                          </div>
+                          <div className="flex justify-end">
+                            <UpdateMatchDialog match={match} />
+                          </div>
                         </div>
                       </div>
                     ))}
