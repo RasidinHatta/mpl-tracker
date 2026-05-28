@@ -13,18 +13,22 @@ export const authRoutes = [
 export const protectedRoutes = [
   "/admin",
   "/admin/*",
-  "/prediction",
-  "/prediction/*",
-  "/history",
-  "/history/*",
   "/settings",
 ];
 
 export const publicRoutes = [
   "/",
+  "/dashboard",
+  "/dashboard/*",
   "/standing",
   "/standing/*",
   "/schedule",
   "/schedule/*",
+  "/history",
+  "/history/*",
+  "/playoff",
+  "/playoff/*",
+  "/prediction",
+  "/prediction/*",
   "/about",
 ];

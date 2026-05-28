@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +18,7 @@ import { Info } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { TeamAvatar } from "./match-schedule";
+import Link from "next/link";
 
 function toDateInputValue(date: Date | string | null) {
   if (!date) return "";
@@ -29,7 +31,7 @@ function toDateInputValue(date: Date | string | null) {
   return `${year}-${month}-${day}`;
 }
 
-export function UpdatePlayoffMatchDialog({ match, isAdmin }: { match: PlayoffMatchWithTeams, isAdmin: boolean }) {
+export function UpdatePlayoffMatchDialog({ match, isAdmin, isSignedIn = true }: { match: PlayoffMatchWithTeams, isAdmin: boolean, isSignedIn?: boolean }) {
   const [open, setOpen] = useState(false);
   const [teamAPrediction, setTeamAPrediction] = useState(match.teamAPrediction?.toString() || "");
   const [teamBPrediction, setTeamBPrediction] = useState(match.teamBPrediction?.toString() || "");
@@ -64,6 +66,10 @@ export function UpdatePlayoffMatchDialog({ match, isAdmin }: { match: PlayoffMat
   };
 
   const handleSave = async () => {
+    if (!isSignedIn && !isAdmin) {
+      toast.error("Please log in first");
+      return;
+    }
     if (isAdmin && (teamAResult || teamBResult) && !isValidScore(teamAResult, teamBResult)) {
       toast.error(`Invalid result: for ${match.format}, one team must reach ${maxScore} and the other must have fewer wins.`);
       return;
@@ -113,7 +119,9 @@ export function UpdatePlayoffMatchDialog({ match, isAdmin }: { match: PlayoffMat
           <DialogTitle>Update {match.matchId}</DialogTitle>
           <DialogDescription>
             {match.teamA && match.teamB
-              ? `Update prediction and result for ${match.teamA.name} vs ${match.teamB.name}.`
+              ? isSignedIn
+                ? `Update prediction and result for ${match.teamA.name} vs ${match.teamB.name}.`
+                : `View playoff match details for ${match.teamA.name} vs ${match.teamB.name}.`
               : "Update playoff match details before both teams are known."}
           </DialogDescription>
         </DialogHeader>
@@ -153,7 +161,7 @@ export function UpdatePlayoffMatchDialog({ match, isAdmin }: { match: PlayoffMat
           )}
 
           {/* Prediction Row */}
-          {match.teamA && match.teamB && (
+          {isSignedIn && match.teamA && match.teamB && (
           <div className="flex items-center justify-between gap-2 px-4 sm:px-8 mt-4">
             <div className="flex flex-1 items-center justify-center">
               <Input
@@ -184,6 +192,12 @@ export function UpdatePlayoffMatchDialog({ match, isAdmin }: { match: PlayoffMat
               />
             </div>
           </div>
+          )}
+
+          {!isSignedIn && match.teamA && match.teamB && (
+            <div className="mx-4 rounded-lg border border-dashed bg-muted/30 px-4 py-3 text-center text-sm text-muted-foreground sm:mx-8">
+              Please log in to make playoff predictions.
+            </div>
           )}
 
           {/* Result Row */}
@@ -218,11 +232,19 @@ export function UpdatePlayoffMatchDialog({ match, isAdmin }: { match: PlayoffMat
             </div>
           )}
         </div>
-        <DialogFooter>
-          <Button type="submit" disabled={loading} onClick={handleSave}>
-            Save changes
-          </Button>
-        </DialogFooter>
+        {isSignedIn || isAdmin ? (
+          <DialogFooter>
+            <Button type="submit" disabled={loading} onClick={handleSave}>
+              Save changes
+            </Button>
+          </DialogFooter>
+        ) : (
+          <DialogFooter>
+            <Link href="/sign-in" className={buttonVariants()}>
+              Log in
+            </Link>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

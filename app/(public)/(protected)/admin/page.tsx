@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-import { CalendarDays, ShieldCheck, Swords, Trophy, Users } from "lucide-react";
+import { CalendarDays, ChevronLeft, ChevronRight, ShieldCheck, Swords, Trophy, Users } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { MatchGroup } from "@/lib/generated/prisma/enums";
@@ -49,7 +49,7 @@ function groupLinkClass(active: boolean) {
   );
 }
 
-export default async function AdminPage(props: { searchParams?: Promise<{ group?: string }> }) {
+export default async function AdminPage(props: { searchParams?: Promise<{ group?: string; week?: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) redirect("/sign-in");
@@ -77,6 +77,12 @@ export default async function AdminPage(props: { searchParams?: Promise<{ group?
 
   const allMatches = schedule.flatMap((week) => week.matches);
   const completedMatches = allMatches.filter((match) => match.teamAResult !== null && match.teamBResult !== null);
+  const requestedWeek = Number(searchParams?.week);
+  const currentWeekIndex = Math.max(0, schedule.findIndex((week) => week.week === requestedWeek));
+  const selectedWeek = schedule[currentWeekIndex] ?? schedule[0];
+  const previousWeek = currentWeekIndex > 0 ? schedule[currentWeekIndex - 1] : null;
+  const nextWeek = currentWeekIndex < schedule.length - 1 ? schedule[currentWeekIndex + 1] : null;
+  const selectedWeekCompletedMatches = selectedWeek?.matches.filter((match) => match.teamAResult !== null && match.teamBResult !== null).length ?? 0;
   const playoffInitialized = playoffMatches.length > 0;
   const datedPlayoffMatches = playoffMatches.filter((match) => match.date);
 
@@ -183,37 +189,84 @@ export default async function AdminPage(props: { searchParams?: Promise<{ group?
               <AddMatchDialog teams={teams} group={group} />
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {allMatches.map((match) => (
-                  <div key={match.id} className="flex flex-col gap-3 rounded-lg border bg-card/50 p-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-3">
-                      <Badge variant={match.teamAResult !== null && match.teamBResult !== null ? "secondary" : "outline"}>
-                        Week {match.week} Match {match.matchNo}
-                      </Badge>
-                      <span className="text-sm text-muted-foreground">{formatDate(match.date)}</span>
+              {selectedWeek ? (
+                <div className="space-y-4">
+                  <div className="flex flex-col gap-3 rounded-lg border bg-muted/30 p-3 md:flex-row md:items-center md:justify-between">
+                    <div>
+                      <div className="text-sm font-bold">Week {selectedWeek.week}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {selectedWeek.matches.length} matches - {selectedWeekCompletedMatches} completed
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between gap-3 sm:min-w-[360px]">
-                      <div className="flex min-w-0 flex-1 items-center justify-end gap-2">
-                        <span className="truncate text-sm font-semibold">{match.teamA.name}</span>
-                        <TeamAvatar name={match.teamA.name} logo={match.teamA.logo} color="left" size="small" />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Link
+                        href={previousWeek ? `/admin?group=${group}&week=${previousWeek.week}` : "#"}
+                        aria-disabled={!previousWeek}
+                        className={cn(
+                          groupLinkClass(false),
+                          !previousWeek && "pointer-events-none opacity-50"
+                        )}
+                      >
+                        <ChevronLeft className="mr-1 h-3.5 w-3.5" />
+                        Previous
+                      </Link>
+                      <div className="flex max-w-full gap-1 overflow-x-auto">
+                        {schedule.map((week) => (
+                          <Link
+                            key={week.week}
+                            href={`/admin?group=${group}&week=${week.week}`}
+                            className={groupLinkClass(week.week === selectedWeek.week)}
+                          >
+                            Week {week.week}
+                          </Link>
+                        ))}
                       </div>
-                      <div className="min-w-16 text-center text-sm font-black">
-                        {match.teamAResult ?? "-"} : {match.teamBResult ?? "-"}
-                      </div>
-                      <div className="flex min-w-0 flex-1 items-center gap-2">
-                        <TeamAvatar name={match.teamB.name} logo={match.teamB.logo} color="right" size="small" />
-                        <span className="truncate text-sm font-semibold">{match.teamB.name}</span>
-                      </div>
-                      <UpdateMatchDialog match={match} />
+                      <Link
+                        href={nextWeek ? `/admin?group=${group}&week=${nextWeek.week}` : "#"}
+                        aria-disabled={!nextWeek}
+                        className={cn(
+                          groupLinkClass(false),
+                          !nextWeek && "pointer-events-none opacity-50"
+                        )}
+                      >
+                        Next
+                        <ChevronRight className="ml-1 h-3.5 w-3.5" />
+                      </Link>
                     </div>
                   </div>
-                ))}
-                {allMatches.length === 0 && (
-                  <div className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
-                    No matches yet.
+
+                  <div className="space-y-3">
+                    {selectedWeek.matches.map((match) => (
+                      <div key={match.id} className="flex flex-col gap-3 rounded-lg border bg-card/50 p-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex items-center gap-3">
+                          <Badge variant={match.teamAResult !== null && match.teamBResult !== null ? "secondary" : "outline"}>
+                            Week {match.week} Match {match.matchNo}
+                          </Badge>
+                          <span className="text-sm text-muted-foreground">{formatDate(match.date)}</span>
+                        </div>
+                        <div className="flex items-center justify-between gap-3 sm:min-w-[360px]">
+                          <div className="flex min-w-0 flex-1 items-center justify-end gap-2">
+                            <span className="truncate text-sm font-semibold">{match.teamA.name}</span>
+                            <TeamAvatar name={match.teamA.name} logo={match.teamA.logo} color="left" size="small" />
+                          </div>
+                          <div className="min-w-16 text-center text-sm font-black">
+                            {match.teamAResult ?? "-"} : {match.teamBResult ?? "-"}
+                          </div>
+                          <div className="flex min-w-0 flex-1 items-center gap-2">
+                            <TeamAvatar name={match.teamB.name} logo={match.teamB.logo} color="right" size="small" />
+                            <span className="truncate text-sm font-semibold">{match.teamB.name}</span>
+                          </div>
+                          <UpdateMatchDialog match={match} />
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )}
-              </div>
+                </div>
+              ) : (
+                <div className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
+                  No matches yet.
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

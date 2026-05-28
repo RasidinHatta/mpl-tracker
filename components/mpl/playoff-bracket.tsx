@@ -9,6 +9,7 @@ import { useEffect, useState, useRef } from "react";
 type Props = {
   matches: PlayoffMatchWithTeams[];
   isAdmin: boolean;
+  isSignedIn: boolean;
 };
 
 function formatMatchDate(date: Date | string | null) {
@@ -22,7 +23,7 @@ function formatMatchDate(date: Date | string | null) {
   });
 }
 
-export function PlayoffBracket({ matches, isAdmin }: Props) {
+export function PlayoffBracket({ matches, isAdmin, isSignedIn }: Props) {
   const getMatch = (id: string) => matches.find((m) => m.matchId === id);
 
   const ubq1 = getMatch("UBQ1");
@@ -41,40 +42,40 @@ export function PlayoffBracket({ matches, isAdmin }: Props) {
         {/* Column 1: UB Quarterfinals */}
         <div className="flex flex-col gap-8 w-64 shrink-0">
           <div className="text-center text-[11px] uppercase tracking-wider font-semibold text-muted-foreground mb-1 h-4">UB Quarterfinals</div>
-          <MatchCard match={ubq1} isAdmin={isAdmin} title="M1" placeholderA="Seed 3" placeholderB="Seed 6" matchId="M1" />
+          <MatchCard match={ubq1} isAdmin={isAdmin} isSignedIn={isSignedIn} title="M1" placeholderA="Seed 3" placeholderB="Seed 6" matchId="M1" />
           <div className="h-[90px]" /> {/* Spacer */}
-          <MatchCard match={ubq2} isAdmin={isAdmin} title="M2" placeholderA="Seed 4" placeholderB="Seed 5" matchId="M2" />
+          <MatchCard match={ubq2} isAdmin={isAdmin} isSignedIn={isSignedIn} title="M2" placeholderA="Seed 4" placeholderB="Seed 5" matchId="M2" />
         </div>
 
         {/* Column 2: UB Semifinals & LB Semifinal */}
         <div className="flex flex-col gap-8 w-64 shrink-0">
           <div className="text-center text-[11px] uppercase tracking-wider font-semibold text-muted-foreground mb-1 h-4">UB Semifinals</div>
           <div className="mt-8">
-            <MatchCard match={ubs1} isAdmin={isAdmin} title="M3" placeholderA="Seed 1" placeholderB="Winner M1" matchId="M3" />
+            <MatchCard match={ubs1} isAdmin={isAdmin} isSignedIn={isSignedIn} title="M3" placeholderA="Seed 1" placeholderB="Winner M1" matchId="M3" />
           </div>
           <div className="h-8" />
-          <MatchCard match={ubs2} isAdmin={isAdmin} title="M4" placeholderA="Seed 2" placeholderB="Winner M2" matchId="M4" />
+          <MatchCard match={ubs2} isAdmin={isAdmin} isSignedIn={isSignedIn} title="M4" placeholderA="Seed 2" placeholderB="Winner M2" matchId="M4" />
           
           <div className="mt-10 text-center text-[11px] uppercase tracking-wider font-semibold text-muted-foreground mb-1 h-4">LB Semifinal</div>
-          <MatchCard match={lbsf} isAdmin={isAdmin} title="M6" placeholderA="Loser M3" placeholderB="Loser M4" matchId="M6" />
+          <MatchCard match={lbsf} isAdmin={isAdmin} isSignedIn={isSignedIn} title="M6" placeholderA="Loser M3" placeholderB="Loser M4" matchId="M6" />
         </div>
 
         {/* Column 3: UB Final & LB Final */}
         <div className="flex flex-col gap-8 w-64 shrink-0">
           <div className="text-center text-[11px] uppercase tracking-wider font-semibold text-muted-foreground mb-1 h-4">UB Final</div>
           <div className="mt-28">
-            <MatchCard match={ubf} isAdmin={isAdmin} title="M5" placeholderA="Winner M3" placeholderB="Winner M4" matchId="M5" />
+            <MatchCard match={ubf} isAdmin={isAdmin} isSignedIn={isSignedIn} title="M5" placeholderA="Winner M3" placeholderB="Winner M4" matchId="M5" />
           </div>
           
           <div className="mt-[136px] text-center text-[11px] uppercase tracking-wider font-semibold text-muted-foreground mb-1 h-4">LB Final</div>
-          <MatchCard match={lbf} isAdmin={isAdmin} title="M7" placeholderA="Loser M5" placeholderB="Winner M6" matchId="M7" />
+          <MatchCard match={lbf} isAdmin={isAdmin} isSignedIn={isSignedIn} title="M7" placeholderA="Loser M5" placeholderB="Winner M6" matchId="M7" />
         </div>
 
         {/* Column 4: Grand Final */}
         <div className="flex flex-col gap-8 w-64 shrink-0">
           <div className="text-center text-[11px] uppercase tracking-wider font-semibold text-muted-foreground mb-1 h-4">Grand Final</div>
           <div className="mt-[210px]">
-            <MatchCard match={gf} isAdmin={isAdmin} title="M8" placeholderA="Winner M5" placeholderB="Winner M7" matchId="M8" />
+            <MatchCard match={gf} isAdmin={isAdmin} isSignedIn={isSignedIn} title="M8" placeholderA="Winner M5" placeholderB="Winner M7" matchId="M8" />
           </div>
         </div>
       </div>
@@ -82,7 +83,7 @@ export function PlayoffBracket({ matches, isAdmin }: Props) {
   );
 }
 
-function MatchCard({ match, isAdmin, title, placeholderA = "TBD", placeholderB = "TBD", matchId }: { match?: PlayoffMatchWithTeams; isAdmin: boolean, title?: string, placeholderA?: string, placeholderB?: string, matchId: string }) {
+function MatchCard({ match, isAdmin, isSignedIn, title, placeholderA = "TBD", placeholderB = "TBD", matchId }: { match?: PlayoffMatchWithTeams; isAdmin: boolean, isSignedIn: boolean, title?: string, placeholderA?: string, placeholderB?: string, matchId: string }) {
   if (!match) return <div id={`match-${matchId}`} className="h-[52px] rounded border border-dashed bg-muted/20 opacity-50 flex items-center justify-center text-[10px]">Match not found</div>;
 
   const getWinner = () => {
@@ -159,7 +160,7 @@ function MatchCard({ match, isAdmin, title, placeholderA = "TBD", placeholderB =
 
         {/* Info / Update Button */}
         <div className="absolute right-7 top-1/2 -translate-y-1/2 flex items-center justify-center">
-          <UpdatePlayoffMatchDialog match={match} isAdmin={isAdmin} />
+          <UpdatePlayoffMatchDialog match={match} isAdmin={isAdmin} isSignedIn={isSignedIn} />
         </div>
       </div>
     </div>

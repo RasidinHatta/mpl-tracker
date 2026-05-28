@@ -50,12 +50,12 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       icon: <CalendarDays />,
       isActive: pathname.startsWith("/schedule"),
     },
-    {
+    ...(user ? [{
       title: "Prediction",
       url: createUrl("/prediction"),
       icon: <PieChartIcon />,
       isActive: pathname.startsWith("/prediction"),
-    },
+    }] : []),
     {
       title: "History",
       url: createUrl("/history"),

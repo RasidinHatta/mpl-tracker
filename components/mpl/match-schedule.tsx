@@ -66,8 +66,10 @@ export function TeamAvatar({ name, logo, color, size = "large" }: { name: string
 
 function MatchCard({
   match,
+  isSignedIn,
 }: {
   match: WeekSchedule["matches"][number];
+  isSignedIn: boolean;
 }) {
   const hasResult = match.teamAResult !== null && match.teamBResult !== null;
   const completed = isMatchCompleted(match);
@@ -151,7 +153,7 @@ function MatchCard({
 
         {/* Action hint */}
         <div className={`mt-3 flex justify-center transition-all duration-300 ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}>
-          <UpdateMatchDialog match={match} />
+          <UpdateMatchDialog match={match} isSignedIn={isSignedIn} />
         </div>
       </CardContent>
     </Card>
@@ -160,8 +162,10 @@ function MatchCard({
 
 export default function MatchSchedule({
   schedule,
+  isSignedIn,
 }: {
   schedule: WeekSchedule[];
+  isSignedIn: boolean;
 }) {
   if (schedule.length === 0) {
     return (
@@ -291,7 +295,7 @@ export default function MatchSchedule({
                     {/* Match Grid */}
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       {dayMatches.map((match) => (
-                        <MatchCard key={match.id} match={match} />
+                        <MatchCard key={match.id} match={match} isSignedIn={isSignedIn} />
                       ))}
                     </div>
                   </div>

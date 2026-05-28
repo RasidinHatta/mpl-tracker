@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -19,8 +20,9 @@ import { useRouter } from "next/navigation";
 import { TeamAvatar } from "./match-schedule";
 import { useSession } from "@/lib/auth.client";
 import { UserRole } from "@/lib/generated/prisma/enums";
+import Link from "next/link";
 
-export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
+export function UpdateMatchDialog({ match, isSignedIn = true }: { match: MatchWithTeams; isSignedIn?: boolean }) {
   const [open, setOpen] = useState(false);
   const [teamAPrediction, setTeamAPrediction] = useState(match.teamAPrediction?.toString() || "");
   const [teamBPrediction, setTeamBPrediction] = useState(match.teamBPrediction?.toString() || "");
@@ -62,6 +64,10 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
   };
 
   const handleSave = async () => {
+    if (!isSignedIn) {
+      toast.error("Please log in first");
+      return;
+    }
     if (isAdmin && (teamAResult || teamBResult) && !isValidScore(teamAResult, teamBResult)) {
       toast.error(`Invalid result: for ${match.format}, one team must reach ${maxScore} and the other must have fewer wins.`);
       return;
@@ -102,7 +108,9 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
         <DialogHeader>
           <DialogTitle>Update Match Details</DialogTitle>
           <DialogDescription>
-            Update prediction and result for {match.teamA.name} vs {match.teamB.name}.
+            {isSignedIn
+              ? `Update prediction and result for ${match.teamA.name} vs ${match.teamB.name}.`
+              : `View match details for ${match.teamA.name} vs ${match.teamB.name}.`}
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-6 py-6">
@@ -119,37 +127,42 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
             </div>
           </div>
 
-          {/* Prediction Row */}
-          <div className="flex items-center justify-between gap-2 px-4 sm:px-8 mt-4">
-            <div className="flex flex-1 items-center justify-center">
-              <Input
-                type="number"
-                min="0"
-                max={maxScore}
-                className="w-20 text-center text-lg font-bold"
-                value={teamAPrediction}
-                disabled={isMatchCompleted}
-                onChange={(e) => setTeamAPrediction(e.target.value)}
-              />
-            </div>
+          {isSignedIn ? (
+            <div className="flex items-center justify-between gap-2 px-4 sm:px-8 mt-4">
+              <div className="flex flex-1 items-center justify-center">
+                <Input
+                  type="number"
+                  min="0"
+                  max={maxScore}
+                  className="w-20 text-center text-lg font-bold"
+                  value={teamAPrediction}
+                  disabled={isMatchCompleted}
+                  onChange={(e) => setTeamAPrediction(e.target.value)}
+                />
+              </div>
 
-            <div className="flex w-28 flex-col items-center justify-center">
-              <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1">Prediction</span>
-              <span className="text-lg font-medium text-muted-foreground/50">-</span>
-            </div>
+              <div className="flex w-28 flex-col items-center justify-center">
+                <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold mb-1">Prediction</span>
+                <span className="text-lg font-medium text-muted-foreground/50">-</span>
+              </div>
 
-            <div className="flex flex-1 items-center justify-center">
-              <Input
-                type="number"
-                min="0"
-                max={maxScore}
-                className="w-20 text-center text-lg font-bold"
-                value={teamBPrediction}
-                disabled={isMatchCompleted}
-                onChange={(e) => setTeamBPrediction(e.target.value)}
-              />
+              <div className="flex flex-1 items-center justify-center">
+                <Input
+                  type="number"
+                  min="0"
+                  max={maxScore}
+                  className="w-20 text-center text-lg font-bold"
+                  value={teamBPrediction}
+                  disabled={isMatchCompleted}
+                  onChange={(e) => setTeamBPrediction(e.target.value)}
+                />
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="mx-4 rounded-lg border border-dashed bg-muted/30 px-4 py-3 text-center text-sm text-muted-foreground sm:mx-8">
+              Please log in to make predictions.
+            </div>
+          )}
 
           {/* Result Row */}
           {isAdmin && (
@@ -183,11 +196,19 @@ export function UpdateMatchDialog({ match }: { match: MatchWithTeams }) {
             </div>
           )}
         </div>
-        <DialogFooter>
-          <Button type="submit" disabled={loading} onClick={handleSave}>
-            Save changes
-          </Button>
-        </DialogFooter>
+        {isSignedIn ? (
+          <DialogFooter>
+            <Button type="submit" disabled={loading} onClick={handleSave}>
+              {isAdmin ? "Save changes" : "Save prediction"}
+            </Button>
+          </DialogFooter>
+        ) : (
+          <DialogFooter>
+            <Link href="/sign-in" className={buttonVariants()}>
+              Log in
+            </Link>
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

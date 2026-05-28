@@ -27,6 +27,7 @@ export default async function PlayoffPage(props: { searchParams?: Promise<{ grou
     headers: await headers()
   });
   const isAdmin = session?.user?.role === "ADMIN";
+  const isSignedIn = Boolean(session?.user);
 
   // Check if bracket is initialized (at least one match exists)
   const isInitialized = matches.length > 0;
@@ -56,7 +57,7 @@ export default async function PlayoffPage(props: { searchParams?: Promise<{ grou
 
       {/* Bracket Content */}
       {isInitialized ? (
-        <PlayoffBracket matches={matches} isAdmin={isAdmin} />
+        <PlayoffBracket matches={matches} isAdmin={isAdmin} isSignedIn={isSignedIn} />
       ) : (
         <div className="flex flex-col items-center justify-center p-12 text-center border rounded-xl bg-muted/20 border-dashed">
           <Trophy className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />

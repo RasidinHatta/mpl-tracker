@@ -12,6 +12,8 @@ import { getStandings } from "@/actions/mpl/standings";
 import { getMatchSchedule } from "@/actions/mpl/matches";
 import { TeamAvatar } from "@/components/mpl/match-schedule";
 import { MatchGroup } from "@/lib/generated/prisma/enums";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export const metadata = {
   title: "MPL Tracker — Predictions",
@@ -22,6 +24,29 @@ export default async function PredictionPage(props: { searchParams?: Promise<{ g
   const searchParams = await props.searchParams;
   const groupParam = searchParams?.group as MatchGroup | undefined;
   const group = groupParam || MatchGroup.MPLID; // Default to MPLID
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.user) {
+    return (
+      <div className="flex flex-1 items-center justify-center p-6">
+        <Card className="w-full max-w-md text-center">
+          <CardHeader>
+            <CardTitle>Please log in</CardTitle>
+            <CardDescription>
+              Predictions are tied to your account. Log in to make predictions and track your accuracy.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Link href="/sign-in">
+              <Button>Log in to continue</Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const stats = await getPredictionStats(group);
   const weeklyMatches = await getMatchSchedule(group);

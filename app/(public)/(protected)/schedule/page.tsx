@@ -24,6 +24,7 @@ export default async function SchedulePage(props: { searchParams?: Promise<{ gro
     headers: await headers()
   });
   const isAdmin = session?.user?.role === "ADMIN";
+  const isSignedIn = Boolean(session?.user);
 
   // Calculate stats
   const totalMatches = schedule.reduce((acc, week) => acc + week.matches.length, 0);
@@ -87,7 +88,7 @@ export default async function SchedulePage(props: { searchParams?: Promise<{ gro
       </div>
 
       {/* Content */}
-      <MatchSchedule schedule={schedule} />
+      <MatchSchedule schedule={schedule} isSignedIn={isSignedIn} />
     </div>
   );
 }
