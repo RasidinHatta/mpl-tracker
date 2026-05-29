@@ -59,7 +59,7 @@ export default function AuthLayout({
             src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2940&auto=format&fit=crop"
             alt="Mobile Background"
             fill
-            sizes="100vw"
+            sizes="(max-width: 767px) 100vw, 0vw"
             className="object-cover opacity-20"
           />
           <div className="absolute inset-0 bg-linear-to-b from-background/30 via-background/80 to-background" />
