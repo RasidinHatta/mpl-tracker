@@ -14,6 +14,7 @@ export default function AuthLayout({
             src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2940&auto=format&fit=crop"
             alt="Esports Arena Background"
             fill
+            sizes="(min-width: 1024px) 66vw, 50vw"
             priority
             className="object-cover opacity-50 transition-transform duration-1000 hover:scale-105"
           />
@@ -58,6 +59,7 @@ export default function AuthLayout({
             src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2940&auto=format&fit=crop"
             alt="Mobile Background"
             fill
+            sizes="100vw"
             className="object-cover opacity-20"
           />
           <div className="absolute inset-0 bg-linear-to-b from-background/30 via-background/80 to-background" />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { signIn } from "@/lib/auth.client";
+import { toast } from "sonner";
 
 interface SignInOauthButtonProps {
   provider: "google";
@@ -28,13 +29,16 @@ export const SignInOauthButton = ({
   async function handleClick() {
     setIsPending(true);
 
-    await signIn.social({
-      provider,
-      callbackURL: "/dashboard",
-      errorCallbackURL: "/sign-in/error",
-    });
-
-    setIsPending(false);
+    try {
+      await signIn.social({
+        provider,
+        callbackURL: "/dashboard",
+        errorCallbackURL: "/sign-in/error",
+      });
+    } catch {
+      toast.error("Could not start Google sign in. Check the auth URL and try again.");
+      setIsPending(false);
+    }
   }
 
   const action = signUp ? "Up" : "In";
