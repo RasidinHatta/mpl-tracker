@@ -57,7 +57,7 @@ export default async function PlayoffPageContent(props: { searchParams?: Promise
 
       {/* Bracket Content */}
       {isInitialized ? (
-        <PlayoffBracket matches={matches} isAdmin={isAdmin} isSignedIn={isSignedIn} />
+        <PlayoffBracket matches={matches} standings={standings} group={group} isAdmin={isAdmin} isSignedIn={isSignedIn} />
       ) : (
         <div className="flex flex-col items-center justify-center p-12 text-center border rounded-xl bg-muted/20 border-dashed">
           <Trophy className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />

@@ -9,6 +9,10 @@ export async function proxy(req: NextRequest) {
   const isLoggedIn = !!sessionCookie;
   const pathname = nextUrl.pathname;
 
+  if (pathname === "/" && isLoggedIn) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
   // Explicitly allow public routes without further checks
   const isOnPublicRoute = publicRoutes.some((route: string) => {
     if (route.endsWith("/*")) {
